@@ -94,4 +94,5 @@ You can download the full explanation of action types here.
  - [Type : 4000 - 4099](type/101.md)
  - [Type : 8000 - 8099](type/101.md)
 
+  - [Color Font Generator](color-generator.html)
 

@@ -1,47 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Color Wheel Tag Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.5.3/jscolor.min.js"></script>
+  <meta charset="UTF-8">
+  <title>🎨 Color Tag Generator</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 2rem;
-      background: #f9f9f9;
+    :root {
+      --bg: #f9f9f9;
+      --fg: #333;
+      --card: #ffffff;
+      --accent: #4CAF50;
+      --code-bg: #272822;
+      --code-fg: #f8f8f2;
+      --preview-color: #000;
     }
-    .output {
-      margin-top: 20px;
+
+    body.dark {
+      --bg: #121212;
+      --fg: #e0e0e0;
+      --card: #1e1e1e;
+      --accent: #81c784;
+      --code-bg: #1a1a1a;
+      --code-fg: #dcdcdc;
+      --preview-color: #fff;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .toggle-theme {
+      float: right;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .code-box {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 15px;
+      border-radius: 5px;
+      position: relative;
       font-family: monospace;
-      font-size: 1.2rem;
-      background: #fff;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      margin-top: 1rem;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .preview {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      color: var(--preview-color);
     }
   </style>
 </head>
 <body>
 
-  <h2>🎨 Color Wheel Text Tag Generator</h2>
+  <button class="toggle-theme" onclick="toggleTheme()">🌗 Toggle Dark Mode</button>
 
-  <label>Select color:</label><br>
-  <input class="jscolor" id="colorInput" value="ffff00"><br><br>
+  <h2>🎨 Color Tag Generator</h2>
 
-  <label>Enter your text:</label><br>
-  <input type="text" id="textInput" placeholder="Type here..." style="width: 300px;"><br><br>
+  <label for="color">Choose a color:</label><br>
+  <input type="color" id="color" value="#ffff00"><br><br>
 
-  <button onclick="generate()">Generate Code</button>
+  <label for="text">Enter your text:</label><br>
+  <input type="text" id="text" placeholder="your text here"><br>
 
-  <div class="output" id="output"></div>
+  <button onclick="generateCode()">Generate</button>
+
+  <h3 style="margin-top: 2rem;">🖊️ Preview Colour:</h3>
+  <div class="preview" id="preview">Preview will appear here...</div>
+
+  <h3 style="margin-top: 2rem;">💡 Output Code:</h3>
+  <div class="code-box">
+    <code id="output">&lt;ffff00&gt;your text here&lt;/&gt;</code>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+  </div>
 
   <script>
-    function generate() {
-      const color = document.getElementById('colorInput').value;
-      const text = document.getElementById('textInput').value;
-      const tag = `<${color}>${text}</>`;
-      document.getElementById('output').textContent = tag;
+    function generateCode() {
+      const colorHex = document.getElementById('color').value;
+      const colorCode = colorHex.replace('#', '');
+      const text = document.getElementById('text').value || 'your text here';
+
+      const tagCode = `<${colorCode}>${text}</>`;
+      document.getElementById('output').textContent = tagCode;
+
+      document.getElementById('preview').innerHTML = `<span style="color:#${colorCode}">${text}</span>`;
     }
+
+    function copyCode() {
+      const codeText = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(codeText).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      body.classList.toggle('dark');
+      localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    // Load stored theme
+    window.onload = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.body.classList.add('dark');
+      }
+    };
   </script>
 
 </body>
