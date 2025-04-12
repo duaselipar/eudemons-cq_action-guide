@@ -182,21 +182,21 @@
 
   <br />
 
-  This action shows a dialog when the player interacts with an NPC or items.
+  <p>This action shows a dialog when the player interacts with an NPC or items.</p>
 
-  ### 💡 Example SQL:
-  ```sql
-  REPLACE INTO `cq_action` VALUES (6960043, 6960044, 0000, 0101, 0, 'But I can sell it only for an hour every day.');
-  REPLACE INTO `cq_action` VALUES (6960044, 6960045, 0000, 0101, 0, 'Do you want to give it a go?');
-  REPLACE INTO `cq_action` VALUES (6960045, 6960046, 0000, 0102, 0, 'Just~one,~please. 6960060');
-  REPLACE INTO `cq_action` VALUES (6960046, 4000035, 0000, 0102, 0, 'Sorry,~but~I~don`t~need~it. 0');
-  ```
-type = 101
+  <h4>💡 Example SQL:</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (6960043, 6960044, 0000, 0101, 0, 'But I can sell it only for an hour every day.');
+REPLACE INTO `cq_action` VALUES (6960044, 6960045, 0000, 0101, 0, 'Do you want to give it a go?');
+REPLACE INTO `cq_action` VALUES (6960045, 6960046, 0000, 0102, 0, 'Just~one,~please. 6960060');
+REPLACE INTO `cq_action` VALUES (6960046, 4000035, 0000, 0102, 0, 'Sorry,~but~I~don\`t~need~it. 0');
+  </pre>
 
-param = NPC dialog text
-
-You can chain it with id_next
-
+  <ul>
+    <li><code>type</code> = 101</li>
+    <li><code>param</code> = NPC dialog text</li>
+    <li>You can chain it with <code>id_next</code></li>
+  </ul>
 </details>
 
 <ul>
