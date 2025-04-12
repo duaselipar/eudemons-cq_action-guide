@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>🧠 Eudemons Online cq_action Table Guide | CQ_Action Guide</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="🧠 Eudemons Online cq_action Table Guide" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A complete guide to using cq_action in Eudemons Online private servers." />
+<meta property="og:description" content="A complete guide to using cq_action in Eudemons Online private servers." />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="CQ_Action Guide" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🧠 Eudemons Online cq_action Table Guide" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"A complete guide to using cq_action in Eudemons Online private servers.","headline":"🧠 Eudemons Online cq_action Table Guide","name":"CQ_Action Guide","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=abf97d0eb3055fbe493b3a599e4bb1ea0efc7bc7">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">CQ_Action Guide</a></h1>
+      
+
+      <h1 id="-eudemons-online-cq_action-table-guide">🧠 Eudemons Online <code class="language-plaintext highlighter-rouge">cq_action</code> Table Guide</h1>
+
+<p>Welcome to the ultimate guide for understanding the <code class="language-plaintext highlighter-rouge">cq_action</code> table used in Eudemons Online private servers. This table plays a critical role in controlling game behavior — from NPC dialogs and item rewards to experience gains, system messages, and conditional logic.</p>
+
+<p>Whether you’re new to EO development or looking to refine your scripting skills, this guide will walk you through:</p>
+<ul>
+  <li>The purpose and structure of the <code class="language-plaintext highlighter-rouge">cq_action</code> table</li>
+  <li>Common <code class="language-plaintext highlighter-rouge">type</code> codes and how they work</li>
+  <li>Practical examples like giving items, showing NPC dialogs, and triggering system messages</li>
+  <li>Tips for chaining actions using <code class="language-plaintext highlighter-rouge">id_next</code> and handling conditions with <code class="language-plaintext highlighter-rouge">id_nextfail</code></li>
+</ul>
+
+<p>All content is written clearly and includes real-world examples to help you build, debug, and expand your server’s functionality faster.</p>
+
+<blockquote>
+  <p>⚙️ Built by the EO dev community — for the EO dev community.</p>
+</blockquote>
+
+<p>Explore the sections below and level up your EO server customization!</p>
+
+<ul>
+  <li><a href="#what-is-cq_action">What is <code class="language-plaintext highlighter-rouge">cq_action</code>?</a></li>
+  <li><a href="#field-explanations">Field Explanations</a></li>
+  <li><a href="#common-action-types">Common Action Types</a></li>
+  <li><a href="#download-full-action-types">Type Explaination Download</a></li>
+  <li><a href="#action-type-guides">Action Type Guides</a></li>
+</ul>
+
+<hr />
+
+<h2 id="what-is-cq_action">What is <code class="language-plaintext highlighter-rouge">cq_action</code>?</h2>
+
+<p><img src="assets/images/actiontable.png" alt="Alt text" /></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">cq_action</code> table controls sequences of actions triggered in-game — like when you click an NPC, receive an item, or complete a quest. It uses an ID-based flow system with support for conditions and multiple outcomes.</p>
+
+<hr />
+
+<h2 id="field-explanations">Field Explanations</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">INSERT INTO `cq_action` (`id`, `id_next`, `id_nextfail`, `type`, `data`, `param`) VALUES (1000, 0000, 0000, 0501, 810007, '');</code></p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td>Unique action ID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id_next</code></td>
+      <td>Next action if success/condition true</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id_nextfail</code></td>
+      <td>Next action if condition fails</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>Type of action (dialog, give item, etc.)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">data</code></td>
+      <td>Depends on type (item ID, message ID, etc.)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">param</code></td>
+      <td>Usually contains message text or command</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="common-action-types">Common Action Types</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type Code</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">0101</code></td>
+      <td>NPC Dialog Text</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">0102</code></td>
+      <td>NPC Options (buttons)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">0125</code></td>
+      <td>System Announcement (Global)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">0126</code></td>
+      <td>System Tip (Local)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">501</code></td>
+      <td>Give Item</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">1001</code></td>
+      <td>Give EXP, Money, Stones</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="download-full-action-types">Download Full Action Types</h2>
+
+<p>You can download the full explanation of action types here.</p>
+
+<ul>
+  <li><a href="assets/ScriptTypeExplanation.txt">Download Here</a></li>
+</ul>
+
+<hr />
+
+<h2 id="action-type-guides">Action Type Guides</h2>
+
+<!-- 🔘 Button to open the modal -->
+<p><button onclick="document.getElementById('popup').style.display='block'">Type 101</button></p>
+
+<!-- 📦 The Modal -->
+<div id="popup" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6);">
+  <div style="background:#fff; padding:20px; margin:10% auto; width:80%; max-width:500px; border-radius:10px; position:relative;">
+    <span onclick="document.getElementById('popup').style.display='none'" style="position:absolute; top:10px; right:20px; cursor:pointer; font-weight:bold;">&times;</span>
+    
+    <h3>📘 Type 501: Give Item</h3>
+    <p>This action gives the player an item based on the item ID in the <code>data</code> field.</p>
+    <pre><code>INSERT INTO cq_action (id, type, data) VALUES (1001, 501, 1034160);</code></pre>
+  </div>
+</div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

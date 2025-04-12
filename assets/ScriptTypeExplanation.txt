@@ -1,0 +1,602 @@
+/// The script inside this. Not necessarily all-purpose. . But most of them are compatible. .
+
+
+
+//////////////////////////////////////////////////// ///////////////////////
+// "%%" indicates a displayable "%" symbol
+// "%nnXXX" indicates the display width, which is always left-aligned. Extra long will be displayed in actual length. (For example, the "%6id" of an NPC with an id of 1234 is displayed as "1234" )
+
+// system part ///////////////////
+const char PARAM_DATE_STAMP[] 				= "date_stamp"; 					// for calculation only
+const char PARAM_TIME[] 					= "time"; 						// for calculation only
+const char ACCEPT_STR_[] 					= "accept"; 						// A substring uploaded by the client // %accept0 ~ %accept3
+const char MAXEUDEMON_STARLEV[] 			= "maxeudemon_starlev"; 			// for calculating and judging.
+
+
+
+// ITEM part ///////////////////
+const char 	PARA_ITEM_TYPE[] 				= "item_type";
+const char 	PARA_ITEM_DATA[] 				= "item_data";
+const char 	PARA_TARGET_NAME[] 				= "target_name";
+
+// NPC part ///////////////////
+const char 	PARA_DATASTR[] 					= "datastr";
+const char 	PARA_DATA_[] 					= "data"; 							// %data0 ~ %data3
+const char 	PARA_NAME[] 					= "name"; 							// npc name
+const char 	PARA_NPC_ID[] 					= "id"; 								//npc id in database
+const char 	PARA_NPC_X[] 					= "npc_x";
+const char 	PARA_NPC_Y[] 					= "npc_y";
+const char 	PARA_NPC_OWNERID[] 				= "npc_ownerid";
+
+// USER part /////////////////
+const char 	PARA_USER_ID[] 					= "user_id";
+const char 	PARA_USER_MAPID[] 				= "user_map_id";
+const char 	PARA_USER_MAPX[] 				= "user_map_x";
+const char 	PARA_USER_MAPY[] 				= "user_map_y";
+const char 	PARA_USER_HOME[] 				= "user_home_id";
+const char 	PARA_SYN_ID[] 					= "syn_id";
+const char 	PARA_SYN_NAME[] 				= "syn_name";
+const char 	PARA_USER_NAME[] 				= "user_name";
+const char 	PARA_MATE_NAME[] 				= "mate_name";
+const char 	PARA_MAP_OWNER_ID[] 			= "map_owner_id";
+const char 	PARA_MAP_OWNER_TYPE[] 			= "map_owner_type";
+const char 	PARA_ALLY_SYN_[] 				= "ally_syn"; 						// %ally_syn0 ~ %ally_syn4
+const char 	PARA_ENEMY_SYN_[] 				= "enemy_syn"; 						// %enemy_syn0 ~ %enemy_syn4
+const char 	PARA_TUTOREXP_[] 				= "tutor_exp"; 						// Mentor experience
+const char 	PARA_STUDENT_EXP_[] 			= "student_exp"; 					// Apprentice Contributed Experience
+const char 	PARA_EXPLOIT_[] 				= "exploit"; 						// meritorious service
+
+//Player PK game
+const char 	PARA_PKGAME_USER_KILL[] 		= "pkgame_user_kill"; //PK game to kill the enemy player
+const char 	PARA_PKGAME_USER_BALANCE_EXP[] 	= "pkgame_user_balance_exp"; //PK game experience reward
+
+
+//legion part
+const char 	PARA_AVAILABLE_FUND[] 			= "available_fund"; 					// Withdraw legion's distributable funds
+// iter part of user /////////////////
+const char 	PARA_ITER_VALUE[] 				= "iter_value";
+const char 	PARA_ITER_SYN_NAME[] 			= "iter_syn_name";
+const char 	PARA_ITER_SYN_LEADER[] 			= "iter_syn_leader";
+const char 	PARA_ITER_SYN_MONEY[] 			= "iter_syn_money";
+const char 	PARA_ITER_SYN_AMOUNT[] 			= "iter_syn_amount";
+const char 	PARA_ITER_SYN_FEALTY[] 			= "iter_syn_fealty";
+const char 	PARA_ITER_MEMBER_NAME[] 		= "iter_member_name"; 				// %iter is the player ID, returns the player name
+const char 	PARA_ITER_MEMBER_RANK[] 		= "iter_member_rank"; 				// %iter is the player ID, returns the player's level title
+const char 	PARA_ITER_MEMBER_PROFFER[]		= "iter_member_proffer";
+const char 	PARA_ITER_WANTED[] 				= "iter_wanted";
+const char 	PARA_ITER_POLICEWANTED[]		= "iter_police_wanted";
+const char 	PARA_ITER_GEMSUPQUALITY[]		= "iter_upquality_gem";
+const char 	PARA_ITER_GEMSUPLEVEL[] 		= "iter_uplevel_gem";
+const char 	PARA_ITER_COST_DURRECOVER[]		= "iter_cost_durrecover"; 			//
+const char 	PARA_ITER_GAME_CARD[] 			= "iter_game_card"; 					//
+const char 	PARA_ITER_GAME_CARD2[] 			= "iter_game_card2"; 				//
+
+const char 	PARA_ITER_TABLE_DATASTR[]		= "iter_table_datastr";
+const char 	PARA_ITER_TABLE_DATA_[] 		= "iter_table_data"; 				// %iter_table_data0 ~ %iter_table_data3
+const char 	PARA_ITER_VAR_DATA_[] 			= "iter_var_data"; 						// %iter_var_data0 ~ %iter_var_data99
+const char 	PARA_ITER_VAR_STR_[] 			= "iter_var_str"; 						// %iter_var_str0 ~ %iter_var_str19
+
+const char 	PARA_PUBLIC_VAR_DATA_[] 		= "public_var_data"; 						// %public_var_data0 ~ %public_var_data99
+const char 	PARA_PUBLIC_VAR_STR_[] 			= "public_var_str"; 						// %public_var_str0 ~ %public_varstr99
+
+const char 	PARA_MAP_ITER_VAR_DATA_[] 		= "map_iter_var_data"; 						// %map_iter_var_data0 ~ %map_iter_var_data19
+const char 	PARA_MAP_ITER_VAR_STR_[] 		= "map_iter_var_str"; 						// %map_iter_var_str0 ~ %map_iter_var_str19
+
+const char 	PARA_ITER_ITEM_DATA[] 			= "iter_item_data";
+
+//---task system iter---begin
+const char 	PARA_ITER_TASK_USERNAME[] 		= "iter_task_username";    //Returns the name field in the player's cq_user table
+const char 	PARA_ITER_TASK_COMPLETENUM[]	= "iter_task_completenum"; //Take the value of the number of task completions and return the number of task completions
+const char 	PARA_ITER_TASK_BEGINTIME[] 		= "iter_task_begintime";   %iter_taskdetail_begintime1-90//Take the value of the task start time and return the task start time
+//---task system iter---end
+
+//////////////////////////////////////////////////// ///////////////////////
+enum {
+		// system part, need user ptr ------------------------------------------ --------------------------------
+		ACTION_SYS_FIRST 			= 100,
+		ACTION_MENUTEXT 			= 101, 			// menu text. data: number of display lines (default is 0), param="text".(optional): display text, this type can contain spaces, and can also be empty lines.
+		ACTION_MENULINK 			= 102, 			// Menu hyperlinks. "text task_id align": align (optional): alignment mode (default/0: left alignment; 5: center; 9: right alignment; a(1-9)b(2-8 ): no line break, from a /b starts to display at the line width, 9 is right- aligned)
+		ACTION_MENUEDIT 			= 103, 			// Menu input box. "len task_id text": len: length that can be entered; text (optional): displayed text, align: alignment mode (default: text on the left, positive integer: the character at which the input box is embedded in the text). °ÔNote: If there are multiple input boxes, they will be distinguished by round buttons on the interface, and only one will be uploaded each time.
+		ACTION_MENUPIC 				= 104, 			// menu picture. "xy pic_id task_id": task_id (optional): indicates that the picture can be "pressed". No text is displayed in the area where the image is located.
+		ACTION_MENUPASSEDIT 		= 105, 			////password input box
+		ACTION_MENUNUMBEREDIT 		= 106, 			////number input box
+		ACTION_MENUBUTTON 			= 110, 			// Menu button, the format is the same as hyperlink.
+		ACTION_MENULISTPART 		= 111, 			// Menu list item. "task_id iter text...", after the player clicks on the list, task_id will be triggered, and iter will be filled in the player's %iter variable.
+		ACTION_MENUCREATE 			= 120, 			// Menu creation. "cancel_task_id" (optional): The TASK triggered when the menu is forcibly closed
+		ACTION_RAND 				= 121, 			// Check randomness. "data1 data2". "10 100" means there is a 1/10 chance of being true.
+		ACTION_RANDACTION 			= 122, 			// There are 8 random actions "action0 action1... action7", one is randomly selected and executed
+		ACTION_CHKTIME 				= 123, 			// data is time type 0-check current server detailed time "%d-%d-%d %d:%d %d-%d-%d %d:%d"; 1-check year Time of day "%d-%d %d:%d %d-%d %d:%d", 2- Check time of day of month "%d %d:%d %d %d:%d", 3- Check the time of the day of the week "%d %d:%d %d %d:%d", 4- Check the time of the day "%d:%d %d:%d", 5- Check the time of the hour "%d %d" (the first and last minute of each hour)
+		ACTION_POSTCMD 				= 124, 			// Send the interface command to the client, data is the command number
+		ACTION_BROCASTMSG 			= 125, 			// The whole server broadcasts text messages, data is the channel, and para is the content
+		ACTION_MESSAGEBOX 			= 126, 			// Let the client pop up a dialog. data is a dialog box type (0-99), param=text string parameter.
+		ACTION_130 					= 130, 			//Update announcement window script
+		ACTION_131 					= 131, 			//Update Announcement End Script.
+		ACTION_ZSBZBOX 				= 188, 			// Treasure of the gods. data is the amount of all partial withdrawals, and when it is 0, it means that all withdrawals are prohibited. param=Item Type ID Display Quantity Execute Script Random Factor | A total of 8 items are required. Otherwise invalid. Each item is separated by | sign.
+		ACTION_DIALOG 				= 189, 			// All Dialog types can be implemented using this. . But it is recommended only for windows that implement some simple no-op classes. data is the window type. . param=literal string parameter.
+		ACTION_PKDIALOG 			= 190, 			// The dialog box for the start of the PK game. 178 custom.
+		ACTION_PUBLIC_DATAVAR 		= 191, 			// global integer variable.
+		ACTION_PUBLIC_DATASTRVAR	= 192, 			// global text variable.
+		ACTION_SYS_LIMIT 			= 199,
+
+		// npc part, need npc ptr ------------------------------------------ --------------------------------
+		ACTION_NPC_FIRST 				= 200,
+		ACTION_NPC_ATTR 				= 201, 			// Modify or check the attributes of the task NPC. "attr opt data npc_id", at least 3 parameters. If npc_id is specified, the NPC must be in the local map group. attr can choose "ownerid"(=,==), "ownertype"(=,==), "lookface"(=,==), "data?"(=,+=,==,<,<= ,>,>=,pass.pass can increase or decrease the DateStamp stored in the field by a certain number of days, .data can be "accept"), "datastr"(=,==), "life"(=), "maxlife "(=)
+// 		ACTION_NPC_REQUESTSHIFT 		= 202, 			// Notify the client to shift an NPC. param="idNextTask".
+// 		ACTION_NPC_SHIFT 				= 203, 			// Shift the current NPC. Only move on the same map. Limited dynamic NPC.
+		ACTION_NPC_ERASE 				= 205, 			// Delete the current NPC. Limited dynamic NPC. Note: After deletion, do not operate this NPC any more. If dwData is not 0, it means to delete all NPCs whose type is dwData in this map. param="idMap type": Delete some NPCs of the specified map.
+		ACTION_NPC_MODIFY 				= 206, 			// Modify the attributes of the specified task NPC across threads. "npc_id attr opt data". attr can choose "lookface" (=), "data?" (=), "datastr" (=)
+		ACTION_NPC_RESETSYNOWNER		= 207, 			// Reset the owner of the legion map. Only for legion sign NPCs. Fill in the OWNER_ID for the first place in the statistics of legion records, and clear all records at the same time. All attacks automatically stop. (battle flags for unpaused maps)
+		ACTION_NPC_FIND_NEXT_TABLE		= 208, 			// Find the next list item and write the ID to TASK_ITERATOR. Only for NPCs with lists. param="type", corresponding to the type field of cq_table.
+		ACTION_NPC_ADD_TABLE 			= 209, 			// Add an item to the list, the one with the same type and idKey will be deleted in advance (if idKey is 0, it will not be deleted). Only for NPCs with lists. param="type idKey data0 data1 data2 data3 szData", at least 2 parameters.
+		ACTION_NPC_DEL_TABLE 			= 210, 			// Delete all eligible items from the list, return true if none exists. Only for NPCs with lists. param="type idKey data0 data1 data2 data3 szData", at least 2 parameters, if the parameter is 0, it means no match, and all the ones that are not 0 that are exactly the same as the list will be deleted. When there is no param, delete the current record (the record specified by iterator), and always return true.
+		ACTION_NPC_DEL_INVALID 			= 211, 			// Delete all expired items from the list, return true if none exists. Only for NPCs with lists. param="type idx", idx indicates which data the date (%date_stamp) is stored in. [For example, if idx is 3, it means that the date is stored in data3, and all items whose date in data3 is less than today's date will be deleted. ]
+		ACTION_NPC_TABLE_AMOUNT 		= 212, 			// Check the number of items in the list, return false if >=data, return true if <data. param is meaningless.
+		ACTION_NPC_SYS_AUCTION 			= 213,		 	// LW allows NPC to start the system auction, DATA is the NPC ID, param is the prompt for the system to officially start
+		ACTION_NPC_DRESS_SYNCLOTHING 	= 214, 			//wear legion clothes
+		ACTION_NPC_TAKEOFF_SYNCLOTHING 	= 215, 			//Take off legion clothes
+		ACTION_NPC_AUCTIONING 			= 216, 			//judging whether there are items in the auction DATA is the ID of the NPC, PARAM: type: 0 means to view system auction items, 1 means to view player items
+		ACTION_NPC_UNKONW223 			= 223, 			//Don't know what it is, but it has something to do with the Legion. Seeing that it always returns true.
+		ACTION_NPC_ISLEGIONWARTIME 		= 226, 			//Determine whether it is in an army battle.
+		ACTION_NPC_CLEARPASSWORD 		= 229, 			//Clear the password of the common warehouse.
+
+		ACTION_NPC_DIALOG 				= 250, 			//Let the client pop up a dialog (trade shop). The number of the data dialog box, this type can only be used on NPCs, not on quest props.
+
+		ACTION_NPC_LIMIT 				= 299,		
+
+		// map part, need curr map ------------------------------------------ --------------------------------
+		ACTION_MAP_FIRST 			= 300,
+		ACTION_MAP_MOVENPC 			= 301, 			// Move the npc to the specified map and location (only for fixed NPC), data is the ID of the specified npc, param is "idMap nPosX nPosY". Note: You can move to the (0,0) coordinates of this map in order to hide the NPC.
+		ACTION_MAP_MAPUSER 			= 302, 			// Determine the number of users in the specified map, data is the specified map ID, param is "cmd opt data",
+													// cmd supports "map_user" and "alive_user", opt can be "==, <=, >=", data is the quantity
+		ACTION_MAP_BROCASTMSG 		= 303, 			// broadcast message, data is map id, szParam is broadcast message
+		ACTION_MAP_DROPITEM 		= 304, 			// The map generates specified items, szParam is "idItemType idMap nPosX nPosY alivesecs (survival time) priv_secs (protection time)" unit: seconds.
+		ACTION_MAP_SETSTATUS 		= 305, 			// Set map status, support EVENT. param="mapid status_bit data", status_bit = { STATUS_WAR=1, }, data=0 or 1.
+		ACTION_MAP_ATTRIB 			= 306, 			// Check and modify the attributes of the map. param="field opt data idMap", at least 3 parameters, the default is the current map. field="synid" (opt="==", "="). field="status"(opt="test", "set", "reset"). field="type"(opt="test"). field="res_lev" (opt="=", "==", "<"). field="mapdoc"(opt="=", "=="), portal0_x(=), portal0_y(=),field="castle"(opt="==")
+		ACTION_MAP_REGION_MONSTER	= 307, 			// Check the number of monsters in a certain area of the specified map or the current map. param="map_id region_x region_y region_cx region_cy monster_type opt data". When map_id is 0, it means to get the current map, when monster_type is 0, it means not to check the type, and opt supports "==" and "<".
+
+		ACTION_MAP_CHANGEWEATHER	= 310, 			// Modify the weather of the player's REGION. param="Type Intensity Dir Color KeepSecs", Type, Intensity=0~999, Dir=0~359, Color=0x00RRGGBB, KeepSecs=seconds
+		ACTION_MAP_CHANGELIGHT 		= 311, 			// Modify the brightness of the player's map. param="idmap light secs", light=0xAARRGGBB (0xFFFFFFFF means recovery), secs is 0: means permanent change
+		ACTION_MAP_MAPEFECT 		= 312,			// Display the map effect at the specified location on the specified map , param = "idMap xy EffectName"
+		ACTION_MAP_CREATEMAP 		= 313, 			// Create a map, linked to the current NPC (npc must be LINK_NPC), requires a player object. param="name owner_type owner_id mapdoc type portal_x portal_y reborn_map reborn_portal res_lev". partal refers to the coordinates of the entry point, and res_lev indicates the map level (for upgrading).
+		ACTION_MAP_FIREWORKS 		= 314, 			// Fireworks
+		ACTION_MAP_315 				= 315, 			// I don't know what it is, return true. The white radish said whether it is used to delete obstacles. I think it's very possible. .
+
+		ACTION_MAP_DATAVAR_INIT 	= 316, 			// Initialize map integer variables. map_var(1000,3) set 0 ...corresponding variable name: %map_iter_var_data3. Note: 1000 means map number, support %user_map_id
+		ACTION_MAP_DATAVAR 			= 317, 			// Map integer variable assignment (comparison). map_var(1000,3) += 1 ...Support: // == £¨ +=, /=, *= Note: 1000 means map number, support %user_map_id		
+		ACTION_MAP_STRVAR 			= 318, 			// Map text variable comparison (no case-sensitive) map_var(1000,0) == %map_iter_var_str1 Note: 1000 represents the map number, support %user_map_id
+		ACTION_MAP_STRVAR_INIT 		= 319, 			// Initialize map text variables. map_var(1000,3) set soulless bell...Corresponding variable name: %map_iter_var_str3 Note: 1000 means map number, support %user_map_id
+
+
+
+		ACTION_MAP_LIMIT 			= 399,
+
+		// item action only part, need pUser+pItem ptr -------------------------------------- ------------------------------------
+		ACTION_ITEMONLY_FIRST 		= 400,
+		ACTION_ITEM_REQUESTLAYNPC	= 401, 			// Notify the client to place an NPC. param="idNextTask type sort lookface region", at least 4 parameters. region represents the type of cq_region
+		ACTION_ITEM_COUNTNPC 		= 402, 			// Check the number of NPCs on the same map. param="field data opt num", field="name" (by name), "type" (by type), "all" (all NPCs), "furniture" (furniture), data=name or type to count (fill 0 for all and furniture), opt="<", "==".
+		ACTION_ITEM_LAYNPC 			= 403, 			// Create an NPC. After the creation is successful, the NPC is the current task NPC, and the owner_id will be automatically set to the legion ID or player ID. param="name type sort lookface ownertype life region base linkid task0 task0 ... task7 data0 data1 data2 data3 datastr". At least 5 parameters. The level of the target is placed in data3.
+		ACTION_ITEM_DELTHIS 		= 498, 			// Delete the current task item. Note: must be the last ACTION.
+		ACTION_ITEMONLY_LIMIT 		= 499,
+
+		// user item part, need user ptr ----------------------------------------- --------------------------------- _
+		ACTION_ITEM_FIRST 			= 500,
+		ACTION_ITEM_ADD 			= 501, 			// Add item. data=itemtype_id, param="amount amount_limit ident gem1 gem2 magic1 magic2 magic3 data warghostexp gemtype availabletime MONOPOLY eudemon_attack1 eudemon_attack2
+													// eudemon_attack3 eudemon_attack4 special_effect Gem3 GodExp prescription", param can be omitted, all default values are 0 (meaning no modification), and prescription is a few minutes.
+		ACTION_ITEM_DEL 			= 502, 			// Delete item. When data=itemtype_id, param is not 0, multiple superimposed items will be deleted at the same time. Or data is 0, and param indicates the name of the item to be deleted.
+													// Extend script, when the data is not 0, check the Amount at the same time, and determine whether to check the bound items. Such as: "502 810002 1 1 ". Indicates to delete an 810002 item with Amount>=1, and it is an unbound item.
+		ACTION_ITEM_CHECK 			= 503, 			// Check items. When data=itemtype_id, param is not 0, check the quantity (or durability) of the item at the same time, and the item must meet the required quantity (or durability). Or data is 0, and param indicates the name of the item you are looking for.
+													// Extend script, when the data is not 0, check the Amount at the same time, and determine whether to check the bound items. Such as: "503 810002 1 1 ". Indicates that the Amount>=1 of the 810002 item is checked, and it is an unbound item.
+		ACTION_ITEM_HOLE 			= 504, 			// Weapon hole. param supports "ChkHole HoleNum" or "MakeHole HoleNum", Num is 1 or 2
+		ACTION_ITEM_REPAIR 			= 505, 			// Item repair. data is the location of the specified equipment.
+		ACTION_ITEM_MULTIDEL 		= 506, 			// Delete multiple items, param is "idType0 idType1 num", that is, delete num items of idType0-idType1.
+		ACTION_ITEM_MULTICHK 		= 507, 			// Detect multiple items, param is "idType0 idType1 num", that is, detect num items of idType0-idType1.
+		ACTION_ITEM_LEAVESPACE 		= 508, 			// Check remaining space in inventory. param="space weight packtype"
+													// The value range of packtype is 50 ~ 53
+													// 50: common item backpack
+													// 51: Demon Soul Gem Backpack
+													// 52: Eudemons Egg Backpack
+													// 53: Eudemons Backpack
+
+		ACTION_ITEM_UPEQUIPMENT 	= 509, 			// equipment operation, param format is "cmd position",
+													// cmd supports "up_lev", "up_quality", "recover_dur"
+													// position is the equipment position, defined as follows
+													/*ITEMPOSITION_HELMET 		= 1;
+														ITEMPOSITION_NECKLACE= 2;
+														ITEMPOSITION_ARMOR 		= 3;
+														ITEMPOSITION_WEAPONR 	= 4;
+														ITEMPOSITION_WEAPONL= 5;
+														ITEMPOSITION_RINGR 		= 6;
+														ITEMPOSITION_RINGL 		= 7;
+														ITEMPOSITION_SHOES 		= 8;
+														ITEMPOSITION_MOUNT 		= 9*/
+
+		ACTION_ITEM_EQUIPTEST 		= 510, 			// Item Quality Inspection,
+													// param "equip_pos cmd opt num",
+													// equip_pos is the same as the position definition above,
+													// cmd supports "level", "quality", "durability", "max_dur"
+													// opt supports "==, >=, <=",
+													// num is the data, when cmd is "durability" and "max_dur", -1 is the maximum value
+		ACTION_ITEM_EQUIPEXIST 		= 511, 			// Equipment existence check, data is the location of the equipment
+		ACTION_ITEM_EQUIPCOLOR 		= 512, 			// Equipment color change, param = "equip_pos color", equip_pos supports as follows
+													/*ITEMPOSITION_HELMET 		= 1;
+														ITEMPOSITION_ARMOR 		= 3;
+														ITEMPOSITION_WEAPONL= 5; */// ITEMPOSITION_WEAPONL Must be a shield to work
+		ACTION_ITEM_FIND 			= 513, 			// Find an item, the type is stored in the user's iterator. data=itemtype_id. Or data is 0, and param indicates the name of the item to be searched.
+		ACTION_ENCASH_CHIP 			= 514, 			// Exchange chips for money, the amount of money is in the Data field of the Item
+		ACTION_ITEM_517 			= 517, 			//Team teleport scroll,
+		ACTION_ITEM_518 			= 518, 			//The call scroll of the team,
+		ACTION_ITEM_IDENTITEM 		= 519, 			//Identify items with equipment identification scrolls
+		ACTION_ITEM_IDENTEUDEMON	= 520, 			//Identify items with Eudemons identification scroll
+		ACTION_ITEM_521 			= 521,			// don't know what it is. Related to brushing flowers
+		ACTION_ITEM_522 			= 522, 			// don't know what it is. Related to brushing flowers
+
+		ACTION_ITEM_EUDEMON_CHECK 	= 523, 			//To check the related attributes of Eudemons, you can write several judgments together. . Such as: ismyselfeudemon == 1, iscallout == 1, isalive == 1, level == 1, damage != 5
+		ACTION_ITEM_EUDEMON_SET 	= 524, 			//Write the relevant attributes of Eudemons, it is not allowed to write several together. . . Such as: damage 5, level 1
+		ACTION_ITEM_ADD_525 		= 525, 			//It is the same as 501, and the parameters are also the same, except that the last availabletime is changed to the number of aging days. .
+
+
+
+		ACTION_ITEM_CREATEEUDEMON_X12 	= 526, //Create a 12-star XO Eudemons directly on the bag
+		ACTION_ITEM_CREATEEUDEMON_X8 	= 527, //Create a 8-star O Eudemons directly on the bag
+		ACTION_ITEM_CREATEEUDEMON_X6 	= 530, //Create a 6-star O Eudemons directly on the bag
+		ACTION_ITEM_CREATEEUDEMON_X19 	= 531, //Create a 19-star XO Eudemons directly on the bag
+		ACTION_ITEM_TALENT 				= 534, //Eudemons Talent check and Modification. talent1=,==
+	
+		ACTION_ITEM_CREATEEUDEMON_X25 	= 538, //Create a 25-star XO Eudemon directly on the body..param is 0 for 25 stars. When it is other values, it is the specified number of stars (can be used to realize X0 of more stars)
+		ACTION_ITEM_540 				= 540, //Check and modify the number of items. .param="amount += 1" . The operators support <, >, <=, >=, =, +=. Can be negative. Can only be used on dismantled items.
+
+		ACTION_ITEM_ADD_550 			= 550,	//It is the same as 501, and the parameters are also the same. It just means that there is one more display effect on the client.
+												///When going back to expand, you can consider adding parameters directly after 538.
+		ACTION_ITEM_LIMIT 				= 599,
+
+		// user npc only part, need not user ptr --------------------------------------------------------------------------
+		ACTION_NPCONLY_FIRST 			= 600,
+		ACTION_NPCONLY_CREATENEW_PET	= 601, 	// Create a MONSTER, OWNERID, OWNERTYPE are the same as NPC. param="xy generator_id type data name", at least 4 parameters, if there is a name, change the name. The generator is used to control The range of monster activities, and the type in cq_generator is meaningless. The absolute coordinates of x, y on this map.
+		ACTION_NPCONLY_DELETE_PET		= 602, 	// Delete all MONSTER on this map, OWNERID, OWNERTYPE are the same as NPC. param="type data name", at least 1 parameter, if data is not 0, match data at the same time, if there is name, match name at the same time.
+		ACTION_NPCONLY_MAGICEFFECT		= 603, 	// The NPC sends a magic effect.param="source_id magic_type magic_level target_id data"
+		ACTION_NPCONLY_MAGICEFFECT2		= 604, 	// The NPC sends a ground effect magic.param="source_id magic_type magic_level xy target_id data", At least 5 parameters.
+		ACTION_NPCONLY_LIMIT 			= 699,
+
+		// user syndicate part --------------------------------------------------------------------------
+		ACTION_SYN_FIRST 				= 700,
+		//////////////////////////////////////////////////////////
+		// legion Action finishing
+		ACTION_SYN_CREATE 				= 701, 	// To create a legion, the player must enter the legion name. param="level money leave_money", the three parameters are the required player level, the required cash amount, and the remaining cash amount after the legion is established.
+		ACTION_SYN_DESTROY 				= 702, 	// dismiss. When the player performing the Action is the group leader, sub-group leader, or sub-team leader, it means disbanding the legion, sub-group, and sub-team respectively
+		ACTION_SYN_DONATE 				= 703, 	// Donate, need an input box.
+		ACTION_SYN_CREATE_SUB 			= 708, 	// Chuangzi legion (the execution of the legion leader is to create a sub-group, and the execution of the sub-regiment leader is to create a sub-group),
+												// The player needs to input the legion name (the length is not more than 16BYTE).
+		ACTION_SYN_COMBINE_SUB 			= 710, 	// Merge sub factions. The player who executes the Action is the leader of the sub-clan and merged into the parent legion
+		ACTION_SYN_ATTR 				= 717, 	// Check and modify legion attributes, the parameters are not less than 3, the default legion ID is the legion ID of the current player.
+												// param="szField szOpt data syn_id", szField is optional:
+												// Fund: "money" (opt optional "+=", "<"),
+												// reputation: "repute" (opt optional "+=", "<"),
+												// Number of people: "membernum" (opt is "<"),
+												// Parent legion: "fealty" (opt is "=="),
+												// Level: "level" (opt optional "=", "+=", "<", "==")
+		ACTION_SYN_ALLOCATE_SYNFUND		= 729, 	// Allocate legion funds. The specific amount of player data is required (up to 50% of the total fund)
+		ACTION_SYN_RENAME 				= 731, 	// Rename legion. Must be a sub-clan, executed by the leader of the sub-clan
+		//////////////////////////////////////////////////////////
+
+		ACTION_SYN_DEMISE 				= 704, 	// surrender, only the legion leader is allowed to surrender, neither the division commander nor the division leader is allowed.
+												// The player needs to enter the legion member's name. param= "level", indicates the level required by the player who accepts the concession
+		ACTION_SYN_SET_ASSISTANT		= 705, 	// To be promoted to assistant guild leader, the player needs to input the guild name.
+		ACTION_SYN_CLEAR_RANK 			= 706, 	// To dismiss the rank, the player needs to input the legion name.
+		ACTION_SYN_PRESENT_MONEY		= 707, 	// Send money to other factions. The leader of the legion enters the amount of money, and the ID of other legions is TASK_ITERATOR (see ACTION_SYN_FIND_BY_NAME). Send money can not be less than 10000
+		ACTION_SYN_CHANGE_LEADER		= 709, 	// Update the leader of the sub-clan. The guild leader and the new guild leader of the sub-guild form a team, and enter the name of the sub-guild. param= level, the required new guild leader level
+		ACTION_SYN_ANTAGONIZE 			= 711, 	// To make an enemy, the player must enter the legion name.
+		ACTION_SYN_CLEAR_ANTAGONIZE		= 712, 	// To clear enemies, players need to enter the legion name.
+		ACTION_SYN_ALLY 				= 713, 	// Form an alliance, requiring two guild leaders to form a team
+		ACTION_SYN_CLEAR_ALLY 			= 714, 	// Disconnect the alliance, the player needs to input the legion name.
+		ACTION_SYN_KICKOUT_MEMBER		= 715, 	// Expell legion member by name, player needs to input legion member name.
+		ACTION_SYN_CREATENEW_PET		= 716, 	// (Obsolete) Create a legion pet. param="generator_id type data", at least two parameters, if accept, change the name. The generator is used to control the range of monster activities, and the type in cq_generator is meaningless.
+		ACTION_SYN_CHANGESYN 			= 718, 	// Help the public to transfer. Tangkou turns to Tangkou, and Tangkou and Zonglegion switch to each other. You need to form a team with the hall master (or legion master) and transfer one person at a time. It is necessary to enter the name of the hall (or legion name) to be transferred. Positions are automatically canceled until transferred.
+		ACTION_SYN_CHANGE_SUBNAME		= 719, 	// Modify the name of the hall, only limited to the hall whose name exceeds 6 bytes. Otherwise returns FALSE. (temporary function)
+
+		ACTION_SYN_FIND_NEXT_SYN		= 720, 	// Find the next legion, write the ID to TASK_ITERATOR
+		ACTION_SYN_FIND_BY_NAME 		= 721, 	// To find a legion by name, the player must enter the legion name. Write ID to TASK_ITERATOR
+		ACTION_SYN_FIND_NEXT_SYNMEMBER	= 722, 	// Find the next member, write the ID to TASK_ITERATOR
+		ACTION_SYN_SAINT 				= 724, 	// The upgrade operation of the Paladin "=, >="
+		ACTION_SYN_RANK 				= 726, 	// Modify RANK, ACCEPT="rank name". Only modify RANK=50 and below. param="RANK50 level limit 20 10 of RANK40's 30", if param is empty, there is no limit.
+				
+		ACTION_SYN_UPMEMBERLEVEL 		=728,
+		ACTION_SYN_APPLLY_ATTACKSYN 	=730, 	//Apply to attack legions
+		
+		ACTION_SYN_LIMIT 				=799,
+
+		// monster part ---------------------------------------------- ----------------------------
+		ACTION_MST_FIRST 				= 800,
+		ACTION_MST_DROPITEM 			= 801, 	// monster drops items or money after being killed, param "dropitem itemtype" or "dropmoney money"
+												//Monster drops trap after being killed, param "droptrap traptype lifeperiod".
+		ACTION_MST_MAGIC 				= 802, 	// Check spells.
+												// param "check type" (learned spells of type type),
+												// "check type level" (learned spells of type type, and the level is level),
+												// "learn type" (learn type spells, level 0),
+												// "uplevel type" (uplevel spell type)
+		ACTION_MST_LIMIT 				= 899,		
+
+		// user attr part --------------------------------------------- -----------------------------
+		ACTION_USER_FIRST 				= 1000,
+		ACTION_USER_VIP 				= 5001,		
+		ACTION_USER_ATTR 				= 1001, 	// Modification and inspection of player attributes. "attr opt data". attr optional
+													// 		"life"(+=,==,<),
+													// 		"mana"(+=,==,<),
+													// 		"money"(+=,==,<),
+													// 		"exp"(+=,==,<),
+													// 		"pk"(+=,==,<),
+													// 		"profession"(==, set, >=, <=),
+													// 		"level", (+=,==,<),
+													// 		"force", (+=,==,<),
+													// 		"dexterity", (+=,==,<)
+													// 		"speed", (+=,==,<),
+													// 		"health", (+=,==,<),
+													// 		"soul", (+=,==,<),
+													// 		"rank", (==,<),
+													// 		"rankshow", (==,<),
+													// 		"iterator", (=, <=, +=, ==),
+													// 		"crime" (==, set)
+													// 		"gamecard"(==, >=, <=)
+													// 		"gamecard2"(==, >=, <=)
+													// 		"xp"(+=)
+													// 		"metempsychosis"(==, <)
+// 													// 		"nobility_rank"(==, <, +=, =)	//
+													// 		"mercenary_rank"(==, <, +=) 	// Mercenary level
+													// 		"mercenary_exp"(==, <, +=) 		// Mercenary experience
+													// 		"exploit"(==, <, +=) 			// exploit value
+													// 		"maxlifepercent"(+=,==,<) 		// Maximum life percentage
+													// 		"turor_exp"(==,<,+=,=)
+													// 		"eudemon_boord_size(==,<,+=,=)"
+													// 		"tutor_level"(==,<,+=,=)
+													// 		"syn_proffer"(<,+=,=)			//leg contribution
+													// 		"maxeudemon"(<,+=,=)			//The maximum number of Eudemons that can be summoned
+													// 		"soul_value(<,+=,=)" 			//Soul power, spiritual power value. Corresponds to the soul_value field in the database. (Mages and warriors do not have these two things)
+													//      "ahlife (-=) "					// It is used to deduct the amount of blood (if there is a eudemon body, deduct the amount of blood of the eudemon first).
+													//		"moonmoney (==, +=, < >)"
+													//		"starmoney (==, +=, < >)"
+													// 		"BftitlePlaneid (==, <+ =, =)" 	// Combat Skills Level. Now the top 7 level is currently available.
+													//		"DstitleId (==, <)" 			// Used to combat the title level check.
+													//		"Crystalmoney (+=, <, ==)"		// Eternal crystal currency locate at event->store
+													//		"Honourmoney (+=, <, ==)"		// honour coin currency locate at event->store
+													//		"olggodmoney (+=, <, ==)"		// ancient divine coin locate at event->store
+													//		"energy (<,+=,=)"				// used to implement stamina potion
+													//		"goddesspoint (==,<,+=)"		// Used to manipulate the holy power of the players goddess.
+													//		"godexp (+=°¢==°¢<)"			// operate God experience.
+													//		"exp_percent (+=)"				// give the current level percentage experience.
+													//		"godexp_percent (+=)"			// give the current god level a percentage of god experience.
+		
+			
+		ACTION_EUDEMO_ATTRIB 			= 1503, 	//. Support (star < >= == , callout == , damagetype == 5, fidelity += < > ==, type ==) (Note: This is different from 2.0. Be sure to use , to separate.)
+		ACTION_EUDEMO_REBORN 			= 1531, 	//Resurrect the dead Eudemons. data =0 means that only the dead Eudemons in the current expedition will be revived. When data =1, it means to revive all dead eudemon beasts (including those that have not yet set out)
+		ACTION_1535 					= 1535, 	//unknown
+		ACTION_1537 					= 1537, 	//unknown
+		ACTION_1538 					= 1538, 	//unknown
+		ACTION_1539 					= 1539, 	//Resurrection character, and has a check time, if the resurrection time is not up, returns false.
+		ACTION_1540 					= 1540, 	//Resurrect all babies, including those who have not yet set out. The time is not checked.
+		ACTION_1541 					= 1541, 	//unknown.
+		ACTION_USER_BEGINRUNBUSINESS	= 1511, 	//Run business data=991,992,993,994 dart car style param "wood quantity unit price end time (seconds)"
+		ACTION_USER_ENDRUNBUSINESS 		= 1512, 	//end running business
+		ACTION_USER_RUNBUSINESS 		= 1513, 	//check whether it is pulling a car (running business).
+		ACTION_USER_LIFESKILL 			= 1514, 	//life skills. Support learn check addexp (TrainReward does not support it at the moment, because I don't know what it means)
+		ACTION_USER_CURRENT 			= 1515, 	// Currently known, used to check the current number of Eudemons expeditions.
+													//callout_num (<==>)
+		ACTION_1517 					= 1517, 	//. For PK competition.
+		ACTION_1518 					= 1518, 	//Get experience 20 within a specified time. However, because the experience level conversion cannot find accurate data, this type is useless. .
+		ACTION_1545 					= 1545, 	//not sure what it is. For PK competition.
+		ACTION_1527 					= 1527, 	//not sure what it is. For PK competition.
+		ACTION_1543 					= 1543, 	//not sure what it is. For PK competition.
+		ACTION_1544 					= 1544, 	//not sure what it is. For PK competition.
+		
+		ACTION_USER_1525 				= 1525, 	// Send to the weekly PK game map (check if it is within 4 minutes (the reason is 4 minutes, to prevent errors))
+													//. And send time, the number of people on the current map, ghost figures, the number of kills and other packets. According to the official regulations, there should also be experience in cultivating Eudemons, but there is no such thing at present.
+		ACTION_USER_FULL 				= 1002, 	// Fill up the player's attributes. "attr". attr optional "life", "mana"
+		ACTION_USER_CHGMAP 				= 1003, 	// Cut the map param "idMap nPosX nPosY bPrisonChk", bPrisonChk is an optional parameter, the default is not allowed to exit the prison, set it to 1 to exit
+		ACTION_USER_RECORDPOINT 		= 1004, 	// save record point param "idMap nMapX nMapY"
+		ACTION_USER_HAIR 				= 1005, 	// "color num"
+													// "style num"
+		ACTION_USER_CHGMAPRECORD		= 1006, 	// Cut map to record point
+		ACTION_USER_CHGLINKMAP 			= 1007, 	// Cut map to NPC linked map. Requires an NPC object.
+		ACTION_USER_CHANGFACE 			= 1008, 	//Change player avatar
+		ACTION_USER_CHECKSTATE 			= 1009, 	//Check character status. 164 second > 0. There is no need to do a time check. Just do whether it is in that state or not.
+
+		ACTION_USER_CHECKFACE 			= 1014, 	//ChkFace 49 is currently known to be used to detect avatars
+
+
+		ACTION_USER_TALK 				= 1010, 	// Send a MSGTALK message to the player. param is the message content, data is the channel,
+													// const unsigned short _TXTATR_NORMAL 		=2000;
+													// const unsigned short _TXTATR_ACTION 		=_TXTATR_NORMAL+2;// action
+													// const unsigned short _TXTATR_SYSTEM 		=_TXTATR_NORMAL+5;// system
+													// const unsigned short _TXTATR_TALK 		=_TXTATR_NORMAL+7;// chat
+													// const unsigned short _TXTATR_GM 			=_TXTATR_NORMAL+11;// GM channel
+													// const unsigned short _TXTATR_WEBPAGE 	=_TXTATR_NORMAL+105;//open URL
+
+		ACTION_USER_GODSTATUS 			= 1012, 	//God's blessing status. ([add check addonly] 1 Hour )
+	
+		ACTION_USER_MAGIC 				= 1020, 	// Check spells. param can be:
+													// "check type" (the player has learned spells of type type),
+													// "check type level" (the player has learned type spells, and the level is level),
+													// "learn type" (the player learns type spells, the level is 0),
+													// "uplevel type" (the player's type spell is upgraded by one level)
+													// "addexp type exp" (the player's type spell adds exp experience points)
+		ACTION_USER_WEAPONSKILL 		= 1021, 	// "check type level", check the type and level of weapon skills, whether >= level
+													// "learn type level", learn the specified type and level of skills
+		ACTION_USER_LOG 				= 1022, 	// Save the specified information to gm log and bring in the trigger information (name and id), the information is specified in param
+													// For example, "%s completes the Heavenly Sword task and gets gems", %s in param is the location to save the trigger information
+		ACTION_USER_BONUS 				= 1023, 	// Take a reward.
+		ACTION_USER_DIVORCE 			= 1024, 	// Divorce
+		ACTION_USER_MARRIAGE 			= 1025, 	//Marriage check, married returns 1, unmarried returns 0
+		ACTION_USER_SEX 				= 1026, 	// Gender check, male = 1, female = 0
+		ACTION_USER_EFFECT 				= 1027, 	// The character triggering the action is attached with the specified special effect, param is "opt effect", opt supports "self", "couple", "team", "target", effect is the name of the special effect
+		ACTION_USER_TASKMASK 			= 1028, 	// task mask related operations, param is "opt idx", opt is the operation, supports "chk", "add", "clr", idx is the task number, value (0-31)
+		ACTION_USER_MEDIAPLAY 			= 1029, 	// Media playback, param is "opt media", opt supports "play, broacast", "media" is the media file name
+		ACTION_USER_SUPERMANLIST		= 1030, 	// Query the unparalleled list, the starting value is stored in TASK_ITERATOR. param="idNextTask number", idNextTask is the value of the next TASK, and number is how many list items to download each time.
+		ACTION_USER_CHKIN_CARD 			= 1031, 	// Delete the game card item on the player and add a game card record
+		ACTION_USER_CHKOUT_CARD 		= 1032, 	// Add a game card item to the player, delete a game card record
+		ACTION_USER_CREATEMAP 			= 1033, 	// Create a map, linked to the player's home_id, requires a player object. param="name owner_type owner_id mapdoc type portal_x portal_y reborn_map reborn_portal res_lev". partal refers to the coordinates of the entry point, and res_lev indicates the map level (for upgrading).
+		ACTION_USER_ENTER_HOME 			= 1034, 	// Go back to your home.
+		ACTION_USER_ENTER_MATE_HOME		= 1035, 	// Return to spouse's home.
+		ACTION_USER_CHKIN_CARD2 		= 1036, 	// delete the game card 2 item on the player, add a game card 2 record
+		ACTION_USER_CHKOUT_CARD2		= 1037, 	// Add a game card 2 item to the player, delete a game card 2 record
+		ACTION_USER_FLY_NEIGHBOR		= 1038, 	// Find an NPC of type _ROLE_NEIGHBOR_DOOR in the map group, and switch to the NPC immediately. param="serial", serial refers to the value of data3.
+		ACTION_USER_UNLEARN_MAGIC		= 1039, 	// When reincarnated, forget the magic skill, this skill can be "enlightened" again in the future. param="type1 type2 ...", at least one parameter, up to 20 parameters.
+		ACTION_USER_REBIRTH 			= 1040, 	// Reincarnation. If it has been transferred or the level is not enough, it will fail. Check whether the player has changed jobs, job requirements, and level requirements. Automatically modify the player's occupation, level, equipment level, and redistribute points. param="nProf nLook"
+													// The following functions are completed by other ACTIONs: task rewards; inaugural rewards for levels 15, 40, and 100; mount rewards; returning to the city at any time; skill rewards.
+		ACTION_USER_WEBPAGE 			= 1041, 	// Notify the client to open the web page. param="http://....."
+		ACTION_USER_BBS 				= 1042, 	// In the BBS bulletin board, add a message of the SYSTEM channel, and the message person is the player name. The USER object is required, and only one item is reserved for each USER. param is the message content.
+		ACTION_USER_UNLEARN_SKILL		= 1043, 	// When reincarnated, forget all weapon skills, and this skill can be "enlightened" again in the future.
+		ACTION_USER_DROP_MAGIC 			= 1044, 	// When reincarnated, remove magic skills. param="type1 type2 ...", at least one parameter, up to 20 parameters.
+		ACTION_USER_OPEN_DIALOG 		= 1046, 	// Notify the client to open an interface. data=idDialog. param="task_id0 task_id1 task_id2 task_id3 ...", there can be no param, up to 20 task_ids, task_id cannot be 0, and the client is allowed to choose the next TASK. When there is no param, the client can only upload "client-triggerable TASK". When there is param, cq_task.client_active must be 0.
+		ACTION_USER_CHGMAP_REBORN		= 1047, 	// Cut the screen to the resurrection point.
+// 		ACTION_USER_ADD_WPG_BADGE		= 1048, 	// Add a weekly PK token, according to the type of the first token found on the body. The item must be stackable. Only give two at most.
+		ACTION_USER_DEL_WPG_BADGE		= 1049, 	// Delete all weekly PK tokens.
+		ACTION_USER_CHK_WPG_BADGE		= 1050, 	// Check that the player has only one item of param type (there can only be one), and there is no token of other weekly PK competitions. If param is empty, it means that there cannot be any weekly PK tokens.
+		ACTION_USER_TAKESTUDENTEXP		= 1051, 	// Extract the experience contributed by the apprentice. The player returns pszAccept to specify the experience value that needs to be extracted, and the instructor experience is automatically deducted.
+
+		ACTION_USER_CHGTO_MAINMAP		= 1052, 	// Go to the resurrection point on the main map to revive
+		ACTION_USER_CHGTO_RANDOMPOS		= 1053, 	// The character randomly flies to any coordinate on the current map (the point cannot have a mask)
+		ACTION_USER_SET_PASSROD 		= 1055, 	//Set the warehouse password.
+		ACTION_USER_BBSAVEPASSWORD		= 1056, 	////Detect whether there is already a eudemon Warehouse password lock
+		ACTION_USER_SAVEPASSWORD		= 1057, 	////Check whether there is already a common warehouse password lock
+		ACTION_USER_SAVEPASSWORD1		= 228, 		////Detect whether there is a common warehouse password lock (it may be wrong with the one above, but I don°Øt want to do this, so I wrote it randomly)
+
+		//---task system, record the details of the task---begin
+
+		ACTION_USER_TASK_MANAGER		= 1080, 	//////////////////////////////////////////////// ///
+													//	data: task number,
+													//	param: 	'new' (creating new records)
+													// 			'delete' (Delete Record)
+													// 			'isexit' (check task exists)
+													//////////////////////////////////////////////////
+		
+		ACTION_USER_TASK_OPE 			=1081, 		//////////////////////////////////////////////// ///
+													//	data: task number, if data == -1, the following operations are performed for findnext
+													//	param: 'ope opt data', data(value)
+													// 		ope(phase) 		opt(>=, ==, +=,=) operate on the task phase										
+													// 		ope(completenum) opt(>=, ==, +=,=) operates on the number of task completions		
+													// 		ope(begintime) opt(>=, ==, +=,=,reset) operates on the task start time, for +=, the parameter is seconds; for ">=,==,=", "yyyy-mm-dd hh:mm:ss" is the format												
+													// reset means to set the start time of the task to the current time
+		ACTION_USER_TASK_LOCALTIME 		= 1082,	 	///////////////////////////////////////////////// ///////////
+													//data: task number,
+													//param: 'seconds', the action of comparing the current time with the start time of the task; if the difference between the current time and the start time of the task is greater than param, return true; otherwise return false
+													//////////////////////////////////////////////////// /////////////////////
+
+		ACTION_USER_TASK_FIND 			= 1083, 	//Query the player's task, the record is a collection in ascending order of userid and taskid
+													//param: 'find taskid phase completenum'; query specific records according to task ID, phase, and completion times; when phase and cocompletenum are both -1, only query records matching taskid
+													// 'findnext'; query the next record
+		//---task system, record the details of the task---end
+		ACTION_USER_TASK_LOG 			= 1085,		//used to write logs in the script. But not used (by:178)
+		ACTION_USER_TASK_LOCALDAY		= 1086, 	//data: task number,
+													//param: 'Number of days', the action of comparing the current time with the start time of the task; if the difference between the current time and the start time of the task is greater than or equal to param, return true; otherwise return false
+		
+		// team part. °Ô If there is no team, it will return false. The following ACTION must be triggered by the captain,
+		// The operation object is each player (usually not including the captain), and the player must be within one screen.
+		// Note: only return true when all players are true; otherwise return false
+		// °Ô ---------------------------------------------------------------
+		ACTION_TEAM_BROADCAST 			= 1101, 	// Broadcast a message to the team channel. param=message.
+		ACTION_TEAM_ATTR 				= 1102, 	// Check or operate team member attributes.
+													// param="field opt data",
+													// field="money"(+=, <, >, ==),
+													// field="level"(<, >, ==),
+													// field="count" (the number of players including the captain, <, ==),
+													// field="count_near" (the number of players including the captain, must be alive in this map, <, ==),
+													// field="mate" (only field is required, must be alive),
+													// field="friend" (only field is required, must be alive),
+		ACTION_TEAM_LEAVESPACE 			= 1103, 	// Check the remaining space in the backpack, param="space weight packtype".
+													// packtype is the type of backpack that needs to be checked, and the value range is 50~53
+		ACTION_TEAM_ITEM_ADD 			= 1104, 	// Add item. data=itemtype_id
+		ACTION_TEAM_ITEM_DEL 			= 1105, 	// Delete item. data=itemtype_id
+		ACTION_TEAM_ITEM_CHECK 			= 1106, 	// Check items. data=itemtype_id
+		ACTION_TEAM_CHGMAP 				= 1107, 	// Team cut screen (including the captain), only used for the same map group cut screen, everyone must be alive. param="mapid x y"
+		
+		ACTION_TEAM_CHK_ISLEADER		= 1501, 	// check whether it is the captain, no parameters required
+		ACTION_USER_LUCKDRAW 			= 1508, 	// Lucky Draw
+		ACTION_USER_DATAVAR_INIT		= 1521, 	// Initialize integer variable. var(3) set 0 ...corresponding variable name: %iter_var_data3
+		ACTION_USER_DATAVAR 			= 1522, 	// Integer variable assignment. var(3) += 1 ... supports:
+													// == , +=, /=, *= also support %iter_var_data2 variables.
+
+
+		ACTION_USER_STRVAR 				= 1523, 	// text variable comparison (no case sensitive) var(0) == %iter_var_str1
+		ACTION_USER_STRVAR_INIT 		= 1524, 	// Initialize text variables. var(3) set lost soul bell...Corresponding variable name: %iter_var_Str3
+		ACTION_USER_AUTORUN 			= 1532, 	//Automatic pathfinding. x,y, NPCID. 302 397 1904
+		ACTION_USER_EUDEMON 			= 1533, 	// known:
+													// star >= 4000 stars. Add star += 1000 to adjust star directly.
+													// rebornlimitadd += 1 maximum reborn increase
+													// alive == 0 is alive
+													// iscallout == 0 whether to call out
+													// luck == 198 lucky.
+													// uplevtime += 1800 // don't know what it is
+													// egg //Is it a monster egg?
+													// fidelity // This forgot what it is. But it seems to be useful.
+													// damagetype This is a four-phase attribute.
+
+		
+		ACTION_USER_LIMIT 				= 1999,
+
+		// event part, need not any ptr -------------------------------------------- ---------------------------------
+		ACTION_EVENT_FIRST 					= 2000,
+		ACTION_EVENT_SETSTATUS 				= 2001, 	// Set the status of the map. param="mapid status_bit data", status_bit = { STATUS_WAR=1, }, data=0 or 1.
+		ACTION_EVENT_DELNPC_GENID			= 2002, 	// (obsolete) delete MONSTER. param="idMap idGen".
+		ACTION_EVENT_COMPARE 				= 2003, 	// Compare various attributes. "data1 opt data2". data1 and data2 are common parameters with %, and they are compared by signed numbers. opt optional "=", "<", "<="
+		ACTION_EVENT_COMPARE_UNSIGNED		= 2004, 	// Compare various attributes. "data1 opt data2". data1 and data2 are common parameters with %, compared by unsigned numbers. opt optional "=", "<", "<="
+		ACTION_EVENT_CHANGEWEATHER			= 2005, 	// Modify the weather of the specified REGION. param="idMap idRegion Type Intensity Dir Color KeepSecs", Type, Intensity=0~999, Dir=0~359, Color=0x00RRGGBB, KeepSecs=seconds
+		ACTION_EVENT_CREATEPET 				= 2006, 	// Create a MONSTER. param="nOwnerType idOwner idMap nPosX nPosY idGen idType nData szName", at least 7 parameters, if accepted, change the name, otherwise use name. The generator is used to control the range of monster activities, and the type in cq_generator is meaningless. When idOwner is 0, no disk is saved.
+		ACTION_EVENT_CREATENEW_NPC			= 2007, 	// Create an NPC. param="name type sort lookface ownertype ownerid mapid posx posy life base linkid task0 task0 ... task7 data0 data1 data2 data3 datastr". At least 9 parameters.
+		ACTION_EVENT_COUNTMONSTER			= 2008, 	// Check the number of MONSTER on the same map. param="idMap field data opt num", field="name" (by name), "gen_id" (by type), data=name or type to be counted, opt="<", "==".
+		ACTION_EVENT_DELETEMONSTER			= 2009, 	// Delete MONSTER of a certain map. param="idMap type data name", at least two parameters. If data is not 0, match data at the same time, if there is name, match name at the same time.
+		ACTION_EVENT_BBS 					= 2010, 	// In the BBS bulletin board, add a message of the SYSTEM channel, and the message person is "SYSTEM". param is the message content.
+		ACTION_EVENT_ERASE 					= 2011, 	// Delete the specified NPC. Limited dynamic NPC. Note: Do not operate on such NPCs after deletion. param="idMap type": Delete all NPCs of type type on the specified map.
+		ACTION_EVENT_MAPALLUSER_RUNSCRIPT 	= 2012,	//The player in the specified map. Execute all specified scripts. param="8939 9701551 -1". The last -1 does not know what it means.
+		
+		ACTION_EVENT_LIMIT 					= 2099,
+
+		// event part, need not any ptr -------------------------------------------- ---------------------------------
+		ACTION_TRAP_FIRST 					= 2100,
+		ACTION_TRAP_CREATE 					= 2101, 	// Create a trap. param="type look owner_id map_id pos_x pos_y data".
+		ACTION_TRAP_ERASE 					= 2102, 	// Delete a trap. param="", delete the current trap. Note: Do not operate the trap after deletion.
+		ACTION_TRAP_COUNT 					= 2103, 	// detect the number of traps whose type is type, and return true if it is less than count. param="map_id pos_x pos_y pos_cx pos_cy count type".
+		ACTION_TRAP_ATTR 					= 2104, 	// Modify trap attributes (do not save to disk). param="id field opt num". field: "type"(opt: "="), "look"(opt: "=").
+		ACTION_TRAP_ERASETYPE 				= 2105, 	// Delete the trap type of the specified map. param="mapid type" Note: Do not operate this trap after deletion.
+
+		ACTION_TRAP_LIMIT 					= 2199,
+
+		// wanted list part --------------------------------------------- -----------------------------
+		ACTION_WANTED_FIRST 				= 3000,
+		ACTION_WANTED_NEXT 					= 3001, 	// Search for the next reward, write idx to TASK_ITERATOR
+		ACTION_WANTED_NAME 					= 3002, 	// The player returns pszAccept to specify the name of the bounty, used in conjunction with ACTION_WANTED_NEW.
+		ACTION_WANTED_BONUTY 				= 3003, 	// The player returns the specified amount of pszAccept, which is used in conjunction with ACTION_WANTED_NEW.
+		ACTION_WANTED_NEW 					= 3004, 	// Generate a new reward record through CUser::m_WantedInfo, and use it in conjunction with the previous 2 actions.
+		ACTION_WANTED_ORDER 				= 3005, 	// Receive the reward specified in pszAccept
+		ACTION_WANTED_CANCEL 				= 3006, 	// Cancel the bounty specified in pszAccept with 2 times the price
+		ACTION_WANTED_MODIFYID 				= 3007, 	// The player returns the modified reward id specified by pszAccept.
+		ACTION_WANTED_SUPERADD 				= 3008, 	// The player returns the money specified by pszAccept for additional rewards, which is used in conjunction with ACTION_WANTED_ID.
+		ACTION_POLICEWANTED_NEXT			= 3010, 	// Search for the next official reward, write idx into TASK_ITERATOR
+		ACTION_POLICEWANTED_ORDER			= 3011, 	// Unveil the list (number specified in pszAccept)
+		ACTION_POLICEWANTED_CHECK			= 3012, 	// Check whether the trigger person is wanted by the government
+		ACTION_WANTED_LIMIT 				= 3099,	
+		
+		// ghost gem magic part -------------------------------------------- -----------------------------------------
+		ACTION_MAGIC_FIRST 					= 4000,
+		ACTION_MAGIC_ATTACHSTATUS			= 4001, 	// append status, szParam="status power secs times"		                                          	
+		
+		ACTION_MAGIC_ATTACK 				= 4002, 	// magic attack, data=magictype, szParam="magiclevel"
+														// Require corresponding data to exist in the magictype table
+														// Currently supported magic types are:
+														// 		MAGICSORT_DETACHSTATUS
+														// 		MAGICSORT_STEAL
+		ACTION_MAGIC_MONSTER 				= 4003, 	//Add skills to monsters. data=10060(skill number*10), szParam = "107900 * 33" . Eudemons ID /10 (*33 means you can only learn it at level 33)
+		ACTION_MAGIC_LIMIT 					= 4099, 	//
+		////////////////////////The following are 178 new additions (different from the official ones)///////////// ////////
+		ACTION_NEW_COUNTDOWN 				= 8000, 	//Countdown, data=time (seconds), Param = script executed after the countdown ends. When data = 0, it means that the countdown is turned off and the script is not executed.
+														//Note: A number can only display one countdown at the same time, so be sure to end the previous countdown before adding a countdown.
+		ACTION_NEW_COUNTDOWN2 				= 8001, 	// Countdown, Data = Time (Seconds), "1 98120001 RICHGOD_GROUND PULLLING ~ Holy ~ Sword" // (1 Means Not Moving, USING SKILL s or pointing npc or running will be interrupted, 0 means performing Other Operations) .98120001 Script to execute after the countdown ends. "RichGod_Ground" is the action special effect (corresponding to the 3deffect.ini file, and it is written as "null" when no special effect is required), and "Put~Holy~Sword " is the text displayed on the client.
+														//When data = 0, it means that the countdown is turned off and the script is not executed.
+														//Note: A number can only display one countdown at the same time, so be sure to end the previous countdown before adding a countdown.
+		ACTION_NEW_COUNTDOWN3 				= 8002, 	//Countdown to the current map mission. data= copy ID value, Param = "script executed after the countdown ends". After switching maps, the countdown ends automatically and the script is not executed.
+														//Note: This script type must Script types explained executed after being transferred to the copy map, and the map number must be greater than 4000000000, and it is only valid for the copy type map.
+														//For the related configuration of the copy to the cq_duplicate table settings, refer to the detailed description in the "Duplicate.ini" file. The x and y of the cq_duplicate table represent the coordinates to which the invitee is sent after accepting.
+														//In addition, players in maps with a map ID greater than or equal to 4000000000 will not be invited.
+		ACTION_NEW_COUNTDOWN4 				= 8003, 	//countdown script type, time information will not appear on the client. data = time (seconds), Param = script to be executed after the countdown ends. When data = 0, it means that the countdown is turned off and the script is not executed. )
+
+		ACTION_NEW_SETPOSE 					= 8010, 	//Modify character actions. data=action number. (corresponding to 3dmotion.ini file)
+		ACTION_ACROSSMAPPATHINFO 			= 8011, 	//Used for automatic pathfinding across maps, param="mapid x y". When using this, it must be configured in the cq_acrossmappathinfo table and AcrossMapPathInfo.ini.
+};
+
