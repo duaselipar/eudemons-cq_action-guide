@@ -68,19 +68,30 @@ You can download the full explanation of action types here.
 
 ---
 
+
 ## Action Type Guides
 
-<!-- 🔘 Button to open the modal -->
-<button onclick="document.getElementById('popup').style.display='block'">Type 101</button>
-
-<!-- 📦 The Modal -->
-<div id="popup" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6);">
-  <div style="background:#fff; padding:20px; margin:10% auto; width:80%; max-width:500px; border-radius:10px; position:relative;">
-    <span onclick="document.getElementById('popup').style.display='none'" 
-          style="position:absolute; top:10px; right:20px; cursor:pointer; font-weight:bold;">&times;</span>
-    
-    <h3>📘 Type 501: Give Item</h3>
-    <p>This action gives the player an item based on the item ID in the <code>data</code> field.</p>
-    <pre><code>INSERT INTO cq_action (id, type, data) VALUES (1001, 501, 1034160);</code></pre>
-  </div>
+<div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 10px; margin: 10px 0;">
+  <strong>✅ Tip:</strong> Helpful advice for doing things better or more easily.
 </div>
+
+
+ - [Type : 100 - 199](type/101.md)
+ - [Type : 200 - 299](type/101.md)
+ - [Type : 300 - 399](type/101.md)
+ - [Type : 400 - 499](type/101.md)
+ - [Type : 500 - 599](type/101.md)
+ - [Type : 600 - 699](type/101.md)
+ - [Type : 700 - 799](type/101.md)
+ - [Type : 800 - 899](type/101.md)
+ - [Type : 1000 - 1099](type/101.md)
+ - [Type : 1100 - 1199](type/101.md)
+ - [Type : 5001 (VIP)](type/101.md)
+ - [Type : 1500 - 1599](type/101.md)
+ - [Type : 2000 - 2099](type/101.md)
+ - [Type : 2100 - 2199](type/101.md)
+ - [Type : 3000 - 3099](type/101.md)
+ - [Type : 4000 - 4099](type/101.md)
+ - [Type : 8000 - 8099](type/101.md)
+
+
