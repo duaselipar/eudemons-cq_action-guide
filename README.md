@@ -76,6 +76,55 @@ You can download the full explanation of action types here.
 </div>
 
 
+
+<!-- Stylish Button to trigger popup -->
+<button onclick="document.getElementById('popup101').style.display='block'" 
+        style="background-color: #4CAF50; color: white; padding: 12px 24px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s ease;">
+  🗨️ Create Dialog (Type 101)
+</button>
+
+<!-- Extra-Wide Popup Modal -->
+<div id="popup101" style="display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6);">
+  <div style="background:white; padding:40px; max-width:1100px; width:95%; margin:4% auto; border-radius:14px; position:relative; box-shadow:0 0 20px rgba(0,0,0,0.35); font-family:sans-serif;">
+    
+    <!-- Close Button -->
+    <span onclick="document.getElementById('popup101').style.display='none'" 
+          style="position:absolute; top:15px; right:25px; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+    
+    <!-- Popup Content -->
+    <h2 style="margin-top:0;">🗨️ Type 101 - Create Dialog</h2>
+    <p style="font-size:1.1rem;">This action shows a dialog when the player interacts with an NPC or Items.</p>
+
+    <h4 style="margin-bottom:5px;">💡 Example SQL:</h4>
+    <div style="background:#f4f4f4; border-radius:8px; padding:12px 16px; font-size:14px; line-height:1.4; overflow:auto; max-height:220px;">
+      <pre style="margin:0; white-space:pre-wrap;"><code>
+    REPLACE INTO `cq_action` VALUES (6960043, 6960044, 0000, 0101, 0, 'But I can sell it only for an hour every day.');
+    REPLACE INTO `cq_action` VALUES (6960044, 6960045, 0000, 0101, 0, 'Do you want to give it a go?');
+    REPLACE INTO `cq_action` VALUES (6960045, 6960046, 0000, 0102, 0, 'Just~one,~please. 6960060');
+    REPLACE INTO `cq_action` VALUES (6960046, 4000035, 0000, 0102, 0, 'Sorry,~but~I~don`t~need~it. 0');
+      </code></pre>
+    </div>
+
+
+    <ul style="margin-top:20px; font-size:15px;">
+      <li><code>type</code> = 101</li>
+      <li><code>param</code> = NPC dialog text</li>
+      <li>You can chain it with <code>id_next</code></li>
+    </ul>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
  - [Create Dialog](type/101.md)
  - [Type : 200 - 299](type/101.md)
  - [Type : 300 - 399](type/101.md)
