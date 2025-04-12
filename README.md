@@ -14,10 +14,6 @@ All content is written clearly and includes real-world examples to help you buil
 
 Explore the sections below and level up your EO server customization!
 
-
-
-
-- [Home](README.md)
 - [Understanding cq_action](actions.md)
 - [NPC Dialog Examples](npc-dialog.md)
 - [Item Giving (Type 501)](101.md)
