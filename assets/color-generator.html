@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Color Wheel Tag Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.5.3/jscolor.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    .output {
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 1.2rem;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎨 Color Wheel Text Tag Generator</h2>
+
+  <label>Select color:</label><br>
+  <input class="jscolor" id="colorInput" value="ffff00"><br><br>
+
+  <label>Enter your text:</label><br>
+  <input type="text" id="textInput" placeholder="Type here..." style="width: 300px;"><br><br>
+
+  <button onclick="generate()">Generate Code</button>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    function generate() {
+      const color = document.getElementById('colorInput').value;
+      const text = document.getElementById('textInput').value;
+      const tag = `<${color}>${text}</>`;
+      document.getElementById('output').textContent = tag;
+    }
+  </script>
+
+</body>
+</html>
