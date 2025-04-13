@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checksum Calculator - cq_card / cq_card2</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            padding: 8px;
+            margin: 6px 0;
+            width: 100%;
+        }
+        input[type="submit"] {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .result {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+        code {
+            background: #f4f4f4;
+            display: block;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Checksum Calculator</h2>
+    <form id="checksumForm">
+        <label for="base_chk_sum">Base Checksum:</label>
+        <select name="base_chk_sum" id="base_chk_sum">
+            <option value="780000">cq_card</option>
+            <option value="780001">cq_card2</option>
+        </select>
+        <br><br>
+        <label for="account_id">Account ID:</label>
+        <input type="number" id="account_id" name="account_id" required>
+        <br><br>
+        <input type="submit" value="Calculate">
+    </form>
+
+    <div class="result" id="result" style="display:none;">
+        <p id="chkSumOutput"></p>
+        <p><strong>SQL Query:</strong></p>
+        <code id="sqlOutput"></code>
+    </div>
+
+    <script>
+        document.getElementById("checksumForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const base_chk_sum = parseInt(document.getElementById("base_chk_sum").value);
+            const account_id = parseInt(document.getElementById("account_id").value);
+            const chk_sum = base_chk_sum ^ account_id;
+            const table = base_chk_sum === 780000 ? 'cq_card' : 'cq_card2';
+
+            const ref_id = 1;
+            const time_stamp = 0;
+            const used = 0;
+            const flag = 3;
+            const ordernumber = 0;
+            const card_in_time = Math.floor(Date.now() / 1000); // current UNIX timestamp
+
+            document.getElementById("chkSumOutput").innerHTML =
+                `Checksum for account ID <strong>${account_id}</strong> with base checksum <strong>${base_chk_sum}</strong> is: <strong>${chk_sum}</strong>`;
+
+            document.getElementById("sqlOutput").innerText =
+                `INSERT INTO \`${table}\` (\`id\`, \`type\`, \`account_id\`, \`ref_id\`, \`chk_sum\`, \`time_stamp\`, \`used\`, \`flag\`, \`ordernumber\`, \`card_in_time\`) VALUES (NULL, ${base_chk_sum}, ${account_id}, ${ref_id}, ${chk_sum}, ${time_stamp}, ${used}, ${flag}, '${ordernumber}', ${card_in_time});`;
+
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
