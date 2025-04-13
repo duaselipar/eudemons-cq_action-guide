@@ -1,100 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Checksum Calculator - cq_card / cq_card2</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        h2 {
-            color: #2c3e50;
-        }
-        form {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select {
-            padding: 8px;
-            margin: 6px 0;
-            width: 100%;
-        }
-        input[type="submit"] {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .result {
-            background: #e8f5e9;
-            border-left: 4px solid #4CAF50;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 6px;
-        }
-        code {
-            background: #f4f4f4;
-            display: block;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Checksum Calculator - cq_card / cq_card2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-light: #f8f9fa;
+      --bg-dark: #1e1e1e;
+      --text-light: #2c3e50;
+      --text-dark: #e0e0e0;
+      --card-light: #ffffff;
+      --card-dark: #2a2a2a;
+      --accent: #4CAF50;
+      --code-bg-light: #f4f4f4;
+      --code-bg-dark: #333;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    form {
+      background: var(--card-light);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      transition: background 0.3s;
+    }
+    body.dark form {
+      background: var(--card-dark);
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      padding: 8px;
+      margin: 6px 0 16px;
+      width: 100%;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="submit"] {
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .result {
+      background: #e8f5e9;
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    body.dark .result {
+      background: #324d39;
+    }
+    code {
+      background: var(--code-bg-light);
+      display: block;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      transition: background 0.3s;
+    }
+    body.dark code {
+      background: var(--code-bg-dark);
+    }
+    button.toggle {
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
+  <header>
     <h2>Checksum Calculator</h2>
+    <button class="toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </header>
+  <div class="container">
     <form id="checksumForm">
-        <label for="base_chk_sum">Base Checksum:</label>
-        <select name="base_chk_sum" id="base_chk_sum">
-            <option value="780000">cq_card</option>
-            <option value="780001">cq_card2</option>
-        </select>
-        <br><br>
-        <label for="account_id">Account ID:</label>
-        <input type="number" id="account_id" name="account_id" required>
-        <br><br>
-        <input type="submit" value="Calculate">
+      <label for="base_chk_sum">Base Checksum:</label>
+      <select name="base_chk_sum" id="base_chk_sum">
+        <option value="780000">cq_card</option>
+        <option value="780001">cq_card2</option>
+      </select>
+
+      <label for="account_id">Account ID:</label>
+      <input type="number" id="account_id" name="account_id" required />
+
+      <input type="submit" value="Calculate" />
     </form>
 
     <div class="result" id="result" style="display:none;">
-        <p id="chkSumOutput"></p>
-        <p><strong>SQL Query:</strong></p>
-        <code id="sqlOutput"></code>
+      <p id="chkSumOutput"></p>
+      <p><strong>SQL Query:</strong></p>
+      <code id="sqlOutput"></code>
     </div>
+  </div>
 
-    <script>
-        document.getElementById("checksumForm").addEventListener("submit", function(event) {
-            event.preventDefault();
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
 
-            const base_chk_sum = parseInt(document.getElementById("base_chk_sum").value);
-            const account_id = parseInt(document.getElementById("account_id").value);
-            const chk_sum = base_chk_sum ^ account_id;
-            const table = base_chk_sum === 780000 ? 'cq_card' : 'cq_card2';
+    document.getElementById("checksumForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-            const ref_id = 1;
-            const time_stamp = 0;
-            const used = 0;
-            const flag = 3;
-            const ordernumber = 0;
-            const card_in_time = Math.floor(Date.now() / 1000); // current UNIX timestamp
+      const base_chk_sum = parseInt(document.getElementById("base_chk_sum").value);
+      const account_id = parseInt(document.getElementById("account_id").value);
+      const chk_sum = base_chk_sum ^ account_id;
+      const table = base_chk_sum === 780000 ? 'cq_card' : 'cq_card2';
 
-            document.getElementById("chkSumOutput").innerHTML =
-                `Checksum for account ID <strong>${account_id}</strong> with base checksum <strong>${base_chk_sum}</strong> is: <strong>${chk_sum}</strong>`;
+      const ref_id = 1;
+      const time_stamp = 0;
+      const used = 0;
+      const flag = 3;
+      const ordernumber = 0;
+      const card_in_time = Math.floor(Date.now() / 1000); // current UNIX timestamp
 
-            document.getElementById("sqlOutput").innerText =
-                `INSERT INTO \`${table}\` (\`id\`, \`type\`, \`account_id\`, \`ref_id\`, \`chk_sum\`, \`time_stamp\`, \`used\`, \`flag\`, \`ordernumber\`, \`card_in_time\`) VALUES (NULL, ${base_chk_sum}, ${account_id}, ${ref_id}, ${chk_sum}, ${time_stamp}, ${used}, ${flag}, '${ordernumber}', ${card_in_time});`;
+      document.getElementById("chkSumOutput").innerHTML =
+        `Checksum for account ID <strong>${account_id}</strong> with base checksum <strong>${base_chk_sum}</strong> is: <strong>${chk_sum}</strong>`;
 
-            document.getElementById("result").style.display = "block";
-        });
-    </script>
+      document.getElementById("sqlOutput").innerText =
+        `INSERT INTO \`${table}\` (\`id\`, \`type\`, \`account_id\`, \`ref_id\`, \`chk_sum\`, \`time_stamp\`, \`used\`, \`flag\`, \`ordernumber\`, \`card_in_time\`) VALUES (NULL, ${base_chk_sum}, ${account_id}, ${ref_id}, ${chk_sum}, ${time_stamp}, ${used}, ${flag}, '${ordernumber}', ${card_in_time});`;
+
+      document.getElementById("result").style.display = "block";
+    });
+  </script>
 </body>
 </html>
