@@ -19,6 +19,7 @@ Explore the sections below and level up your EO server customization!
 - [Common Action Types](#common-action-types)
 - [Type Explaination Download](#download-full-action-types)
 - [Action Type Guides](#action-type-guides)
+- [Other Tools](#other-tools)
 
 ---
 
@@ -90,7 +91,7 @@ You can download the full explanation of action types here.
 
 
 <details>
-  <summary>🗨️ <strong>Create Dialog</strong></summary>
+  <summary>🗨️ <strong>Create Dialog (Type 101, 102, 104 and 120)</strong></summary>
   <br>
 
   <p>This action shows a dialog when the player interacts with an NPC or items.</p>
@@ -145,7 +146,7 @@ REPLACE INTO `cq_action` VALUES (1006, 0000, 0000, 0120, 0, '');
 
 
 <details>
-  <summary>🎁 <strong>Sent Items</strong></summary>
+  <summary>🎁 <strong>Sent Items (Type 501, 525, 540 and 550)</strong></summary>
   <br>
 
   <p>Sent the player a specific item when this action is triggered.</p>
@@ -247,10 +248,59 @@ INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 1001, 0, 'e_money += -13500');
 
 
 
+<details>
+  <summary>🎲 <strong>Random Chance & Random Action (Type 121 & 122)</strong></summary>
+  <br>
+
+  <p>These types allow you to introduce <strong>randomness</strong> into your server logic:</p>
+
+  <ul>
+    <li><strong>Type 121</strong> – Checks if a random chance is successful (e.g., 20% chance to win)</li>
+    <li><strong>Type 122</strong> – Randomly selects and executes one of 8 possible actions</li>
+  </ul>
+
+  <h4>🎯 Type 121 – Random Chance</h4>
+  <p><code>param</code> format: <code>"chance total"</code></p>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 0121, 0, '20 100');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'succeed');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'fails');
+  </pre>
+  <p>This means: <strong>20 out of 100</strong> (20%) chance of success.</p>
+  <ul>
+    <li>If the check <strong>succeeds</strong>, it continues to <code>id_next</code> (1001)</li>
+    <li>If the check <strong>fails</strong>, it continues to <code>id_nextfail</code> (1002)</li>
+  </ul>
+
+  <h4>🔀 Type 122 – Random Action Select</h4>
+  <p><code>param</code> format: <code>"action0 action1 action2 ... action7"</code></p>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0122, 0, '1001 1002 1003 1004 1005 1006 1007 1008');
+  </pre>
+  <p>This means: randomly choose <strong>ONE</strong> action ID from the list above.<br>
+Each ID must refer to a valid <code>cq_action</code> that will be executed.</p>
+
+  <div style="border-left: 4px solid #FF9800; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🧠 <strong>Tip:</strong> You can repeat the same ID multiple times to increase its chance of being selected.<br>
+    Example: <code>'1001 1001 1001 1002 1002 1003 1004 1005'</code><br>
+    This gives <code>1001</code> a higher weight than the others (appears 3 out of 8).
+  </div>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Use Case:</strong> 
+    <code>type 121</code> is great for chance-based triggers (e.g. success/failure),
+    while <code>type 122</code> is ideal for random branching events, rewards, or NPC reactions.
+  </div>
+</details>
 
 
 
 
+
+
+---
+
+## Other Tools
 
   - [Color Font Generator](color-generator.html)
   - [Cq_card Generator](cq_card-generator.html)
