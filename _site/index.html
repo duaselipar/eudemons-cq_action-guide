@@ -384,6 +384,189 @@ Each ID must refer to a valid <code>cq_action</code> that will be executed.</p>
   </div>
 </details>
 
+<details>
+  <summary>💬 <strong>Message Box (Type 126)</strong></summary>
+  <br />
+
+  <p><strong>Type 126</strong> displays a simple message box popup on the client with a <code>YES</code> button. It is for informational purposes only — it does <u>not</u> execute any action on click.</p>
+
+  <h4>🖼️ Example Output:</h4>
+  <img src="assets/images/126.png" alt="Message Box Screenshot" style="max-width:100%; border-radius:8px; margin:10px 0;" />
+
+  <h4>💡 Example SQL:</h4>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Your text here.');
+  </pre>
+
+  <h4>📌 Notes:</h4>
+  <ul>
+    <li><strong>param:</strong> The message to display. Spaces are allowed — you do <strong>not</strong> need to use <code>~</code>.</li>
+    <li><strong>Text limit:</strong> Keep your message short and concise. Long messages will overflow or be cut off.</li>
+    <li>Useful for showing warnings, notifications, or short instructions.</li>
+  </ul>
+
+</details>
+
+<details>
+  <summary>📢 <strong>Broadcast Message (Type 125)</strong></summary>
+  <br />
+
+  <p><strong>Type 125</strong> sends system-wide broadcast messages across different UI locations depending on the <code>data</code> value (channel type).</p>
+
+  <h4>💡 Example SQL:</h4>
+  <pre>
+-- Top-left corner (Old &amp; New Engine)
+INSERT INTO cq_action VALUES (6000040, 0000, 0000, 0125, 2005, 'Your text here');
+
+-- Center screen classic popup (Old &amp; New Engine)
+INSERT INTO cq_action VALUES (3508802, 0000, 0000, 0125, 2011, 'Your text here');
+
+-- Bottom-left in chat (New Engine only)
+INSERT INTO cq_action VALUES (201217028, 0000, 0000, 0125, 2007, 'Your text here');
+
+-- Center screen modern popup (New Engine only)
+INSERT INTO cq_action VALUES (25768045, 0000, 0000, 0125, 2024, 'Your text here');
+  </pre>
+
+  <h4>📸 Broadcast Styles:</h4>
+
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Channel</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Location</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Preview</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Engine</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>2007</code></td>
+        <td style="padding:8px;">Bottom-left (chat area)</td>
+        <td style="padding:8px;"><img src="assets/images/125-2007.png" alt="Chat Message" style="width:80%;" /></td>
+        <td style="padding:8px;">New Engine Only</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2005</code></td>
+        <td style="padding:8px;">Top-left system notice</td>
+        <td style="padding:8px;"><img src="assets/images/125-2005.png" alt="Top Left Message" style="width:80%;" /></td>
+        <td style="padding:8px;">Old &amp; New Engine</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2024</code></td>
+        <td style="padding:8px;">Modern popup (center screen)</td>
+        <td style="padding:8px;"><img src="assets/images/125-2024.png" alt="Popup Message" style="width:80%;" /></td>
+        <td style="padding:8px;">New Engine Only</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2011</code></td>
+        <td style="padding:8px;">Classic popup (center screen)</td>
+        <td style="padding:8px;"><img src="assets/images/125-2011.png" alt="Center Screen Message" style="width:80%;" /></td>
+        <td style="padding:8px;">Old &amp; New Engine</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Choose <code>data</code> based on how visible the message should be.<br />
+    Use <code>2007</code> for chat-style messages, <code>2024</code> for clean centered alerts.
+  </div>
+</details>
+
+<details>
+  <summary>💡 <strong>Local System Message (Type 1010)</strong></summary>
+  <br />
+
+  <p><strong>Type 1010</strong> is used for sending client-side local messages, popups, and web links. The display behavior is defined by the <code>data</code> (channel) value.</p>
+
+  <h4>💡 Example SQL:</h4>
+  <pre>
+-- Local chat system notice
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2000, 'Your text here.');
+
+-- Modern pop-up (new engine only)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2024, 'You`ve arrived in Forgotten Realms');
+
+-- Web link
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2105, 'http://www.google.com');
+  </pre>
+
+  <h4>📘 Message Channels (data values):</h4>
+
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Data</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Channel</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Message Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>2000/2007</code></td>
+        <td style="padding:8px;">System Chat Channel</td>
+        <td style="padding:8px;">Welcome to Knightfall.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2001</code></td>
+        <td style="padding:8px;">Whisper Chat Channel</td>
+        <td style="padding:8px;">Announcer: reminder has end.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2002</code></td>
+        <td style="padding:8px;">[Action] Chat Channel</td>
+        <td style="padding:8px;">Eliminate 16 Elite monsters.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2003</code></td>
+        <td style="padding:8px;">Team Chat Channel</td>
+        <td style="padding:8px;">%user_name has used Double EXP Potion.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2023</code></td>
+        <td style="padding:8px;">Boss Chat Channel</td>
+        <td style="padding:8px;">King MadBull has Appear!</td>
+      </tr>  
+       <tr>
+        <td style="padding:8px;"><code>2025</code></td>
+        <td style="padding:8px;">Help Chat Channel</td>
+        <td style="padding:8px;">You don't have enough gold.</td>
+      </tr>     
+      <tr>
+        <td style="padding:8px;"><code>2005</code></td>
+        <td style="padding:8px;">Top-left Notice</td>
+        <td style="padding:8px;">You learned Tornado Skill.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2011</code></td>
+        <td style="padding:8px;">Center Screen - System</td>
+        <td style="padding:8px;">You donated 1000 HP and the Hatred Wraith revived!</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2024</code></td>
+        <td style="padding:8px;">Modern Popup (New Engine)</td>
+        <td style="padding:8px;">You’ve arrived in Cronus</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2105</code></td>
+        <td style="padding:8px;">Open Web Link</td>
+        <td style="padding:8px;"><code>http://www.google.com</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>⚠️ Behavior Notes:</h4>
+  <ul>
+    <li><strong>All messages are local</strong> (only visible to the player)</li>
+    <li><strong>data 2105</strong> will immediately open the provided web URL</li>
+    <li>Text limits apply to some channels; keep messages concise</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use <code>type 1010</code> for immersive local feedback like quests, status effects, zone tips, or helper links — without global broadcast noise.
+  </div>
+</details>
+
 <hr />
 
 <h2 id="other-tools">Other Tools</h2>
