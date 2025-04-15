@@ -416,16 +416,16 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Your text here.');
   <h4>💡 Example SQL:</h4>
   <pre>
 -- Top-left corner (Old &amp; New Engine)
-INSERT INTO cq_action VALUES (6000040, 0000, 0000, 0125, 2005, 'Your text here');
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0125, 2005, 'Your text here');
 
 -- Center screen classic popup (Old &amp; New Engine)
-INSERT INTO cq_action VALUES (3508802, 0000, 0000, 0125, 2011, 'Your text here');
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0125, 2011, 'Your text here');
 
 -- Bottom-left in chat (New Engine only)
-INSERT INTO cq_action VALUES (201217028, 0000, 0000, 0125, 2007, 'Your text here');
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0125, 2007, 'Your text here');
 
 -- Center screen modern popup (New Engine only)
-INSERT INTO cq_action VALUES (25768045, 0000, 0000, 0125, 2024, 'Your text here');
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0125, 2024, 'Your text here');
   </pre>
 
   <h4>📸 Broadcast Styles:</h4>
@@ -520,7 +520,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2105, 'http://www.google.c
       <tr>
         <td style="padding:8px;"><code>2003</code></td>
         <td style="padding:8px;">Team Chat Channel</td>
-        <td style="padding:8px;">%user_name has used Double EXP Potion.</td>
+        <td style="padding:8px;">%user_name has used Double EXP Potion.(your teammate cannot see this.)</td>
       </tr>
       <tr>
         <td style="padding:8px;"><code>2023</code></td>
@@ -539,7 +539,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2105, 'http://www.google.c
       </tr>
       <tr>
         <td style="padding:8px;"><code>2011</code></td>
-        <td style="padding:8px;">Center Screen - System</td>
+        <td style="padding:8px;">Center Screen - [System]</td>
         <td style="padding:8px;">You donated 1000 HP and the Hatred Wraith revived!</td>
       </tr>
       <tr>
@@ -564,6 +564,313 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1010, 2105, 'http://www.google.c
 
   <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
     💡 <strong>Tip:</strong> Use <code>type 1010</code> for immersive local feedback like quests, status effects, zone tips, or helper links — without global broadcast noise.
+  </div>
+</details>
+
+<details>
+  <summary>🎒 <strong>Check Inventory Space (Type 508)</strong></summary>
+  <br />
+
+  <p><strong>Type 508</strong> checks if the player has enough remaining space in a specific inventory bag. If not enough space is available, it goes to <code>id_nextfail</code>.</p>
+
+  <h4>🧠 param format:</h4>
+  <pre><code>required_space weight pack_type</code></pre>
+  <ul>
+    <li><strong>required_space</strong>: Number of free slots needed</li>
+    <li><strong>weight</strong>: Usually <code>0</code> (reserved for future logic)</li>
+    <li><strong>pack_type</strong>: Type of inventory bag to check</li>
+  </ul>
+
+  <h4>📦 Supported <code>pack_type</code> Values:</h4>
+
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Pack Type</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Engine</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>50</code></td>
+        <td style="padding:8px;">Common item bag (main backpack)</td>
+        <td style="padding:8px;">✅ Old &amp; New Engine</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>52</code></td>
+        <td style="padding:8px;">Eudemons Egg bag</td>
+        <td style="padding:8px;">✅ Old &amp; New Engine</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>53</code></td>
+        <td style="padding:8px;">Eudemons Inventory</td>
+        <td style="padding:8px;">✅ Old &amp; New Engine</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>46</code></td>
+        <td style="padding:8px;">Quest item bag</td>
+        <td style="padding:8px;">🆕 New Engine Only</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>47</code></td>
+        <td style="padding:8px;">Material item bag</td>
+        <td style="padding:8px;">🆕 New Engine Only</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>43</code></td>
+        <td style="padding:8px;">Divine Fire item bag</td>
+        <td style="padding:8px;">🆕 New Engine Only</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:12px; font-size:15px;">
+    <strong>🧭 Compatibility Summary:</strong><br />
+    ✅ <strong>Old Engine:</strong> <code>50</code>, <code>52</code>, <code>53</code><br />
+    🆕 <strong>New Engine:</strong> <code>46</code>, <code>47</code>, <code>43</code>, <code>50</code>, <code>52</code>, <code>53</code>
+  </div>
+
+  <h4>💡 Example Usage:</h4>
+  <pre>
+-- Check 1 slot in main backpack
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0508, 0, '1 0 50');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your backpack is full!');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0501, 191740, '');
+
+-- Check 1 slot in egg bag
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0508, 0, '1 0 52');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your egg bag is full.');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0501, 1083060, '');
+
+
+-- Check 1 slot in Eudemon Inventory
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0508, 0, '1 0 53');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You need 1 free space in your inventory.');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0526, 0, '');
+  </pre>
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Always use <code>type 126</code> to show user-friendly messages when space is insufficient.
+  </div>
+</details>
+
+<details>
+  <summary>⏰ <strong>Check Time (Type 123)</strong></summary>
+  <br />
+
+  <p><strong>Type 123</strong> checks the current server time using various time-based formats. It can be used to limit actions to certain dates, times, or days of the week.</p>
+
+  <h4>🧠 param format:</h4>
+  <pre><code>Depends on data (0 to 6) – see formats below</code></pre>
+
+---
+
+  <h4>📆 Supported Time Types (<code>data</code> values):</h4>
+
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Data</th>
+        <th style="text-align:left; padding:8px;">Format</th>
+        <th style="text-align:left; padding:8px;">Example</th>
+        <th style="text-align:left; padding:8px;">Description</th>
+        <th style="text-align:left; padding:8px;">Engine</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>0</code></td>
+        <td style="padding:8px;"><code>%d-%d-%d %d:%d %d-%d-%d %d:%d</code></td>
+        <td style="padding:8px;">2024-04-01 10:00 2024-04-01 18:00</td>
+        <td style="padding:8px;">Full date &amp; time range</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>1</code></td>
+        <td style="padding:8px;"><code>%m-%d %H:%M %m-%d %H:%M</code></td>
+        <td style="padding:8px;">04-01 09:00 04-01 17:00</td>
+        <td style="padding:8px;">Month-day with time range</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>2</code></td>
+        <td style="padding:8px;"><code>%d %H:%M %d %H:%M</code></td>
+        <td style="padding:8px;">15 10:00 15 12:00</td>
+        <td style="padding:8px;">Day of month with time range</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>3</code></td>
+        <td style="padding:8px;"><code>%d %H:%M %d %H:%M</code></td>
+        <td style="padding:8px;">2 14:00 2 18:00</td>
+        <td style="padding:8px;">Day of week (1=Monday) with time range</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>4</code></td>
+        <td style="padding:8px;"><code>%H:%M %H:%M</code></td>
+        <td style="padding:8px;">08:00 17:00</td>
+        <td style="padding:8px;">Any time of day (daily range)</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>5</code></td>
+        <td style="padding:8px;"><code>%d %d</code></td>
+        <td style="padding:8px;">10 20</td>
+        <td style="padding:8px;">Minute range in current hour</td>
+        <td style="padding:8px;">Old &amp; New</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>6</code></td>
+        <td style="padding:8px;"><code>%d %d %d %d %d %d %d</code></td>
+        <td style="padding:8px;">0 1 1 0 0 0 0</td>
+        <td style="padding:8px;">Day of week (Mon–Sun as 1/0 mask)</td>
+        <td style="padding:8px;">🆕 New Engine Only</td>
+      </tr>
+    </tbody>
+  </table>
+
+---
+
+  <h4>💡 Examples:</h4>
+
+  <pre>
+-- Run only from 9 AM to 5 PM daily
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0123, 4, '09:00 17:00');
+
+-- Run only on Tuesday and Wednesday
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0123, 6, '0 1 1 0 0 0 0');
+
+-- Run only from minute 10 to 20 of each hour
+INSERT INTO cq_action VALUES (1000, 1002, 1001, 0123, 5, '10 20');
+  </pre>
+
+---
+
+  <h4>🔗 Reference:</h4>
+  <a href="https://www.elitepvpers.com/forum/eo-pserver-guides-releases/419390-guide-teoretical-pracitce-usage-time-type-action.html#post3854279" target="_blank">
+    elitepvpers: Time Type Action Guide
+  </a>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🧠 <strong>Reminder:</strong> Use <code>id_next</code> for when the time check passes and <code>id_nextfail</code> for when it fails.<br />
+    ⚠️ <strong>Note:</strong> <code>data = 6</code> (weekday mask) is only supported in the <strong>new engine</strong>.
+  </div>
+</details>
+
+<details>
+  <summary>📰 <strong>Update Announcement Window (Type 130 &amp; 131)</strong></summary>
+  <br />
+
+  <p><strong>Type 130</strong> displays in-game announcement window (like patch notes or news). It supports multiple lines of text chained via <code>id_next</code>.</p>
+
+  <h4>🖼️ Example Display:</h4>
+  <img src="assets/images/130.png" alt="Update Announcement" />
+
+  <h4>📜 Example SQL Script:</h4>
+  <pre>
+-- Start of announcement chain
+INSERT INTO cq_action VALUES (1000064, 1000065, 0000, 0130, 0, 'Knightfall newest update! Information is showed below:');
+INSERT INTO cq_action VALUES (1000065, 1000066, 0000, 0130, 0, 'New class and new features come to Cronus!');
+INSERT INTO cq_action VALUES (1000066, 1000067, 0000, 0130, 0, '1.New Class `Star Guardian` and brand new skill!');
+INSERT INTO cq_action VALUES (1000067, 1000068, 0000, 0130, 0, '2.Celebrity hall fully fixed and updated.');
+INSERT INTO cq_action VALUES (1000068, 1000069, 0000, 0130, 0, '3.Skytower introduced! limit level up to 310 floor!');
+INSERT INTO cq_action VALUES (1000069, 1000070, 0000, 0130, 0, '4.Complete demon rising expansion to explore!');
+INSERT INTO cq_action VALUES (1000070, 1000071, 0000, 0130, 0, '5.New domain! Get high stats with new talisman');
+INSERT INTO cq_action VALUES (1000071, 1000072, 0000, 0130, 0, '6.New divine fire level 85 with latest tomb to conquer');
+
+-- End of announcement
+INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
+  </pre>
+
+  <h4>🔧 Usage:</h4>
+  <ul>
+    <li>Trigger it when a player enters the game</li>
+    <li>Each <code>type 130</code> is one line of text</li>
+    <li>End the sequence with <code>type 131</code> to close the window</li>
+    <li>Max ~7–10 lines for best layout appearance</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use this for new patch notes, event schedules, server updates, or rules.
+  </div>
+</details>
+
+<details>
+  <summary>🎁 <strong>God’s Treasure Interface (Type 188)</strong></summary>
+  <br />
+
+  <p><strong>Type 188</strong> opens the <em>God’s Treasure</em> spinning interface, where players can draw from 8 randomized rewards. This feature is only available on the <strong>🆕 New Engine</strong>.</p>
+
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong><br />
+    This feature does not exist in classic (old) engine clients.
+  </div>
+
+  <h4>🖼️ Example Display:</h4>
+  <img src="assets/images/188.png" alt="Gods Treasure Interface" />
+
+---
+
+  <h4>🧠 param format:</h4>
+  <pre><code>ItemID Quantity DisplayActionID RandomWeight</code></pre>
+  <p>There must be <strong>exactly 8 entries</strong>, separated by commas.</p>
+
+---
+
+  <h4>💰 Pricing:</h4>
+  <ul>
+    <li><code>data</code> = total price (in <strong>EP</strong>) to <code>Claim All</code> items</li>
+    <li>Set <code>data = 0</code> to disable the Claim All button</li>
+  </ul>
+
+---
+
+  <h4>💡 Example SQL:</h4>
+  <pre>
+-- Open interface (Claim All disabled)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0188, 0, 
+'1026624 3 1001 1,
+1026625 1 1002 20,
+1026624 1 1003 20,
+1026624 1 1004 20,
+1026625 3 1005 1,
+1026626 3 1006 1,
+1026626 1 1007 20,
+1026626 1 1008 20');
+
+-- Rewards for each draw
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0540, 1026624, 'amount += 3');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0540, 1026625, 'amount += 1');
+INSERT INTO cq_action VALUES (1003, 0000, 0000, 0540, 1026624, 'amount += 1');
+INSERT INTO cq_action VALUES (1004, 0000, 0000, 0540, 1026624, 'amount += 1');
+INSERT INTO cq_action VALUES (1005, 0000, 0000, 0540, 1026625, 'amount += 3');
+INSERT INTO cq_action VALUES (1006, 0000, 0000, 0540, 1026626, 'amount += 3');
+INSERT INTO cq_action VALUES (1007, 0000, 0000, 0540, 1026626, 'amount += 1');
+INSERT INTO cq_action VALUES (1008, 0000, 0000, 0540, 1026626, 'amount += 1');
+  </pre>
+
+---
+
+  <h4>📝 Use Case Ideas:</h4>
+  <ul>
+    <li>🎯 Boss drops that trigger a lucky spin</li>
+    <li>🎁 Treasure chests with randomized loot</li>
+    <li>🐉 RNG rewards from event monsters or world bosses</li>
+    <li>🧧 Event-based lotteries or login prizes</li>
+  </ul>
+
+  <h4>📌 Parameter Breakdown:</h4>
+<ul>
+  <li><code>ItemID</code>: The item to show in the gift box</li>
+  <li><code>Quantity</code>: How much to display</li>
+  <li><code>DisplayActionID</code>: What action runs when claimed</li>
+  <li><code>RandomWeight</code>: The higher the number, the easier it is to get. The lower the number, the rarer it becomes (e.g., <code>1</code> = rare, <code>20</code> = common).</li>
+</ul>
+
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine <code>type 188</code> with <code>type 121/122</code> if you want conditional treasure or tiered draw access.
   </div>
 </details>
 
