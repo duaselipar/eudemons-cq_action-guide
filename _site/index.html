@@ -260,7 +260,7 @@ REPLACE INTO `cq_task` VALUES (1007, 1007, 0000, '', '', 0, 0, 999, -100000, 100
 </details>
 
 <details>
-  <summary>💠 <strong>Modern NPC Dialog Interface (Type 132 &amp; 133)</strong></summary>
+  <summary>💠 <strong>Modern NPC Dialog (Type 132 &amp; 133)</strong></summary>
   <br />
 
   <p>This dialog system creates stylish, story-driven NPC interactions with portrait images, background panels, and up to 4 interactive options.This feature is only available on the 🆕 New Engine.</p>
@@ -1029,7 +1029,7 @@ INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
 </details>
 
 <details>
-  <summary>🎁 <strong>God’s Treasure Interface (Type 188)</strong></summary>
+  <summary>🎁 <strong>God’s Treasure (Type 188)</strong></summary>
   <br />
 
   <p><strong>Type 188</strong> opens the <em>God’s Treasure</em> spinning interface, where players can draw from 8 randomized rewards. This feature is only available on the <strong>🆕 New Engine</strong>.</p>
@@ -1185,6 +1185,70 @@ INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '6 4');
 
   <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
     ⚠️ <strong>Note:</strong> Make sure the web URL is properly set in your client <code>areaid.ini</code> as <code>URL{areaid}</code>.
+  </div>
+</details>
+
+<details>
+  <summary>🔢 <strong>Global Variable Control (Type 191 &amp; 192)</strong></summary>
+  <br />
+
+  <p><strong>Type 191</strong> and <strong>Type 192</strong> are used to manipulate global or session-wide variables stored in <code>cq_vardata</code> and <code>cq_varstrdata</code> respectively.</p>
+
+  <h4>📌 Type 191 – Numeric Variables (<code>cq_vardata</code>)</h4>
+  <p>Used to store and manipulate numbers like counters, flags, or progress markers.</p>
+
+  <pre>
+-- Add +1 to variable index 3
+INSERT INTO cq_action VALUES (1000, 0000, 0, 191, 0, 'var(3) += 1');
+
+-- Set variable index 3 to 999
+INSERT INTO cq_action VALUES (1000, 0000, 0, 191, 0, 'var(3) set 999');
+
+-- Conditional check: If var(3) equals 100
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 191, 0, 'var(3) == 100');
+  </pre>
+
+  <ul>
+    <li>Supports: <code>set</code>, <code>+=</code>, <code>/=</code>, <code>*=</code>, <code>==</code></li>
+    <li>For conditional checks, use <code>id_nextfail</code> for failure path</li>
+  </ul>
+
+  <p>📥 <strong>Access value in dialog:</strong> <code>%public_var_data3</code></p>
+
+  <h5>📤 Show numeric value to player (example):</h5>
+  <pre>
+-- Display value of public_var_data3
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, '%public_var_data3');
+  </pre>
+
+  <hr />
+
+  <h4>📌 Type 192 – Text/String Variables (<code>cq_varstrdata</code>)</h4>
+  <p>Used to store names, states, or any string-based logic values.</p>
+
+  <pre>
+-- Set string var(3) to "Hello"
+INSERT INTO cq_action VALUES (1000, 0000, 0, 192, 0, 'var(3) set Hello');
+
+-- Check if var(3) is "Hello"
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 192, 0, 'var(3) == Hello');
+  </pre>
+
+  <ul>
+    <li>Supports: <code>set</code>, <code>==</code></li>
+    <li>Use <code>id_nextfail</code> for string mismatch handling</li>
+  </ul>
+
+  <p>📥 <strong>Access value in dialog:</strong> <code>%public_var_str3</code></p>
+
+  <h5>📤 Show string value to player (example):</h5>
+  <pre>
+-- Display value of public_var_str3
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, '%public_var_str3');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 101</code> or <code>125</code> for dynamic storytelling or debugging purposes.
   </div>
 </details>
 
