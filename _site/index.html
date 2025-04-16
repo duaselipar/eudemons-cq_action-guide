@@ -193,20 +193,26 @@
   <summary>🗨️ <strong>Create Dialog (Type 101, 102, 104 and 120)</strong></summary>
   <br />
 
-  <p>This action shows a dialog when the player interacts with an NPC or items.</p>
+  <p>This action shows a dialog when the player interacts with an NPC or item.</p>
   <img src="assets/images/101.png" style="max-width:100%; border-radius:8px; margin:10px 0;" />
 
   <h4>💡 Example SQL:</h4>
   <pre>
 REPLACE INTO `cq_action` VALUES (1001, 1002, 0000, 0101, 0, 'I can sell it only for an hour every day.');
 REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 0101, 0, 'Do you want to give it a go?');
-REPLACE INTO `cq_action` VALUES (1003, 1004, 0000, 0102, 0, 'Just~one,~please. 6960060');
+REPLACE INTO `cq_action` VALUES (1003, 1004, 0000, 0102, 0, 'Just~one,~please. 1007');
 REPLACE INTO `cq_action` VALUES (1004, 1005, 0000, 0102, 0, 'Sorry,~but~I~dont~need~it. 0');
 REPLACE INTO `cq_action` VALUES (1005, 1006, 0000, 0104, 0, '0 0 34');
 REPLACE INTO `cq_action` VALUES (1006, 0000, 0000, 0120, 0, '');
   </pre>
 
-  <h4>📘 Explanation:</h4>
+  <h4>🧾 Required Task Entries (cq_task)</h4>
+  <pre>
+REPLACE INTO `cq_task` VALUES (1001, 1001, 0000, '', '', 0, 0, 999, -100000, 100000, 0999, 0000, 0, -1, 0);
+REPLACE INTO `cq_task` VALUES (1007, 1007, 0000, '', '', 0, 0, 999, -100000, 100000, 0999, 0000, 0, -1, 0);
+  </pre>
+
+  <h4>📘 Explanation Table:</h4>
   <table style="width:100%; border-collapse:collapse;">
     <thead>
       <tr style="background:#f0f0f0;">
@@ -219,73 +225,302 @@ REPLACE INTO `cq_action` VALUES (1006, 0000, 0000, 0120, 0, '');
       <tr>
         <td style="padding:8px;"><code>101</code></td>
         <td style="padding:8px;">Show dialog text</td>
-        <td style="padding:8px;">NPC or item dialog string (maximum around 40 - 45 character each line)</td>
+        <td style="padding:8px;">NPC or item dialog string (≈ 40–45 chars per line)</td>
       </tr>
       <tr>
         <td style="padding:8px;"><code>102</code></td>
         <td style="padding:8px;">Dialog options / buttons</td>
-        <td style="padding:8px;">Text task_id (use <code>0</code> for close); max 8 options, for text use ~ for spacing.</td>
+        <td style="padding:8px;">Text ~ spacing + task_id (use <code>0</code> for close)</td>
       </tr>
       <tr>
         <td style="padding:8px;"><code>104</code></td>
-        <td style="padding:8px;">Dialog image (face pic)</td>
-        <td style="padding:8px;">x y pic_id — face index from <code>Ani/NpcFace.ANI</code> E.g - [Face34]</td>
+        <td style="padding:8px;">Dialog face image</td>
+        <td style="padding:8px;">x y pic_id — from Ani/NpcFace.ANI (e.g. Face34)</td>
       </tr>
       <tr>
         <td style="padding:8px;"><code>120</code></td>
-        <td style="padding:8px;">End of dialog sequence</td>
+        <td style="padding:8px;">End of dialog</td>
         <td style="padding:8px;">(none)</td>
       </tr>
     </tbody>
   </table>
-  <br />
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Every <code>type 101</code> must have a corresponding <code>cq_task</code> entry</li>
+    <li>Every <code>task_id</code> used in <code>type 102</code> must also exist in <code>cq_task</code></li>
+    <li>Use <code>~</code> for spacing inside all dialog text and option strings</li>
+    <li>Use <code>0104</code> to show NPC face image (optional)</li>
+    <li>End your dialog with <code>0120</code> to ensure it closes cleanly</li>
+  </ul>
+
+  <div style="border-left: 4px solid #2196f3; background: #e3f2fd; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🔧 <strong>Reminder:</strong> If the dialog doesn't show or options do nothing, double check your <code>cq_task</code> entries!
+  </div>
 </details>
 
 <details>
-  <summary>🎁 <strong>Sent Items (Type 501, 525, 540 and 550)</strong></summary>
+  <summary>💠 <strong>Modern NPC Dialog Interface (Type 132 &amp; 133)</strong></summary>
   <br />
 
-  <p>Sent the player a specific item when this action is triggered.</p>
+  <p>This dialog system creates stylish, story-driven NPC interactions with portrait images, background panels, and up to 4 interactive options.This feature is only available on the 🆕 New Engine.</p>
 
-  <h4>💡 Example SQL:</h4>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong><br />
+    This feature does not exist in classic (old) engine clients.
+  </div>
+
+  <h4>🖼️ Example: Linleria Dialog</h4>
+  <img src="assets/images/133-0.png" style="width:80%; max-width:480px; border-radius:8px; margin-bottom:12px;" />
+
+
+  <h4>📜 Linleria SQL</h4>
   <pre>
-INSERT INTO `cq_action` VALUES (1000, 1002134, 0000, 0501, 754826, '');  
-// For single items.
+REPLACE INTO cq_action VALUES (1001, 1002, 0000, 0101, 0, 'Hello~i`am~Linleria~the~designer,~do~you~have~enough~essence~to~trade~off~with~these~cosmetic~items?');
+REPLACE INTO cq_action VALUES (1002, 1003, 0000, 0102, 0, 'Yes,send~me~there. 1006');
+REPLACE INTO cq_action VALUES (1003, 1004, 0000, 0102, 0, 'Close. 1005');
+REPLACE INTO cq_action VALUES (1004, 0000, 0000, 0132, 0, '0 Tasksystem_GeneralbotPic Linleria 0 Tasksystem_WnbeishangPic');
+REPLACE INTO cq_action VALUES (1005, 0000, 0000, 133, 0, '');
+  </pre>
 
--- With custom stats (old engine)
-INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0501, 1081990, '0 0 0 0 0 0 0 0 0 0 0 0 1');
+  <ul>
+    <li><strong>`Linleria`</strong>: Displayed name (customizable)</li>
+    <li><strong>`Tasksystem_GeneralbotPic`</strong>: Dialog background (default, don’t change)</li>
+    <li><strong>`Tasksystem_WnbeishangPic`</strong>: Portrait image (can change, from control.ani)</li>
+    <li>Image preview path: <code>data/interface/style01/Tasksystem/God/WnbeishangPic.dds</code></li>
+  </ul>
 
--- Old engine param:
+  <h4>🖼️ Example: Skuld Dialog</h4>
+  <img src="assets/images/133-2.png" style="width:80%; max-width:480px; border-radius:8px; margin-bottom:12px;" />
+
+  <h4>📜 Skuld SQL</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1001, 1002, 0000, 0101, 0, 'Do~You~see~the~Sword~there?~This~sword~is~belong~to~King~of~the~Four~Seas.~I~need~your~help~to~stop~him. sound/dice_move.wav');
+REPLACE INTO cq_action VALUES (1002, 1003, 0000, 0102, 0, 'I~am~going~to~absorb~the~energy. 1006');
+REPLACE INTO cq_action VALUES (1003, 1004, 0000, 0102, 0, 'Close. 1005');
+REPLACE INTO cq_action VALUES (1004, 0000, 0000, 0132, 0, 'Novice_BottomBG Novice_RolePic 21650');
+REPLACE INTO cq_action VALUES (1005, 0000, 0000, 0133, 2, '');
+  </pre>
+
+  <ul>
+    <li><strong>`Novice_BottomBG`</strong>: Background (default)</li>
+    <li><strong>`Novice_RolePic`</strong>: NPC portrait name (can change, from control.ani)</li>
+    <li>Image preview path: <code>data/interface/style01/Rookie/RolePic.dds</code></li>
+    <li><strong>`21650`</strong>: NPC label ID (used for Skuld style)</li>
+  </ul>
+
+  <h4>⚠️ Important Notes</h4>
+  <ul>
+    <li><strong>Maximum 4 options</strong> (<code>0102</code>) per dialog</li>
+    <li>One option <strong>must be a Close</strong> (linked to <code>type 133</code>)</li>
+    <li><strong>Use <code>~</code> instead of spaces</strong> in all dialog lines or they won't display!</li>
+    <li><code>Type 132</code> requires the player to be very close to the NPC (within ~5 tiles)</li>
+    <li><strong>An NPC object is required</strong> — dialog won’t trigger if no valid NPC is nearby</li>
+    <li><code>type 133</code> must use <code>data = 2</code> to allow proper closing for some UIs</li>
+    <li>Supports ambient sound: add file at end of <code>param</code> like <code>sound/dice_move.wav</code> (Skuld dialog only!)</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> All dialog lines and button text must use <code>~</code> instead of spaces. Example:<br />
+    <code>Hello~brave~warrior!</code> ✅ &nbsp;&nbsp;&nbsp;&nbsp; <code>Hello brave warrior!</code> ❌
+  </div>
+
+</details>
+
+<details>
+  <summary>🎁 <strong>Sent Items (Type 501, 525, 540, 550)</strong></summary>
+  <br />
+
+  <p>Sends specific items to the player when triggered. Used for quest rewards, shop systems, monster drops, and more.</p>
+
+
+  <h4>📜 Basic Example – Type 501 (Give Item)</h4>
+  <pre>
+-- Give 1 item (basic)
+REPLACE INTO cq_action VALUES (1000, 1002134, 0000, 0501, 754826, '');
+  </pre>
+
+
+  <h4>📜 Custom Stats – Type 501</h4>
+  <pre>
+-- With custom stats (Old Engine)
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0501, 1081990, '0 0 0 0 0 0 0 0 0 0 0 0 1');
+
+-- Old Engine Params:
 amount amount_limit ident gem1 gem2 magic1 magic2 magic3 data warghostexp gemtype availabletime MONOPOLY
+  </pre>
 
--- With custom stats (new engine)
-INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0501, 1081990, '0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0');
+  <pre>
+-- With custom stats (New Engine)
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0501, 1081990, '0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0');
 
--- New engine param:
+-- New Engine Params:
 amount amount_limit ident gem1 gem2 magic1 magic2 magic3 data warghostexp gemtype availabletime MONOPOLY
 eudemon_attack1 eudemon_attack2 eudemon_attack3 eudemon_attack4 special_effect Gem3 GodExp prescription
+  </pre>
 
--- Usually used for equipment stat customization.
-</pre>
 
-  <h4>📌 Special Types (New Engine Only):</h4>
+  <h4>📌 Special Variants:</h4>
 
   <pre>
--- Type 525: Like 501, but availabletime becomes aging days.
-INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0525, 820646, '0 0 0 0 0 0 0 0 0 0 0 30');
+-- Type 525 (New Engine Only): Same as 501 but "availabletime" becomes "aging days"
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0525, 820646, '0 0 0 0 0 0 0 0 0 0 0 30');
 -- 30 = 30 days
+  </pre>
 
--- Type 540: Modifies item count with logic
-INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0540, 1020171, 'amount += 1');
--- Supports: &lt;, &gt;, &lt;=, &gt;=, =, += (can be negative to remove items). Only works with stackable items.
+  <pre>
+-- Type 540 (Both Engines): Modifies stackable item count
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0540, 1020171, 'amount += 1');
 
--- Type 550: Same as 501 but includes display effect
-INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0550, 1600261, '');
--- Client-side effect shown below:
+-- Notes:
+Supports: +=, -=, =, &gt;, &lt;, &gt;=, &lt;=
+Can also be used to remove items: 'amount += -1'
+Only works for stackable items
+Recommended for adjusting count instead of deleting via 502
+  </pre>
+
+  <pre>
+-- Type 550 (New Engine Only): Same as 501 but with client-side display effect
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0550, 1600261, '');
   </pre>
 
   <img src="assets/images/550.png" style="max-width:100%; border-radius:8px; margin:10px 0;" />
 
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use <code>type 503</code> to check item count before giving or removing</li>
+    <li><code>540</code> is more flexible and safer than deleting stackable items with <code>502</code></li>
+    <li>To show visual reward feedback, use <code>550</code> (New Engine only)</li>
+    <li><code>525</code> is useful for timed items like trial gear or events</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Type 540 works in both Old and New Engine</strong>. Use it for adjusting stackable item amounts, both add and subtract.
+  </div>
+</details>
+
+<details>
+  <summary>🗑️ <strong>Delete Item (Type 502)</strong></summary>
+  <br />
+
+  <p><strong>Type 502</strong> is used to remove one or more items from the player’s inventory based on type or name.</p>
+
+
+  <h4>📦 Syntax Behavior</h4>
+  <ul>
+    <li><code>data</code> = <strong>ItemTypeID</strong> (or <code>0</code> to match by name)</li>
+    <li><code>param</code> = quantity or item name (if using <code>data = 0</code>)</li>
+    <li>Use <code>id_nextfail</code> to handle missing items or not enough quantity</li>
+  </ul>
+
+
+  <h4>📜 Example: Delete Single Quantity by Item Type</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1001, 1003, 1002, 0502, 1020030, '1 1');
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You don`t have enough item.');
+  </pre>
+
+
+  <h4>📜 Example: Delete Stack of Items</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1001, 1003, 1002, 0502, 810002, '10');
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You don`t have enough item.');
+  </pre>
+
+
+  <h4>📜 Example: Delete Unstackable Items (Repeat Action)</h4>
+  <pre>
+-- Delete 2x [ItemID: 111006] if item is NOT stackable
+REPLACE INTO cq_action VALUES (1001, 1002, 1003, 0502, 111006, 0);
+REPLACE INTO cq_action VALUES (1002, 1004, 1003, 0502, 111006, 0);
+REPLACE INTO cq_action VALUES (1003, 0000, 0000, 0126, 0, 'You don`t have enough item.');
+  </pre>
+
+
+  <h4>📜 Example: Delete Items by Name</h4>
+  <pre>
+-- Delete 2x "Blue Crest Helmet" by item name
+REPLACE INTO cq_action VALUES (1001, 1002, 1003, 0502, 0, 'Blue~Crest~Helmet');
+REPLACE INTO cq_action VALUES (1002, 1004, 1003, 0502, 0, 'Blue~Crest~Helmet');
+REPLACE INTO cq_action VALUES (1003, 0000, 0000, 0126, 0, 'You don`t have enough item.');
+  </pre>
+
+
+  <h4>✅ For Stack Items: Use <code>Type 540</code> (Recommended)</h4>
+  <pre>
+-- Safely subtract 5x stackable item (e.g., EXP Scroll)
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0540, 1020116, 'amount += -5');
+  </pre>
+
+
+  <h4>💡 Best Practice:</h4>
+  <ul>
+    <li>Use <strong><code>type 503</code></strong> to check quantity before deleting items</li>
+    <li>Use <code>type 0126</code> to notify player if the item is missing</li>
+    <li>For <strong>stack items</strong>, <code>type 540</code> is cleaner and more reliable</li>
+  </ul>
+
+  <div style="border-left: 4px solid #f44336; background: #ffebee; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Reminder:</strong> For non-stackable items, repeat <code>type 502</code> multiple times to match how many you want to delete.
+  </div>
+</details>
+
+<details>
+  <summary>🔍 <strong>Check Item (Type 503)</strong></summary>
+  <br />
+
+  <p><strong>Type 503</strong> is used to check if a player has a specific item, with optional quantity/durability validation.</p>
+
+
+  <h4>📦 Syntax Behavior</h4>
+  <ul>
+    <li><code>data</code> = <strong>ItemTypeID</strong> (or <code>0</code> for name-based check)</li>
+    <li><code>param</code> = quantity or full item name (if <code>data = 0</code>)</li>
+    <li>If only checking existence (not quantity), set <code>param = 0</code></li>
+    <li>If item is missing or quantity is not enough → goes to <code>id_nextfail</code></li>
+  </ul>
+
+
+  <h4>📜 Example 1: Check If Player Has 5x of Item</h4>
+  <pre>
+-- Check if player has at least 5x of ItemTypeID 111007
+REPLACE INTO cq_action VALUES (0001, 0002, 0003, 0503, 111007, 5);
+
+-- Success
+REPLACE INTO cq_action VALUES (0002, 0000, 0000, 0126, 0, 'You have this item');
+
+-- Failure
+REPLACE INTO cq_action VALUES (0003, 0000, 0000, 0126, 0, 'You don`t have this item');
+  </pre>
+
+
+  <h4>📜 Example 2: Check If Player Has Item (No Quantity Required)</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (0001, 0002, 0003, 0503, 111007, 0);
+REPLACE INTO cq_action VALUES (0002, 0000, 0000, 0126, 0, 'You have this item');
+REPLACE INTO cq_action VALUES (0003, 0000, 0000, 0126, 0, 'You don`t have this item');
+  </pre>
+
+
+  <h4>📜 Example 3: Check by Item Name</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (0001, 0002, 0003, 0503, 0, 'Blue~Crest~Helmet');
+REPLACE INTO cq_action VALUES (0002, 0000, 0000, 0126, 0, 'You have this item');
+REPLACE INTO cq_action VALUES (0003, 0000, 0000, 0126, 0, 'You don`t have this item');
+  </pre>
+
+
+  <h4>💡 Notes:</h4>
+  <ul>
+    <li>Item name matching must be same with cq_itemtype</li>
+    <li>This type is often used before <code>type 502</code> to verify quantity before removing</li>
+    <li>Very useful for quest checking, crafting checks, and condition-based actions</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Always use <code>id_nextfail</code> for fallback messaging.
+  </div>
 </details>
 
 <details>
@@ -663,7 +898,6 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0526, 0, '');
   <h4>🧠 param format:</h4>
   <pre><code>Depends on data (0 to 6) – see formats below</code></pre>
 
----
 
   <h4>📆 Supported Time Types (<code>data</code> values):</h4>
 
@@ -730,7 +964,6 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0526, 0, '');
     </tbody>
   </table>
 
----
 
   <h4>💡 Examples:</h4>
 
@@ -745,7 +978,6 @@ INSERT INTO cq_action VALUES (1000, 1002, 1001, 0123, 6, '0 1 1 0 0 0 0');
 INSERT INTO cq_action VALUES (1000, 1002, 1001, 0123, 5, '10 20');
   </pre>
 
----
 
   <h4>🔗 Reference:</h4>
   <a href="https://www.elitepvpers.com/forum/eo-pserver-guides-releases/419390-guide-teoretical-pracitce-usage-time-type-action.html#post3854279" target="_blank">
@@ -810,13 +1042,11 @@ INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
   <h4>🖼️ Example Display:</h4>
   <img src="assets/images/188.png" alt="Gods Treasure Interface" />
 
----
 
   <h4>🧠 param format:</h4>
   <pre><code>ItemID Quantity DisplayActionID RandomWeight</code></pre>
   <p>There must be <strong>exactly 8 entries</strong>, separated by commas.</p>
 
----
 
   <h4>💰 Pricing:</h4>
   <ul>
@@ -824,7 +1054,6 @@ INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
     <li>Set <code>data = 0</code> to disable the Claim All button</li>
   </ul>
 
----
 
   <h4>💡 Example SQL:</h4>
   <pre>
@@ -850,7 +1079,6 @@ INSERT INTO cq_action VALUES (1007, 0000, 0000, 0540, 1026626, 'amount += 1');
 INSERT INTO cq_action VALUES (1008, 0000, 0000, 0540, 1026626, 'amount += 1');
   </pre>
 
----
 
   <h4>📝 Use Case Ideas:</h4>
   <ul>
@@ -871,6 +1099,92 @@ INSERT INTO cq_action VALUES (1008, 0000, 0000, 0540, 1026626, 'amount += 1');
 
   <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
     💡 <strong>Tip:</strong> Combine <code>type 188</code> with <code>type 121/122</code> if you want conditional treasure or tiered draw access.
+  </div>
+</details>
+
+<details>
+  <summary>🧾 <strong>Temporary Dialog &amp; In-Game Web (Type 189)</strong></summary>
+  <br />
+
+  <p><strong>Type 189</strong> is used for two purposes depending on the <code>data</code> value:</p>
+  <ul>
+    <li><code>data = 204</code>: Temporary dialog box (shows for 4–5 seconds)</li>
+    <li><code>data = 202</code>: Opens a web browser window in-game (linked to <code>areaid.ini</code>)</li>
+  </ul>
+
+  <h4>💬 Example: Temporary Dialog (data = 204)</h4>
+  <img src="assets/images/189-204.png" style="max-width:100%; border-radius:8px; margin-bottom:12px;" />
+
+  <pre>
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 204,
+  'Lorem~ipsum~dolor~sit~amet. Tasksystem_GeneralbotPic|1 null -520 30 250 -30 1 Tasksystem_xnhlhxtgwbsx Title~Manager|100|217|1 500 500');
+  </pre>
+
+  <h5>🧩 Parameter Breakdown (dialog format):</h5>
+  <ul>
+    <li><code>Lorem~ipsum~dolor~sit~amet</code>: Dialog content (must use <code>~</code> for spacing)</li>
+    <li><code>Tasksystem_GeneralbotPic</code>: Background panel (black theme, default)</li>
+    <li><code>|1</code>: Unknown, typically set to 1</li>
+    <li><code>null</code>: Placeholder for optional elements (e.g., sound/dice_move.wav)</li>
+    <li><code>-520 30</code>: X and Y position of the dialog box (X: left/right, Y: up/down)</li>
+    <li><code>250 -30</code>: Text position (left/right, up/down)</li>
+    <li><code>1</code>: Dialog screen location (1 = center screen, 2 = top right)</li>
+    <li><code>Tasksystem_xnhlhxtgwbsx</code>: Portrait (from <code>control.ani</code>)</li>
+    <li><code>Title~Manager</code>: Name below portrait (use <code>~</code> instead of spaces)</li>
+    <li><code>|100</code>: Name X offset (right = bigger, left = smaller)</li>
+    <li><code>|217</code>: Name Y offset (down = bigger, up = smaller)</li>
+    <li><code>|1</code>: Name alignment/location (guess)</li>
+    <li><code>500 500</code>: Unknown values (typically left untouched)</li>
+  </ul>
+
+  <h5>📜 Alternate Example:</h5>
+  <pre>
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 204,
+  'Well?~Is~that~the~young~Ranger~who~fought~off~the~enemy~at~the~city~gates~you~are?~Not~bad. Archer_PhoenixPic null -520 30 250 -250 1');
+  </pre>
+  <p>Some portraits already include name overlays and background. Browse: <code>data/interface/style01/Tasksystem/God/</code></p>
+
+  <hr />
+
+  <h4>🌐 Example: Open In-Game Website (data = 202)</h4>
+  <img src="assets/images/189-202.png" style="max-width:100%; border-radius:8px; margin-bottom:12px;" />
+
+  <pre>
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '6 6');
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '8 654');
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '9 1396');
+INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '6 4');
+  </pre>
+
+  <h5>🌐 Parameter Breakdown (browser format):</h5>
+  <ul>
+    <li><code>size</code>: Window layout (see chart below)</li>
+    <li><code>areaid</code>: Web index (linked to <code>areaid.ini</code>)<br />
+    Example: <code>URL654 = http://knightfall.my.to/newbie/</code></li>
+  </ul>
+
+  <h5>📏 Browser Window Sizes:</h5>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr><th>Size</th><th>Dimensions</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>300 × 400</td></tr>
+      <tr><td>2</td><td>400 × 500</td></tr>
+      <tr><td>3</td><td>500 × 600</td></tr>
+      <tr><td>4</td><td>500 × 500</td></tr>
+      <tr><td>5</td><td>580 × 475</td></tr>
+      <tr><td>6</td><td>900 × 650</td></tr>
+      <tr><td>7</td><td>427 × 469</td></tr>
+      <tr><td>8</td><td>820 × 568</td></tr>
+      <tr><td>9</td><td>900 × 650</td></tr>
+      <tr><td>10</td><td>990 × 730</td></tr>
+      <tr><td>11</td><td>905 × 655</td></tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Note:</strong> Make sure the web URL is properly set in your client <code>areaid.ini</code> as <code>URL{areaid}</code>.
   </div>
 </details>
 
