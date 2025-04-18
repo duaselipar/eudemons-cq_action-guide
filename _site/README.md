@@ -1423,5 +1423,3 @@ REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Failed.');
 
   - [Color Font Generator](color-generator.html)
   - [Cq_card Generator](cq_card-generator.html)
-
-{% include footer.html %}
