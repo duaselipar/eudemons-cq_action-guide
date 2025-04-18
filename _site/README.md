@@ -957,8 +957,7 @@ INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
   <p><strong>Type 188</strong> opens the <em>God’s Treasure</em> spinning interface, where players can draw from 8 randomized rewards. This feature is only available on the <strong>🆕 New Engine</strong>.</p>
 
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong><br>
-    This feature does not exist in classic (old) engine clients.
+    ⚠️ <strong>New Engine Only</strong>
   </div>
 
   <h4>🖼️ Example Display:</h4>
@@ -1184,7 +1183,239 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, '%public_var_str3');
 </details>
 
 
+<details>
+  <summary>🛠️ <strong>Check or Modify NPC Attributes (Type 201 & 206)</strong></summary>
+  <br>
 
+  <p><strong>Type 201</strong> and <strong>Type 206</strong> are used to <u>check or modify NPC attributes</u> such as <code>data</code>, <code>datastr</code>, <code>life</code>, <code>lookface</code>, and more. These can apply to both <code>cq_npc</code> and <code>cq_dynanpc</code> tables.</p>
+
+  <h4>🔁 Type 201 — Check or Modify (Same Thread)</h4>
+
+  <p><strong>Type 201</strong> is used when the NPC is within the same map or thread. It can check values, compare, or perform operations like +=, pass, etc. This is commonly used to control quest flow or internal NPC states.</p>
+
+  <h5>📜 Example – Conditional Check:</h5>
+  <pre>
+-- Check if npc.data3 >= 21
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 0201, 0, 'data3 >= 21 20257');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your data3 is more than 21.');
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Your data3 is less than 21.');
+  </pre>
+
+  <h5>📜 Example – Modify data field:</h5>
+  <pre>
+-- Decrease data1 by 1
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0201, 0, 'data1 += -1 20362');
+  </pre>
+
+  <h5>🧠 Syntax:</h5>
+  <ul>
+    <li><code>attr opt value npc_id</code> (e.g., <code>data3 >= 21 20257</code>)</li>
+    <li><strong>attr:</strong> data0~3, datastr, life, maxlife, ownerid, ownertype, lookface</li>
+    <li><strong>opt:</strong> =, ==, +=, >=, <=, >, <, pass</li>
+    <li><strong>value:</strong> numerical value or string depending on attr</li>
+  </ul>
+
+  <h5>✅ Supported Attributes:</h5>
+  <ul>
+    <li><code>data0 ~ data3</code>, <code>datastr</code></li>
+    <li><code>life</code>, <code>maxlife</code></li>
+    <li><code>ownerid</code>, <code>ownertype</code>, <code>lookface</code></li>
+    <li><strong>New Engine only:</strong> <code>newdata1 ~ newdata8</code>, <code>newdatastr1 ~ newdatastr2</code></li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>pass</code> to adjust date/time values ,e.g., <code>data2 pass +3</code> increases DateStamp by 3 days (Just theory never seen in database).
+  </div>
+
+  <h4>✏️ Type 206 — Modify Only (Cross Thread)</h4>
+
+  <p><strong>Type 206</strong> is used when the target NPC is outside the current execution thread (e.g. different map or unrelated script). It can only be used to directly assign values using <code>=</code> (no checking, no math).</p>
+
+  <h5>📜 Example:</h5>
+  <pre>
+-- Set data0 of npc_id 10018 to 1
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0206, 0, '10018 data0 = 1');
+  </pre>
+
+  <h5>🧠 Syntax:</h5>
+  <ul>
+    <li><code>npc_id attr = value</code></li>
+    <li>Only supports <strong>=</strong> operator</li>
+  </ul>
+
+  <h5>⚙️ Supported Attributes:</h5>
+  <ul>
+    <li><code>data0 ~ data3</code>, <code>datastr</code>, <code>lookface</code></li>
+    <li><strong>New Engine only:</strong> <code>newdata1 ~ newdata8</code>, <code>newdatastr1 ~ newdatastr2</code></li>
+  </ul>
+
+  <h5>📜 New Engine Example:</h5>
+  <pre>
+-- Set newdatastr1 to HelloWorld
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0206, 0, '10018 newdatastr1 = HelloWorld');
+  </pre>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Note:</strong> Type 206 is limited to <code>=</code> only. Old Engine only supports <code>data</code> fields (data0~3).
+  </div>
+
+  <div style="border-left: 4px solid #03A9F4; background: #e1f5fe; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Reminder:</strong> For both <code>cq_npc</code> and <code>cq_dynanpc</code>, only <code>datastr</code>, <code>newdatastr1</code>, and <code>newdatastr2</code> can store letters and numbers (A–Z, 0–9). All other fields must use numeric values only.
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🧹 <strong>Delete Dynamic NPC (Type 205)</strong></summary>
+  <br>
+
+  <p><strong>Type 205</strong> is used to delete a dynamic NPC from the map. It only works on NPCs created in <code>cq_dynanpc</code> — not static NPCs from <code>cq_npc</code>. Once deleted, the NPC is permanently removed and cannot be used in any further action steps.</p>
+
+  <h5>📜 Basic Example:</h5>
+  <pre>
+-- Delete current dynamic NPC
+INSERT INTO cq_action VALUES (8410200, 8410201, 0000, 0205, 0, '');
+  </pre>
+
+  <h5>📌 Important Behavior:</h5>
+  <ul>
+    <li>Only applies to <code>cq_dynanpc</code> (dynamic NPCs)</li>
+    <li>Must be placed as the <strong>last</strong> line in the action chain</li>
+    <li>Any actions listed <strong>after</strong> a 0205 will <u>not</u> be executed</li>
+  </ul>
+
+  <h5>🧠 Syntax Options:</h5>
+  <ul>
+    <li><strong>data ≠ 0:</strong> Deletes all dynamic NPCs with matching <code>type</code> in the <strong>current map</strong></li>
+    <li><strong>param:</strong> Can be used to delete by <code>map_id type</code> pair</li>
+  </ul>
+
+  <h5>📜 Map-Wide Delete by Type:</h5>
+  <pre>
+-- Delete all dynanpc with type = 999 in current map
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0205, 999, '');
+  </pre>
+
+  <h5>📜 Delete by Map + Type (New Engine):</h5>
+  <pre>
+-- Delete NPCs of type 888 from map 1002
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0205, 0, '1002 888');
+  </pre>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Warning:</strong> Once this action runs, the dynamic NPC is permanently deleted. Do <u>not</u> add further actions after a <code>0205</code> or they will never run.
+  </div>
+
+</details>
+
+
+<details>
+  <summary>⚔️ <strong>Check Legion War Time (Type 226)</strong></summary>
+  <br>
+
+  <p><strong>Type 226</strong> checks whether the current time is within the configured Legion War period. It's used to control war-based logic like teleportation, dialogue conditions, or reward distribution.</p>
+
+  <h4>🧠 Behavior:</h4>
+  <ul>
+    <li>If war is currently ongoing → goes to <code>id_next</code></li>
+    <li>If not within Legion War period → goes to <code>id_nextfail</code></li>
+  </ul>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+-- Check if it's Legion War time
+REPLACE INTO cq_action VALUES (1001, 1002, 1003, 0226, 0, '');
+
+-- If war is on
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Legion War is already start');
+
+-- If war is off
+REPLACE INTO cq_action VALUES (1003, 0000, 0000, 0126, 0, 'Legion war not started yet');
+  </pre>
+
+  <h4>📌 Use Cases:</h4>
+  <ul>
+    <li>NPC war entry control</li>
+    <li>Trigger different dialogs based on war state</li>
+    <li>Prevent or allow map teleportation</li>
+  </ul>
+
+  <h4>💡 Tip:</h4>
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; border-radius: 6px;">
+    Combine with <code>type 126</code> to give user-friendly feedback, or teleport (type 1006) if war is active.
+  </div>
+</details>
+
+
+<details>
+  <summary>🗝️ <strong>Clear Warehouse Password (Type 228, 229, 1058)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p>These actions manage player warehouse passwords, including checks and clearance. Used for secure item storage systems.</p>
+
+  <h4>🛡️ Type 228 – Check Warehouse Lock Status</h4>
+  <p><strong>Purpose</strong>: Verifies if the warehouse is password-locked before clearance.</p>
+  <p><strong>Behavior</strong>:</p>
+  <ul>
+    <li>If locked → proceeds to <code>id_next</code> (clear password with <strong>229</strong>).</li>
+    <li>If unlocked → jumps to <code>id_nextfail</code> (error message).</li>
+  </ul>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0228, 0, '');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Warehouse not locked!');
+  </pre>
+
+  <h4>🗝️ Type 229 – Clear Warehouse Password</h4>
+  <p><strong>Purpose</strong>: Removes the warehouse password (requires prior <strong>228</strong> check).</p>
+  <p><strong>Behavior</strong>:</p>
+  <ul>
+    <li>No parameters needed. Always follows <strong>228</strong>'s <code>id_next</code>.</li>
+  </ul>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1001, 1003, 0000, 0229, 0, '');
+  </pre>
+
+  <h4>✅ Type 1058 – Confirm Clearance</h4>
+  <p><strong>Purpose</strong>: Validates if the password was cleared successfully.</p>
+  <p><strong>Behavior</strong>:</p>
+  <ul>
+    <li>If success → <code>id_next</code> (confirmation message).</li>
+    <li>If failure → <code>id_nextfail</code> (error message).</li>
+  </ul>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1003, 1004, 1005, 1058, 0, '');
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'Password cleared!');
+REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Clearance failed.');
+  </pre>
+
+  <h4>🔗 Full Workflow Example</h4>
+  <pre>
+-- 1. Check lock status
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0228, 0, '');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'No password set.');
+
+-- 2. Clear password
+REPLACE INTO `cq_action` VALUES (1001, 1003, 0000, 0229, 0, '');
+
+-- 3. Confirm result
+REPLACE INTO `cq_action` VALUES (1003, 1004, 1005, 1058, 0, '');
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'Success!');
+REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Failed.');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Chain with <code>type 126</code> for user feedback. Use <code>id_nextfail</code> rigorously for error handling.
+  </div>
+</details>
 
 ---
 
@@ -1193,3 +1424,4 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, '%public_var_str3');
   - [Color Font Generator](color-generator.html)
   - [Cq_card Generator](cq_card-generator.html)
 
+{% include footer.html %}
