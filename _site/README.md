@@ -1882,7 +1882,7 @@ REPLACE INTO `cq_action` VALUES (1002, 1003, 1004, 0306, 0, 'castle == 5');
 
 
 <details>
-  <summary>👀 <strong>Region Monitoring (Types 307/322/323)</strong></summary>
+  <summary>👀 <strong>Region Monitoring (Types 307,322,323)</strong></summary>
   <br>
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
@@ -2373,3 +2373,10 @@ REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Sorry, but you don`
 
   - [Color Font Generator](color-generator.html)
   - [Cq_card Generator](cq_card-generator.html)
+
+
+---
+
+<footer style="text-align:center; padding: 20px; font-size: 14px; color: #777;">
+  🧠 Built with ❤️ by DuaSelipar • © 2025 • <a href="https://duaselipar.github.io/eudemons-cq_action-guide/" target="_blank">Back to Top</a>
+</footer>
