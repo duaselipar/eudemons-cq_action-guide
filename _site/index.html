@@ -22,7 +22,7 @@
 {"@context":"https://schema.org","@type":"WebSite","description":"A complete guide to using cq_action in Eudemons Online private servers.","headline":"🧠 Eudemons Online cq_action Table Guide","name":"CQ_Action Guide","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=ecb00d09dacc88b8bb39c6ad5ec04129376055d5">
+    <link rel="stylesheet" href="/assets/css/style.css?v=22a334008bd6bd96a9521f4f9a1b09bf0c10f00c">
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
 
 <!-- Setup Google Analytics -->
@@ -262,13 +262,11 @@ REPLACE INTO `cq_task` VALUES (1007, 1007, 0000, '', '', 0, 0, 999, -100000, 100
 <details>
   <summary>💠 <strong>Modern NPC Dialog (Type 132 &amp; 133)</strong></summary>
   <br />
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p>This dialog system creates stylish, story-driven NPC interactions with portrait images, background panels, and up to 4 interactive options.This feature is only available on the 🆕 New Engine.</p>
 
-  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong><br />
-    This feature does not exist in classic (old) engine clients.
-  </div>
 
   <h4>🖼️ Example: Linleria Dialog</h4>
   <img src="assets/images/133-0.png" style="width:80%; max-width:480px; border-radius:8px; margin-bottom:12px;" />
@@ -1031,12 +1029,11 @@ INSERT INTO cq_action VALUES (1000072, 0000, 0000, 0131, 0, '0');
 <details>
   <summary>🎁 <strong>God’s Treasure (Type 188)</strong></summary>
   <br />
-
-  <p><strong>Type 188</strong> opens the <em>God’s Treasure</em> spinning interface, where players can draw from 8 randomized rewards. This feature is only available on the <strong>🆕 New Engine</strong>.</p>
-
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
+  <p><strong>Type 188</strong> opens the <em>God’s Treasure</em> spinning interface, where players can draw from 8 randomized rewards. This feature is only available on the <strong>🆕 New Engine</strong>.</p>
+
 
   <h4>🖼️ Example Display:</h4>
   <img src="assets/images/188.png" alt="Gods Treasure Interface" />
@@ -1104,7 +1101,9 @@ INSERT INTO cq_action VALUES (1008, 0000, 0000, 0540, 1026626, 'amount += 1');
 <details>
   <summary>🧾 <strong>Temporary Dialog &amp; In-Game Web (Type 189)</strong></summary>
   <br />
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 189</strong> is used for two purposes depending on the <code>data</code> value:</p>
   <ul>
     <li><code>data = 204</code>: Temporary dialog box (shows for 4–5 seconds)</li>
@@ -1190,7 +1189,9 @@ INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 0189, 202, '6 4');
 <details>
   <summary>🔢 <strong>Global Variable Control (Type 191 &amp; 192)</strong></summary>
   <br />
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only </strong>
+  </div>
   <p><strong>Type 191</strong> and <strong>Type 192</strong> are used to manipulate global or session-wide variables stored in <code>cq_vardata</code> and <code>cq_varstrdata</code> respectively.</p>
 
   <h4>📌 Type 191 – Numeric Variables (<code>cq_vardata</code>)</h4>
@@ -1478,6 +1479,943 @@ REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Failed.');
 
   <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
     💡 <strong>Tip:</strong> Chain with <code>type 126</code> for user feedback. Use <code>id_nextfail</code> rigorously for error handling.
+  </div>
+</details>
+
+<details>
+  <summary>🛒 <strong>Exchange Store System (Type 250)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>This system allows players to exchange items via NPCs using Type 250 actions and the <code>cq_exchangegoods</code> table.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius: 6px;">
+    ⚠️ <strong>Important:</strong> 
+    <ul>
+      <li>Type 250 can only be triggered by NPCs, not item packages</li>
+      <li>The <code>data</code> value must always be <strong>601</strong> for exchange shop interface</li>
+    </ul>
+  </div>
+
+  <h4>🖼️ Exchange Store Interface</h4>
+  <img src="assets/images/250-601.png" style="max-width:100%; border-radius:8px; margin:10px 0; border:1px solid #ddd;" />
+
+  <h4>📜 Type 250 – Open Exchange Store</h4>
+  <p><strong>Purpose</strong>: Opens the exchange store interface.</p>
+  <p><strong>Parameters</strong>:</p>
+  <ul>
+    <li><code>data</code>: Fixed value <strong>601</strong> (required for interface)</li>
+    <li><code>param</code>: Unused (leave empty)</li>
+  </ul>
+
+  <h4>📜 Example NPC Dialog Chain:</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (80000000, 80000001, 0, 0101, 0, 'Welcome honored guest. I can exchange various');
+REPLACE INTO `cq_action` VALUES (80000001, 80000002, 0, 0101, 0, 'robes for you. A well-crafted robe can enhance');
+REPLACE INTO `cq_action` VALUES (80000002, 80000003, 0, 0101, 0, 'your charm. Would you like to choose one?');
+REPLACE INTO `cq_action` VALUES (80000003, 80000004, 0, 0102, 0, 'I~want~to~exchange~items. 80000007');
+REPLACE INTO `cq_action` VALUES (80000004, 80000005, 0, 0102, 0, 'No~thanks. 0');
+REPLACE INTO `cq_action` VALUES (80000005, 80000006, 0, 0104, 0, '10 10 10');
+REPLACE INTO `cq_action` VALUES (80000006, 0, 0, 0120, 0, '');
+REPLACE INTO `cq_action` VALUES (80000007, 0, 0, 0250, 601, '');
+  </pre>
+
+  <h4>📦 cq_exchangegoods Table Structure</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>id</code></td>
+        <td style="padding:8px;">Unique entry ID</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>ownerid</code></td>
+        <td style="padding:8px;">NPC ID (from <code>cq_npc</code> or <code>cq_dynanpc</code>)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>itemtype</code></td>
+        <td style="padding:8px;">Item ID to give</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>price</code></td>
+        <td style="padding:8px;">Quantity of <code>needitem</code> required</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>needitem</code></td>
+        <td style="padding:8px;">Item ID required for exchange</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>maxcount</code></td>
+        <td style="padding:8px;">Daily exchange limit (-1 = unlimited)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>RetainField</code></td>
+        <td style="padding:8px;">Unused (set to 0)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>📜 Sample Exchange Data</h4>
+  <pre>
+INSERT INTO `cq_exchangegoods` VALUES
+(0001, 1044, 753231, 18, 1020157, -1, 0),  -- Unlimited exchanges
+(0002, 1044, 753232, 8, 1025644, -1, 0),
+(0003, 1044, 753233, 12, 1025644, -1, 0),
+(0004, 1044, 753234, 18, 1020157, -1, 0),
+(0005, 1044, 753235, 8, 1025644, -1, 0),
+(0006, 1044, 753236, 12, 1025644, -1, 0);
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tips:</strong>
+    <ul>
+      <li>Stock resets daily at 24:00 or server restart</li>
+      <li>Use <code>maxcount=-1</code> for unlimited exchanges</li>
+      <li>All exchange shops use interface ID <strong>601</strong></li>
+      <li><code>ownerid</code> must match an existing NPC ID</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>🚚 <strong>Move NPC (Type 301)</strong></summary>
+  <br />
+
+  <p>This action moves static NPCs (from <code>cq_npc</code>) to specified map coordinates or hides them by moving to (0,0).</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius: 6px;">
+    ⚠️ <strong>Important:</strong> 
+    <ul>
+      <li>Only works with <code>cq_npc</code> (not dynamic NPCs from <code>cq_dynanpc</code>)</li>
+      <li>Moving to (0,0) effectively hides the NPC</li>
+    </ul>
+  </div>
+
+  <h4>📜 Type 301 Parameters</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>data</code></td>
+        <td style="padding:8px;">NPC ID (from <code>cq_npc</code>)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>param</code></td>
+        <td style="padding:8px;"><code>"map_id posX posY"</code> coordinates</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>📜 Example SQL</h4>
+  <h5>Move NPC 2678 to map 1000 at (174,388):</h5>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0301, 2678, '1000 174 388');
+  </pre>
+
+  <h5>Hide NPC 2678 (move to 0,0):</h5>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0301, 2678, '1000 0 0');
+  </pre>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Create NPCs that "travel" between locations</li>
+    <li>Hide/show NPCs for time-limited events</li>
+    <li>Reposition NPCs after map changes</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 123</code> (time check) for NPCs that appear/disappear at specific times.
+  </div>
+</details>
+
+<details>
+  <summary>👥 <strong>Map User Check (Type 302)</strong></summary>
+  <br />
+
+  <p>This action checks player counts on specified maps, with special handling for large map IDs (&gt;2.1 billion) in New Engine.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius: 6px;">
+    ⚠️ <strong>New Engine Only:</strong> The extended format (data=0) is only available in New Engine versions.
+  </div>
+
+  <h4>📜 Standard Parameters (data ≠ 0)</h4>
+  <pre>
+INSERT INTO `cq_action` VALUES (1000, 1001, 1002, 0302, 8764, 'alive_user == 1');
+INSERT INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'There are 1 user in that map');
+INSERT INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'There are 0 or more than 1 user in that map');
+  </pre>
+  <table style="width:100%; border-collapse:collapse; font-size:14px; margin-bottom:16px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Field</th>
+        <th style="text-align:left; padding:8px;">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>data</code></td>
+        <td style="padding:8px;">Map ID (from <code>cq_map</code>)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>param</code></td>
+        <td style="padding:8px;"><code>"cmd opt quantity"</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>cmd</code></td>
+        <td style="padding:8px;"><code>map_user</code> (all users) or <code>alive_user</code> (non-ghost users)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>opt</code></td>
+        <td style="padding:8px;"><code>==</code>, <code>&lt;=</code>, or <code>&gt;=</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>📜 Extended Parameters (data=0) - New Engine Only</h4>
+  <pre>
+INSERT INTO `cq_action` VALUES (1000, 1001, 1002, 0302, 0, '1200 map_user &lt;= 0');
+INSERT INTO `cq_action` VALUES (1000, 1001, 1002, 0302, 0, '4070000001 map_user &lt;= 0'); -- instance map
+INSERT INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'There are no user in that map');
+INSERT INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'There are user in that map');
+  </pre>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Field</th>
+        <th style="text-align:left; padding:8px;">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>data</code></td>
+        <td style="padding:8px;">Must be <code>0</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>param</code></td>
+        <td style="padding:8px;"><code>"map_id cmd opt quantity"</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Restrict access to maps when crowded (<code>map_user &gt;= 50</code>)</li>
+    <li>Trigger events when first player enters (<code>alive_user == 1</code>)</li>
+    <li>Create solo-instance maps (<code>map_user &lt;= 0</code> check before teleport)</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 1006</code> (teleport) to create player-limited zones.<br />
+    <strong>Old Engine:</strong> Only supports standard format (data ≠ 0) with map IDs ≤ 2.1 billion
+  </div>
+</details>
+
+<details>
+  <summary>📢 <strong>Map Broadcast Message (Type 303)</strong></summary>
+  <br />
+
+  <p>Sends a broadcast message to all players on a specific map.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius: 6px;">
+    ⚠️ <strong>Important:</strong> 
+    <ul>
+      <li><code>data</code> field requires a valid map ID</li>
+      <li>Messages are only visible to players on the specified map</li>
+    </ul>
+  </div>
+
+  <h4>🖼️ Example Output</h4>
+  <img src="assets/images/303.png" style="max-width:100%; border-radius:8px; margin:10px 0; border:1px solid #ddd;" />
+
+  <h4>📜 Type 303 Parameters</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>data</code></td>
+        <td style="padding:8px;">Target map ID</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>param</code></td>
+        <td style="padding:8px;">Message text</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>📜 Example SQL</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0303, 1000, 'Congratulations! %user_name has combined a Super Amber.');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Note:</strong> For global announcements, use <code>type 125</code> instead.
+  </div>
+</details>
+
+<details>
+  <summary>🎁 <strong>Map Drop Item (Type 304)</strong></summary>
+  <br />
+
+  <p>Spawns items at specified map coordinates with optional lifetime and protection periods.</p>
+
+  <h4>📜 Standard Parameters</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0304, 0, '1010030 1000 492 320');
+  </pre>
+
+  <h4>📜 New Engine Extended Parameters</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0304, 0, '1010030 1000 492 320 1800 900');
+  </pre>
+
+  <h4>📦 Parameter Breakdown</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Parameter</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>idItemType</code></td>
+        <td style="padding:8px;">Item ID to spawn</td>
+        <td style="padding:8px;">1010030</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>idMap</code></td>
+        <td style="padding:8px;">Target map ID</td>
+        <td style="padding:8px;">1000</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>nPosX nPosY</code></td>
+        <td style="padding:8px;">Spawn coordinates</td>
+        <td style="padding:8px;">492 320</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>alivesecs</code></td>
+        <td style="padding:8px;">Item lifetime (seconds)<br /><em>New Engine only</em></td>
+        <td style="padding:8px;">1800 (30 mins)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>priv_secs</code></td>
+        <td style="padding:8px;">Protection period (seconds)<br /><em>New Engine only</em></td>
+        <td style="padding:8px;">900 (15 mins)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>New Engine Behavior:</strong>
+    <ul>
+      <li>When <code>alivesecs</code> and <code>priv_secs</code> are 0 or empty, uses server defaults</li>
+      <li>Old Engine only use Standard Parameters</li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Event item spawns (holiday gifts, rare drops)</li>
+    <li>Quest objective items</li>
+    <li>Boss fight rewards</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 303</code> to announce important item spawns.
+  </div>
+</details>
+
+<details>
+  <summary>🗺️ <strong>Map Attribute Control (Type 306)</strong></summary>
+  <br />
+
+  <p>Checks or modifies specific map attributes. Supports conditional checks and direct modifications.</p>
+
+  <h4>📜 Basic Syntax</h4>
+  <pre>param = "field opt data [idMap]"</pre>
+
+  <h4>📜 Example</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0306, 0, 'mapdoc == 8773');
+  </pre>
+
+  <h4>📦 Supported Operations</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Operations</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>synid</code></td>
+        <td style="padding:8px;">==, =</td>
+        <td style="padding:8px;">Synarchy ID operations</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>status</code></td>
+        <td style="padding:8px;">test, set, reset</td>
+        <td style="padding:8px;">Map status flags</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>type</code></td>
+        <td style="padding:8px;">test</td>
+        <td style="padding:8px;">Map type check</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>res_lev</code></td>
+        <td style="padding:8px;">=, ==, &lt;</td>
+        <td style="padding:8px;">Resource level</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>mapdoc</code></td>
+        <td style="padding:8px;">=, ==</td>
+        <td style="padding:8px;">Map document ID</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>portal0_x</code></td>
+        <td style="padding:8px;">=</td>
+        <td style="padding:8px;">Main portal X coordinate</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>portal0_y</code></td>
+        <td style="padding:8px;">=</td>
+        <td style="padding:8px;">Main portal Y coordinate</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>castle</code></td>
+        <td style="padding:8px;">==</td>
+        <td style="padding:8px;">Castle association</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Notes:</strong>
+    <ul>
+      <li>When <code>idMap</code> is omitted, affects current map</li>
+      <li>Use <code>id_nextfail</code> for conditional failure paths</li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Examples</h4>
+  <pre>
+-- Check map document ID
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0306, 0, 'mapdoc == 8773');
+
+-- Modify resource level
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0306, 0, 'res_lev = 3 1002');
+
+-- Test castle association
+REPLACE INTO `cq_action` VALUES (1002, 1003, 1004, 0306, 0, 'castle == 5');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 1006</code> for conditional map teleports.
+  </div>
+</details>
+
+<details>
+  <summary>👀 <strong>Region Monitoring (Types 307/322/323)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Checks entity counts within specific map regions with different detection methods.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius: 6px;">
+    ⚠️ <strong>Note:</strong> Type 307 references are scarce - recommended to use 322/323 instead.
+  </div>
+
+  <h4>📜 Type 322 - Circular Area Check</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0322, 1, '1000 527 361 5 &gt; 1');
+  </pre>
+  <p><strong>Parameters</strong>: <code>mapid x y radius &gt; value</code></p>
+  <ul>
+    <li><code>data=1</code>: Exclude ghost players</li>
+    <li>Radius defines circular detection area</li>
+    <li>Supports <code>&gt;</code>, <code>==</code>, <code>&gt;=</code></li>
+  </ul>
+
+  <h4>📜 Type 323 - Rectangular Area Check</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0323, 1, '1000 106 406 12 12 &gt; 3');
+  </pre>
+  <p><strong>Parameters</strong>: <code>mapid x y width height &gt; value</code></p>
+  <ul>
+    <li>Similar to Type 322 but rectangular area</li>
+    <li>Width/Height define detection rectangle</li>
+  </ul>
+
+  <h4>📦 Parameter Comparison</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Type</th>
+        <th style="text-align:left; padding:8px;">Area Shape</th>
+        <th style="text-align:left; padding:8px;">Ghost Handling</th>
+        <th style="text-align:left; padding:8px;">Operators</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">322</td>
+        <td style="padding:8px;">Circle (radius)</td>
+        <td style="padding:8px;"><code>data=0/1</code></td>
+        <td style="padding:8px;">&gt;, ==, &gt;=</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">323</td>
+        <td style="padding:8px;">Rectangle (w/h)</td>
+        <td style="padding:8px;"><code>data=0/1</code></td>
+        <td style="padding:8px;">&gt;, ==, &gt;=</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Boss room player limits</li>
+    <li>Event participation checks</li>
+    <li>Safe zone monitoring</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Implementation Guide:</strong>
+    <ol>
+      <li>Use 322 for radial detection (e.g. spawn points)</li>
+      <li>Use 323 for zone-based checks (e.g. rectangular arenas)</li>
+      <li>Set <code>data=1</code> for alive-player-only events</li>
+    </ol>
+  </div>
+</details>
+
+<details>
+  <summary>✨ <strong>Map Effects (Type 312)</strong></summary>
+  <br />
+
+  <p>Displays visual effects at specified map coordinates. Supports hundreds of built-in effect animations.</p>
+
+  <h4>📜 Basic Syntax</h4>
+  <pre>param = "idMap x y EffectName"</pre>
+
+  <h4>📜 Example</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0312, 0, '2010 325 438 fire555');
+  </pre>
+
+  <h4>📦 Parameter Breakdown</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Parameter</th>
+        <th style="text-align:left; padding:8px;">Description</th>
+        <th style="text-align:left; padding:8px;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>idMap</code></td>
+        <td style="padding:8px;">Target map ID</td>
+        <td style="padding:8px;">2010</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>x y</code></td>
+        <td style="padding:8px;">Effect coordinates</td>
+        <td style="padding:8px;">325 438</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>EffectName</code></td>
+        <td style="padding:8px;">Predefined effect identifier</td>
+        <td style="padding:8px;">fire555</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>🎆 Effect Names (Refer ini/3deffect.ini inside your client)</h4>
+  <div style="column-count:3; column-gap:20px; font-size:13px;">
+    <ul style="margin-top:0;">
+      <li>fire555</li>
+      <li>skill281</li>
+      <li>CoolPose03</li>
+      <li>chgdamage</li>
+      <li>pet31</li>
+      <li>gem16</li>
+      <li>bless</li>
+      <li>zfgx06</li>
+      <li>FF09</li>
+      <li>FF15</li>
+    </ul>
+    <ul>
+      <li>skill335</li>
+      <li>gcyh10</li>
+      <li>zfgx01</li>
+      <li>pilidan</li>
+      <li>gcyh9</li>
+      <li>other12</li>
+      <li>pet40</li>
+      <li>skill090</li>
+      <li>FF14</li>
+      <li>HeroGem</li>
+    </ul>
+    <ul>
+      <li>skill323</li>
+      <li>callpet05</li>
+      <li>skill064</li>
+      <li>monster02</li>
+      <li>noconfirm001</li>
+      <li>PetEvo</li>
+      <li>skill156</li>
+      <li>FF19</li>
+      <li>zhongqiu1</li>
+      <li>organ08</li>
+    </ul>
+  </div>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Note:</strong> 
+    <ul>
+      <li>Effects are client-side only</li>
+      <li>Duration depends on effect type</li>
+      <li>Coordinates are map-specific</li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Quest completion markers</li>
+    <li>Event decorations</li>
+    <li>Boss spawn animations</li>
+    <li>Treasure location highlights</li>
+
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 303</code> for coordinated effect+announcement combos.
+  </div>
+</details>
+
+<details>
+  <summary>🗺️ <strong>Map Variables (Types 316,317,318,319)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Manipulates persistent variables tied to specific maps, supporting both numeric and text data.</p>
+
+  <h4>📜 Type 316 - Initialize Numeric Variable</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0316, 0, 'map_var(1000,10) set 0');
+  </pre>
+  <p><strong>Format</strong>: <code>map_var(map_id,index) set value</code></p>
+  <ul>
+    <li>Initializes variable to 0 (or specified value)</li>
+    <li>Variables: <code>%map_iter_var_data{index}</code></li>
+  </ul>
+
+  <h4>📜 Type 317 - Modify/Compare Numeric Variable</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0317, 0, 'map_var(1200,0) += 1');
+  </pre>
+  <p><strong>Operations</strong>: <code>= == += -= *= /=</code></p>
+
+  <h4>📜 Type 318 - Compare Text Variable</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0318, 0, 'map_var(%user_map_id,2) == Tree');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'This is Tree');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'This is not Tree');
+  </pre>
+  <p><strong>Note</strong>: Case-insensitive comparison</p>
+
+  <h4>📜 Type 319 - Initialize Text Variable</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0319, 0, 'map_var(1000,5) set %user_name');
+  </pre>
+  <p><strong>Variables</strong>: <code>%map_iter_var_str{index}</code></p>
+
+  <h4>📦 Variable Index Range</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Type</th>
+        <th style="text-align:left; padding:8px;">Index Range</th>
+        <th style="text-align:left; padding:8px;">Variable Format</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">Numeric</td>
+        <td style="padding:8px;">0-19</td>
+        <td style="padding:8px;"><code>%map_iter_var_data{index}</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Text</td>
+        <td style="padding:8px;">0-19</td>
+        <td style="padding:8px;"><code>%map_iter_var_str{index}</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Special Map IDs:</strong>
+    <ul>
+      <li><code>%user_map_id</code> - Current player's map</li>
+      <li>Numeric IDs reference <code>cq_map</code></li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Map-specific event counters</li>
+    <li>Boss spawn conditions</li>
+    <li>Dynamic puzzle states</li>
+    <li>Player progress tracking</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 201</code> (NPC attributes) for complex map behaviors.
+  </div>
+</details>
+
+<details>
+  <summary>💉 <strong>Monster HP Check (Type 325)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Retrieves current or max HP of monsters on a map and stores in variables.</p>
+
+  <h4>📜 Basic Syntax</h4>
+  <pre>param = "mapmonsterhp(map_id,monster_type_id,var_index,var_type,hp_mode)"</pre>
+
+  <h4>📦 Parameter Breakdown</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Parameter</th>
+        <th style="text-align:left; padding:8px;">Description</th>
+        <th style="text-align:left; padding:8px;">Values</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>map_id</code></td>
+        <td style="padding:8px;">Target map ID</td>
+        <td style="padding:8px;">Number or <code>%user_map_id</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>monster_type_id</code></td>
+        <td style="padding:8px;">Monster ID from <code>cq_monstertype</code></td>
+        <td style="padding:8px;">e.g. 26171</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>var_index</code></td>
+        <td style="padding:8px;">Variable storage slot</td>
+        <td style="padding:8px;">0-99</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>var_type</code></td>
+        <td style="padding:8px;">Variable scope</td>
+        <td style="padding:8px;">
+          0 = Personal (<code>%iter_var_data#</code>)<br />
+          1 = Global (<code>%public_var_data#</code>)
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>hp_mode</code></td>
+        <td style="padding:8px;">HP retrieval mode</td>
+        <td style="padding:8px;">
+          0 = Current HP<br />
+          1 = Max HP
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>👤 Personal Variable Examples</h4>
+  <pre>
+-- Check current HP
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0325, 0, 'mapmonsterhp(%user_map_id,26171,3,0,0)');
+REPLACE INTO `cq_action` VALUES (1001, 0, 0, 0126, 0, 'HP:%iter_var_data3');
+REPLACE INTO `cq_action` VALUES (1002, 0, 0, 0126, 0, 'Get failed, the monster does not exist or HP is 0');
+
+-- Check max HP
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0325, 0, 'mapmonsterhp(%user_map_id,26171,3,0,1)');
+REPLACE INTO `cq_action` VALUES (1001, 0, 0, 0126, 0, 'Max HP:%iter_var_data3');
+REPLACE INTO `cq_action` VALUES (1002, 0, 0, 0126, 0, 'Get failed, the monster does not exist or max HP is 0');
+  </pre>
+
+  <h4>🌍 Global Variable Examples</h4>
+  <pre>
+-- Check current HP
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0325, 0, 'mapmonsterhp(%user_map_id,26171,3,1,0)');
+REPLACE INTO `cq_action` VALUES (1001, 0, 0, 0126, 0, 'HP:%public_var_data3');
+REPLACE INTO `cq_action` VALUES (1002, 0, 0, 0126, 0, 'Get failed, the monster does not exist or HP is 0');
+
+-- Check max HP
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0325, 0, 'mapmonsterhp(%user_map_id,26171,3,1,1)');
+REPLACE INTO `cq_action` VALUES (1001, 0, 0, 0126, 0, 'Max HP:%public_var_data3');
+REPLACE INTO `cq_action` VALUES (1002, 0, 0, 0126, 0, 'Get failed, the monster does not exist or max HP is 0');
+  </pre>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Behavior Notes:</strong>
+    <ul>
+      <li>Returns <code>false</code> if monster doesn't exist or is dead</li>
+      <li>May return 0 even when successful</li>
+      <li>Global variables don't require player context</li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Boss health percentage displays</li>
+    <li>Event triggers at specific HP thresholds</li>
+    <li>Dynamic difficulty adjustment</li>
+    <li>Raid mechanics implementation</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 317</code> to create HP-based event counters.
+  </div>
+</details>
+
+<details>
+  <summary>🗑️ <strong>Delete Current Item (Type 498)</strong></summary>
+  <br />
+
+  <p>Deletes the item that triggered the action chain. Requires specifying the ItemTypeID and should be the last action in a sequence.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius:6px;">
+    ⚠️ <strong>Critical:</strong> 
+    <ul>
+      <li><code>data</code> field <strong>must</strong> contain the ItemTypeID</li>
+      <li>Always place this action <strong>last</strong> in your chain</li>
+      <li>Only deletes if the current item matches the specified ID</li>
+    </ul>
+  </div>
+
+  <h4>📜 Strict Syntax</h4>
+  <pre>data = ItemTypeID
+param = "" (empty)</pre>
+
+  <h4>📜 Valid Examples</h4>
+  <pre>
+-- Delete current item (verified)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0498, 729011, '');
+
+-- Full item exchange workflow:
+REPLACE INTO `cq_action` VALUES (1001, 1002, 0000, 0501, 500002, '1 1 2 0 0 0 0 0 200 0 0 0'); -- Give reward
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 1010, 2005, 'You received Eudemon Crystal.'); -- Announce
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0498, 729011, ''); -- Delete original item (LAST!)
+  </pre>
+
+  <div style="border-left: 4px solid #f44336; background: #ffebee; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ❌ <strong>Invalid Usage:</strong>
+    <pre>REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0498, 0, ''); -- ERROR: Missing ItemTypeID</pre>
+  </div>
+
+  <h4>🔧 Required Workflow</h4>
+  <ol>
+    <li>Process rewards/effects</li>
+    <li>Show notifications</li>
+    <li><strong>Finally</strong> delete source item with type 498</li>
+  </ol>
+</details>
+
+<details>
+  <summary>🔄 <strong>Multi-Item Operations (Types 506 &amp; 507)</strong></summary>
+  <br />
+
+  <p>Handles batch operations for ranges of items with binding status control.</p>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-bottom: 16px; border-radius:6px;">
+    ⚠️ <strong>Note:</strong> 
+    <ul>
+      <li>Supports item ranges (ID1 to ID2)</li>
+      <li>Old Engine only supports <code>data=0</code></li>
+    </ul>
+  </div>
+
+  <h4>📜 Type 507 - Multi-Item Check</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0507, 0, '743032 743032 10');
+  </pre>
+  <p><strong>Parameters</strong>: <code>"start_id end_id quantity"</code></p>
+
+  <h4>📜 Type 506 - Multi-Item Delete</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1001, 1003, 0000, 0506, 0, '743032 743032 10');
+  </pre>
+
+  <h4>📦 Binding Status Control (data field)</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;"><code>data</code></th>
+        <th style="text-align:left; padding:8px;">Behavior</th>
+        <th style="text-align:left; padding:8px;">Engine Support</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">0</td>
+        <td style="padding:8px;">Ignore binding status (delete/check all)</td>
+        <td style="padding:8px;">Old &amp; New Engine</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">1</td>
+        <td style="padding:8px;">Delete/check both bound and unbound</td>
+        <td style="padding:8px;">New Engine Only</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">2</td>
+        <td style="padding:8px;">Only affect bound items</td>
+        <td style="padding:8px;">New Engine Only</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>🔧 Complete Workflow Example</h4>
+  <pre>
+-- Check for 10 Flower Cards (ID 743032)
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0507, 0, '743032 743032 10');
+
+-- Success path: Delete 10 Flower Cards
+REPLACE INTO `cq_action` VALUES (1001, 1003, 0000, 0506, 0, '743032 743032 10');
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'You have given 10 flower cards');
+
+-- Failure path
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Sorry, but you don`t have 10 flower cards');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Advanced Usage:</strong>
+    <ul>
+      <li>Use identical start/end IDs for single item types</li>
+      <li>Combine with <code>type 501</code> for exchange systems</li>
+    </ul>
   </div>
 </details>
 
