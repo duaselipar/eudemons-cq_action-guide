@@ -2367,6 +2367,882 @@ REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Sorry, but you don`
   </div>
 </details>
 
+
+
+
+<details>
+  <summary>🛡️ <strong>Equipment Check (Type 511)</strong></summary>
+  <br>
+
+  <p>Verifies if a player has specific equipment in a particular slot.</p>
+
+  <h4>📜 Basic Syntax</h4>
+  <pre>
+data = Equipment slot position
+param = ItemTypeID to check
+  </pre>
+
+  <h4>📜 Example</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0511, 4, '480001');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Weapon equipped');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Weapon not equipped');
+  </pre>
+
+  <h4>📦 Equipment Slot Positions</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px;">Position</th>
+        <th style="text-align:left; padding:8px;">Value</th>
+        <th style="text-align:left; padding:8px;">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">Helmet</td>
+        <td style="padding:8px;">1</td>
+        <td style="padding:8px;">Head slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Necklace</td>
+        <td style="padding:8px;">2</td>
+        <td style="padding:8px;">Amulet/necklace slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Armor</td>
+        <td style="padding:8px;">3</td>
+        <td style="padding:8px;">Armor slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Weapon</td>
+        <td style="padding:8px;">4</td>
+        <td style="padding:8px;">Weapon slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Ring</td>
+        <td style="padding:8px;">7</td>
+        <td style="padding:8px;">Ring slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Shoes</td>
+        <td style="padding:8px;">8</td>
+        <td style="padding:8px;">Foot slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Casual</td>
+        <td style="padding:8px;">12</td>
+        <td style="padding:8px;">Casual slot</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">Wardrobe Toy</td>
+        <td style="padding:8px;">38</td>
+        <td style="padding:8px;">Toy slot (New Engine)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Note:</strong>
+    <ul>
+      <li>Position 38 (Wardrobe Toy) is New Engine only</li>
+      <li>Use <code>id_next</code> for equipped case</li>
+      <li>Use <code>id_nextfail</code> for unequipped case</li>
+    </ul>
+  </div>
+
+  <h4>🔧 Practical Uses</h4>
+  <ul>
+    <li>Class-specific quest requirements</li>
+    <li>Equipment-based skill unlocks</li>
+    <li>Cosmetic item verification</li>
+    <li>Special event participation checks</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Combine with <code>type 503</code> to check both equipment and inventory items.
+  </div>
+</details>
+
+
+
+
+<details>
+  <summary>👥 <strong>Team Teleport Scroll (Type 517)</strong></summary>
+  <br>
+
+  <p>Enables user to teleport to team members location. Requires party membership.</p>
+
+  <h4>📜 Basic Usage</h4>
+  <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0517, 0, '');
+  </pre>
+
+  <h4>📦 Requirements</h4>
+  <ul>
+    <li>User must be in a party</li>
+    <li>Target teammate must be on same map</li>
+    <li>Typically used with item ID 810001 (Portal Scroll)</li>
+  </ul>
+
+  <h4>🔧 Full Implementation Example</h4>
+  <pre>
+-- Portal Scroll item action chain
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0, 0517, 0, '');
+REPLACE INTO `cq_action` VALUES (1001, 0, 0, 0126, 0, 'Teleported to teammate!');
+  </pre>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+    ⚠️ <strong>Behavior Notes:</strong>
+    <ul>
+      <li>Teleports user to teammate's position</li>
+      <li>Consumes the scroll on use</li>
+      <li>Some maps may restrict teleportation</li>
+    </ul>
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🔍 <strong>Identify Item (Type 519)</strong></summary>
+  <br>
+
+  <p>Used to identify unknown equipment using a scroll, like the <strong>Equipment Scroll</strong> (ItemID: <code>810004</code>).</p>
+
+  <h4>🧪 Purpose:</h4>
+  <ul>
+    <li>Removes the “unidentified” status from an item.</li>
+  </ul>
+
+  <h4>📜 Example SQL</h4>
+  <pre>
+-- Use Equipment Scroll (ItemID 810004) to identify an item
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0519, 0, '');
+  </pre>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+  <h4>⚙️ Behavior:</h4>
+  <ul>
+    <li>No `data` or `param` values needed; the system auto-identifies the target item equipped or selected.</li>
+  </ul>
+  </div>
+
+
+</details>
+
+
+
+<details>
+  <summary>🔍 <strong>Identify Eudemons (Type 520)</strong></summary>
+  <br>
+
+  <p>Used to identify an Eudemon using an identification scroll, checking its stats and quality. This action is triggered by using the <strong>Eudemon Scroll</strong> (ItemID: <code>810002</code>).</p>
+
+  <h4>🧪 Purpose:</h4>
+  <ul>
+    <li>Reveals the hidden stats and quality of a Eudemon.</li>
+  </ul>
+
+  <h4>📜 Example SQL</h4>
+  <pre>
+-- Use Eudemon Scroll (ItemID 810002) to identify an Eudemon's stats
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0520, 0, '');
+  </pre>
+
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+  <h4>⚙️ Behavior:</h4>
+  <ul>
+    <li>The scroll reveals the Eudemon's characteristics based on pre-defined data in the <code>cq_eudemons</code> table.</li>
+  </ul>
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🐉 <strong>Create Universal O/XO (Types 526, 527, 530, 531)</strong></summary>
+  <br>
+
+  <p>These actions allow players to create Eudemons directly in their inventory. Each type corresponds to different star ratings of Eudemons:</p>
+
+  <h4>🧪 Purpose:</h4>
+  <ul>
+    <li><code>Type 526</code>: Create a 12-star XO Eudemon directly in the player's inventory.</li>
+    <li><code>Type 527</code>: Create an 8-star O Eudemon directly in the player's inventory.</li>
+    <li><code>Type 530</code>: Create a 6-star O Eudemon directly in the player's inventory.</li>
+    <li><code>Type 531</code>: Create a 19-star XO Eudemon directly in the player's inventory.</li>
+  </ul>
+
+  <h4>📜 Full SQL Example for Creating a 12-Star Eudemon</h4>
+  <pre>
+-- Check if the player has enough space in the inventory (Eudemon bag 53)
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1003, 0508, 0, '1 0 53');
+
+-- Create 12-Star XO Eudemon (ID 815038)
+REPLACE INTO `cq_action` VALUES (1001, 1002, 0000, 0526, 0, '');
+
+-- Remove the used item (creation item used)
+REPLACE INTO `cq_action` VALUES (1002, 1004, 0000, 0502, 815038, '');
+
+-- Notify the player of insufficient space if needed
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'You need 1 free space in your inventory.');
+
+-- Confirm the success of the creation
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'Congratulations! You have obtained a 12-Star UniversalXO!');
+  </pre>
+
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+  <h4>⚙️ Behavior Notes:</h4>
+  <ul>
+    <li><strong>Type 503</strong> should be used before this action to check if there is enough space in the player's inventory (bag 53) to hold the Eudemon.</li>
+    <li><strong>Type 526-531</strong> actions correspond to different star-level Eudemons. For example, Type 526 creates a 12-star XO Eudemon, and Type 527 creates an 8-star O Eudemon.</li>
+    <li><code>Type 0502</code> is used to remove the item (used for the Eudemon creation) after successful creation.</li>
+    <li><code>Type 0126</code> provides feedback messages, like informing the player if there is insufficient space or confirming the successful creation of the Eudemon.</li>
+  </ul>
+  </div>
+
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+  <h4>📝 Tips:</h4>
+  <ul>
+    <li>Ensure the player checks for sufficient inventory space using <code>Type 503</code> before attempting to create the Eudemon.</li>
+    <li>The creation action (Type 526-531) will only set the star level of the Eudemon. The <code>Type 503</code> action should handle the check for available space before the creation.</li>
+    <li>Use <code>Type 0126</code> to notify the player if their inventory is full, or confirm successful creation with a custom message.</li>
+  </ul>
+  </div>
+
+</details>
+
+
+
+
+<details>
+  <summary>⚡ <strong>Change Eudemon Attribute (Type 523 & 524)</strong></summary>
+  <br>
+
+  <p>Used for checking and modifying Eudemon stats. A common example is changing an Eudemon’s elemental type using an item like <strong>Thunder Juice</strong> (ItemID: <code>831002</code>).</p>
+
+  <h4>🧪 Purpose:</h4>
+  <ul>
+    <li><code>Type 523</code>: Checks multiple conditions related to the Eudemon — ownership, summon status, level, state, etc.</li>
+    <li><code>Type 524</code>: Applies a stat change to the Eudemon — such as setting its damage, level, or element. Only one condition per statement allowed.</li>
+  </ul>
+
+  <h4>📜 Full SQL Sequence – Use Thunder Juice</h4>
+  <pre>
+-- Check: must be user's Eudemon, summoned, alive, level 1, and not already thunder
+REPLACE INTO `cq_action` VALUES (1000, 1002, 1001, 0523, 0, 'ismyselfeudemon == 1,iscallout == 1,isalive == 1,level == 1,damage != 5');
+
+-- Failure Message: not valid target
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Thunder Juice can only be used on level 1 Eudemons.');
+
+-- Set Eudemon damage element to 5 (Thunder)
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 0524, 0, 'damage 5');
+
+-- Delete the used Thunder Juice item
+REPLACE INTO `cq_action` VALUES (1003, 1004, 0000, 0498, 831002, '');
+
+-- Announce to local system message
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 1010, 2005, '%target_name has changed its race to Thunder!');
+  </pre>
+
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+  <h4>⚙️ Behavior Notes:</h4>
+  <ul>
+    <li><strong>Type 523:</strong> Allows multiple checks in one param string, separated by commas</li>
+    <li><strong>Type 524:</strong> Can only apply <strong>ONE</strong> attribute at a time (e.g., <code>damage 5</code> or <code>level 2</code>)</li>
+    <li><code>ismyselfeudemon</code> ensures the target belongs to the player</li>
+    <li><code>iscallout</code> ensures the Eudemon is currently summoned</li>
+    <li><code>isalive</code> ensures it's not dead or dismissed</li>
+  </ul>
+  </div>
+
+  <h4>📘 Common Conditions for 523:</h4>
+  <ul>
+    <li><code>ismyselfeudemon == 1</code> → belongs to the player</li>
+    <li><code>iscallout == 1</code> → summoned</li>
+    <li><code>isalive == 1</code> → not dead</li>
+    <li><code>level == 1</code> → required level</li>
+    <li><code>damage != 5</code> → not already thunder</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+  <h4>📝 Tips:</h4>
+  <ul>
+    <li>Always handle <code>id_nextfail</code> for 523 to show rejection reason</li>
+    <li>Stack actions for longer flows — check ➝ modify ➝ delete item ➝ show message</li>
+  </ul>
+  </div>
+
+</details>
+
+
+
+<details>
+  <summary>🌟 <strong>Create 25-Star XO Eudemon (Type 538)</strong></summary>
+  <br>
+
+  <p>This action creates a 25-star XO Eudemon directly on the player's body. The <code>param</code> determines the number of stars, with a value of 0 indicating a 25-star XO Eudemon. Other values can be used to create Eudemons with different star ratings.</p>
+
+  <h4>🧪 Purpose:</h4>
+  <ul>
+    <li><code>Type 538</code>: Creates a specified star-rated XO Eudemon directly on the player's body.</li>
+    <li>When <code>param = 0</code>, a 25-star XO Eudemon is created.</li>
+    <li>For other values (e.g., <code>param = 3500</code>), it creates a corresponding number of stars (e.g., 35-star XO Eudemon).</li>
+  </ul>
+
+  <h4>📜 Full SQL Example for Creating a 25-Star Eudemon</h4>
+  <pre>
+-- Check for free space in the player's Eudemon bag (inventory bag 53)
+REPLACE INTO `cq_action` VALUES (1000, 1002, 1001, 0508, 0, '1 0 53');
+
+-- Failure Message: not enough space in inventory
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You need 1 free space in your inventory.');
+
+-- Remove 1 used creation item (e.g., Eudemon creation item)
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 0540, 1024838, 'amount += -1');
+
+-- Create 25-star XO Eudemon directly on the player's body
+REPLACE INTO `cq_action` VALUES (1003, 1004, 0000, 0538, 0, '2500');
+
+-- Success Message: Notify the player of the Eudemon creation
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'You received 25-star XO Eudemons.');
+  </pre>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin:16px 0; border-radius:6px;">
+  <h4>⚙️ Behavior Notes:</h4>
+  <ul>
+    <li><code>Type 0508</code> checks if there is enough space in the player's Eudemon bag (inventory bag 53) before proceeding with the Eudemon creation.</li>
+    <li><code>Type 0540</code> removes the used creation item (such as a scroll or other item used to trigger the Eudemon creation).</li>
+    <li><code>Type 0538</code> actually creates the Eudemon on the player's body with a specified number of stars (e.g., 25 stars). The param value can be customized to create Eudemons with other star ratings (e.g., <code>param = 3500</code> creates a 35-star XO Eudemon).</li>
+    <li><code>Type 0126</code> sends feedback messages to the player — either about inventory space or confirmation of the Eudemon creation.</li>
+  </ul>
+    </div>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+  <h4>📝 Tips:</h4>
+  <ul>
+    <li>Always ensure that the player has enough space in their inventory before attempting to create the Eudemon using <code>Type 0508</code>.</li>
+    <li>For other star-level Eudemons, modify the <code>param</code> value accordingly (e.g., <code>3500</code> for 35 stars).</li>
+    <li>Consider chaining actions with failure conditions using <code>id_nextfail</code> to handle space issues or prevent creation if prerequisites aren’t met.</li>
+  </ul>
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🎁 <strong>Monster Item Drop (Type 801)</strong></summary>
+  <br>
+
+  <p><strong>Type 801</strong> is used to drop items, money, or traps after a monster is killed. The parameters supported are `dropitem`, `dropmoney`, and `droptrap`. You can specify the item type, money amount, or a trap to be dropped. The new engine extension also allows for specifying the quantity for item drops. Below are examples of how to use this action type:</p>
+
+  <h4>💡 Example SQL:</h4>
+
+  <pre>
+-- Drop an item with ItemTypeID 131000
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0801, 0, 'dropitem 131000');
+          
+-- Drop 100,000 money
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0801, 0, 'dropmoney 100000');
+          
+-- Drop a trap with ID 3000 (trap ID from cq_trap) and life period 30 (seconds)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0801, 0, 'droptrap 3000 30');
+          
+-- New Engine Only: Drop 3 items of ItemTypeID 723003
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0801, 0, 'dropitem 723003 3');
+  </pre>
+
+  <h4>📘 Parameter Explanation:</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Operator</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">dropitem</td>
+        <td style="padding:8px;"><code>itemtype</code></td>
+        <td style="padding:8px;">Drop a specified item by ItemTypeID</td>
+        <td style="padding:8px;">`dropitem 131000` (drop item with ItemTypeID 131000)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">dropmoney</td>
+        <td style="padding:8px;"><code>money</code></td>
+        <td style="padding:8px;">Drop a specified amount of money</td>
+        <td style="padding:8px;">`dropmoney 100000` (drop 100,000 money)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">droptrap</td>
+        <td style="padding:8px;"><code>trap_id lifeperiod</code></td>
+        <td style="padding:8px;">Drop a trap with a specified ID (from <code>cq_trap</code>) and a life period</td>
+        <td style="padding:8px;">`droptrap 3000 30` (drop trap with ID 3000, with a life period of 30 seconds)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">dropitem (New Engine Only)</td>
+        <td style="padding:8px;"><code>itemtype quantity</code></td>
+        <td style="padding:8px;">Drop a specified quantity of a given item</td>
+        <td style="padding:8px;">`dropitem 723003 3` (drop 3 items of ItemTypeID 723003)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use `dropitem` to specify the item you want to drop by its ItemTypeID. For the new engine, you can also specify the quantity of items to drop.</li>
+    <li>Use `dropmoney` to drop a specified amount of money after a monster is killed.</li>
+    <li>Use `droptrap` to drop a trap with a specified trap ID. The second parameter (`lifeperiod`) defines the duration for which the trap remains active. This is typically in seconds.</li>
+    <li>The new engine supports specifying the quantity for item drops with `dropitem` (e.g., `dropitem 723003 3` to drop 3 items).</li>
+  </ul>
+    </div>
+
+</details>
+
+<details>
+  <summary>🔥 <strong>Skill Check/Learn/Upgrade (Type 802)</strong></summary>
+  <br>
+
+  <p><strong>Type 802</strong> is used to check, learn, or upgrade player skills (spells). The <code>param</code> supports multiple modes:</p>
+  <ul>
+    <li><code>check type</code> – Check if the player has learned the skill with type <code>type</code>.</li>
+    <li><code>check type level</code> – Check if the player has learned a skill of type <code>type</code> at a specific level.</li>
+    <li><code>learn type</code> – Learn a spell of <code>type</code> at level 0.</li>
+    <li><code>uplevel type</code> – Upgrade an existing spell of <code>type</code> to the next level.</li>
+  </ul>
+
+  <p><strong>Note:</strong> The <code>type</code> value refers to the spell ID from <code>cq_magictype</code>.</p>
+
+  <h4>💡 Example SQL – Check & Learn Skill:</h4>
+  <pre>
+-- Check if skill 8001 is already learned
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0802, 0, 'check 8001');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 1010, 2005, 'You already learned this skill');
+
+-- Learn the skill 8001 if not yet learned
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 0802, 0, 'learn 8001');
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 1010, 2005, 'You learned a new skill!');
+  </pre>
+
+  <h4>💡 Example SQL – Upgrade Existing Skill:</h4>
+  <pre>
+-- Upgrade skill 3011 to the next level
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0802, 0, 'uplevel 3011');
+  </pre>
+
+  <h4>💡 Example SQL – Check Skill Level:</h4>
+  <pre>
+-- Check if player has learned skill 3011 at level 0
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0802, 0, 'check 3011 0');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your skill is level 1');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your skill is not level 1');
+  </pre>
+
+  <h4>📘 Parameter Modes:</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Format</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Function</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>check type</code></td>
+        <td style="padding:8px;">Check if the player has learned this skill</td>
+        <td style="padding:8px;"><code>check 8001</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>check type level</code></td>
+        <td style="padding:8px;">Check if the skill is at the given level</td>
+        <td style="padding:8px;"><code>check 3011 0</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>learn type</code></td>
+        <td style="padding:8px;">Learn the skill (adds skill at level 0)</td>
+        <td style="padding:8px;"><code>learn 8001</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>uplevel type</code></td>
+        <td style="padding:8px;">Increase the spell's level by 1</td>
+        <td style="padding:8px;"><code>uplevel 3011</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use <code>check</code> before <code>learn</code> to prevent duplicate skills.</li>
+    <li>All type values must refer to IDs in <code>cq_magictype</code>.</li>
+    <li>Use <code>uplevel</code> carefully — it assumes the player already has the skill.</li>
+    <li>Always use <code>id_nextfail</code> when checking skills to show appropriate fallback messages.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>💎 <strong>VIP Level Check & Set (Type 5001)</strong></summary>
+  <br>
+
+  <p><strong>Type 5001</strong> checks the player's VIP level or sets it directly (new engine only). You can use this to branch actions depending on the player's VIP status, or upgrade the VIP level programmatically. Supported operators include <code>==</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, and <code>=</code> (only in new engine for setting VIP).</p>
+
+  <h4>💡 Example SQL – Check VIP Level:</h4>
+  <pre>
+-- Check if VIP level is exactly 4
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 5001, 0, '== 4');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You`re vip 4');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You`re not vip 4');
+
+-- Check if VIP is greater than 3
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 5001, 0, '> 3');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your vip is higher than 3');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your vip is less than or equal to 3');
+
+-- Check if VIP is less than 4
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 5001, 0, '< 4');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your vip is less than 4');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your vip is 4 or higher');
+
+-- Check if VIP is 5 or higher
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 5001, 0, '>= 5');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your vip is 5 and above');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your vip is less than 5');
+  </pre>
+
+  <h4>⚙️ Example SQL – Set VIP Level (New Engine Only):</h4>
+  <pre>
+-- Set player's VIP level to 4
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 5001, 0, '= 4');
+  </pre>
+
+  <h4>📘 Notes:</h4>
+  <ul>
+    <li><strong>Checking VIP level</strong>: Use <code>==</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, or <code>&lt;=</code> to perform condition checks.</li>
+    <li><strong>Setting VIP level</strong>: Use <code>=</code> to directly assign a VIP level to the player. Only works in the <strong>New Engine</strong>.</li>
+    <li><strong>Account sync warning:</strong> For VIP assignment to work, <code>account database</code> and <code>player database</code> must be in the same database schema.</li>
+    <li>VIP changes won’t be reflected until the player <strong>relogs</strong>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; border-radius: 6px;">
+    ⚠️ <strong>New Engine Info:</strong> Using <code>=</code> to set VIP level is only supported in the new engine.<br>
+    Ensure databases are merged and user relogs to see the update.
+  </div>
+</details>
+
+
+<details>
+  <summary>⚙️ <strong>Eudemon Attributes Check/Delete (Type 1503, 1504)</strong></summary>
+  <br>
+
+  <p><strong>Type 1503</strong> is used to check various attributes of a player's summoned Eudemon, such as its star rating, callout status, damage type, and other attributes. <strong>Type 1504</strong> is used for deleting Eudemons, with specific checks related to the summoned Eudemon. The <strong>New Engine</strong> introduces the <code>newtype</code> parameter to more specifically refer to Eudemons, as well as additional support for <code>deskknight</code> and <code>syndicate</code> checks.</p>
+
+  <h4>💡 Example SQL – Check Eudemon Attributes:</h4>
+  <pre>
+
+-- Check if Eudemon's damage type is 5 (Thunder) and if it's summoned
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1004, 1503, 0, 'damagetype == 5 callout == 1');
+
+-- Check if Eudemon's type is 42 (Warrior Lulu) and if it's summoned
+REPLACE INTO `cq_action` VALUES (1001, 1002, 1005, 1503, 0, 'type == 42 callout == 1');
+
+-- Check if Eudemon's type is 42 (Warrior Lulu) and then delete it
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 1504, 0, 'type == 42 callout == 1');
+
+-- Display message if Eudemon has been deleted
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'Your Warrior Lulu has been deleted.');
+
+-- Display message if Eudemon is not of Thunder damage type
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'Your pet is not thunder.');
+
+-- Display message if no Warrior Lulu is summoned
+REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Please summon Warrior Lulu first.');
+
+  </pre>
+
+  <h4>📘 New Engine Modifications:</h4>
+  <p><strong>New Engine</strong> introduces <code>newtype</code> to replace <code>type</code>, with the algorithm <code>itemtype / 10</code> to specify the exact Eudemon. Additionally, <code>deskknight == 1</code> and <code>syndicate == 1</code> can be added to check whether the desk knight and the legion totem have been registered.</p>
+
+  <h4>💡 Example SQL – New Engine Modifications: (use , as separator)</h4>
+  <pre>
+-- Check if Eudemon's star is less than 500.
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1004, 1503, 0, 'star > 500,callout == 1');
+
+-- Use newtype (itemtype / 10) for more specific Eudemon type
+REPLACE INTO `cq_action` VALUES (1001, 1003, 1005, 1503, 0, 'newtype == 107019,callout == 1');  -- Eudemon with itemtype 107019, newtype = 107019
+
+-- Delete Eudemon of newtype 107019
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 1504, 0, 'newtype == 107019,callout == 1');
+
+-- Display message if Eudemon star is less than 500.
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'Your eudemons is less than 5 star.');
+
+-- Display message if not specific Eudemon type.
+REPLACE INTO `cq_action` VALUES (1005, 0000, 0000, 0126, 0, 'Please summon Kong first.');
+  </pre>
+
+  <h4>📘 Parameter Explanation:</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Field</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Operator</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Description</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;">star</td>
+        <td style="padding:8px;"><code><, >, ==, >=, <=</code></td>
+        <td style="padding:8px;">Check or compare the star level of the Eudemon</td>
+        <td style="padding:8px;">`star < 500` (check if star is less than 500)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">callout</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check if the Eudemon is summoned</td>
+        <td style="padding:8px;">`callout == 1` (check if summoned)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">damagetype</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check the damage type of the Eudemon</td>
+        <td style="padding:8px;">`damagetype == 5` (check if the damage type is Thunder)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">type / newtype</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check the Eudemon type</td>
+        <td style="padding:8px;">`type == 42`</td>
+      </tr>
+            <tr>
+        <td style="padding:8px;">newtype (new engine)</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check the Eudemon specific type</td>
+        <td style="padding:8px;">`newtype == 107019` (check for a specific Eudemon ID)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">deskknight (new engine)</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check if the desk knight is registered</td>
+        <td style="padding:8px;">`deskknight == 1`</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;">syndicate (new engine)</td>
+        <td style="padding:8px;"><code>==</code></td>
+        <td style="padding:8px;">Check if the syndicate (legion totem) is registered</td>
+        <td style="padding:8px;">`syndicate == 1`</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use the <code>callout</code> field to check if an Eudemon is currently summoned (1 for summoned, 0 for not summoned).</li>
+    <li><strong>New Engine Only</strong>: Use <code>newtype</code> to refer to Eudemons more specifically, calculated as <code>itemtype / 10</code>.</li>
+    <li>For <code>damagetype</code>, use 5 for Thunder element Eudemons.</li>
+  </ul>
+</details>
+
+
+
+<details>
+  <summary>💫 <strong>Revive Eudemons (Type 1531)</strong></summary>
+  <br>
+
+  <p><strong>Type 1531</strong> is used to resurrect dead Eudemons. The behavior of the action is controlled by the <code>data</code> field:</p>
+
+  <h4>💡 Example SQL:</h4>
+  <pre>
+-- Old Engine: Revive only summoned dead Eudemons
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1531, 0, '');
+
+-- New Engine: Revive all dead Eudemons (including unsummoned ones)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1531, 1, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation:</h4>
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Data</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Engine</th>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ccc;">Effect</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px;"><code>0</code></td>
+        <td style="padding:8px;">Old & New</td>
+        <td style="padding:8px;">Revives only currently summoned (in-battle) dead Eudemons.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;"><code>1</code></td>
+        <td style="padding:8px;">New Engine Only</td>
+        <td style="padding:8px;">Revives all dead Eudemons, including unsummoned ones.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use <code>data = 0</code> for compatibility with both old and new engines.</li>
+    <li>Use <code>data = 1</code> only if your server runs the <strong>new engine</strong> and you want to fully restore all fallen Eudemons.</li>
+    <li>Ideal for NPC healers, rebirth rituals, or revival buffs in battle events.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>❤️ <strong>Resurrect Character & Eudemons (Type 1539 & 1540)</strong></summary>
+  <br>
+
+  <p><strong>Type 1539</strong> is used to resurrect the player character, but only if the player is dead and the internal cooldown time has passed. <strong>Type 1540</strong> is used to instantly revive all Eudemons, including those not currently summoned, without any time check. Useful for full revives during events or special rewards.</p>
+
+  <h4>💡 Example SQL – Type 1539 (Character Resurrection with Time Check)</h4>
+  <pre>
+-- Check if player is dead
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1001, 0, 'life == 0');
+
+-- Resurrect character if time condition is met
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 1539, 0, '');
+  </pre>
+
+  <h4>📘 Type 1539 Notes</h4>
+  <ul>
+    <li>Only works if player is dead (<code>life == 0</code>).</li>
+    <li>Resurrection only triggers if the cooldown time has passed.</li>
+    <li>If not enough time has passed, nothing happens.</li>
+  </ul>
+
+  <h4>💡 Example SQL – Type 1540 (Resurrect All Eudemons Instantly)</h4>
+  <pre>
+-- Instantly revive all Eudemons, summoned or not
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1540, 0, '');
+  </pre>
+
+  <h4>📘 Type 1540 Notes</h4>
+  <ul>
+    <li>Works on all Eudemons, regardless of summon status.</li>
+    <li>No cooldown or time check – executes instantly.</li>
+    <li>Good for full revive functions (event prize, healer NPC, etc).</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use Type 1539 when resurrection needs to be limited by time.</li>
+    <li>Use Type 1540 when you want to revive all Euds at once without checks.</li>
+    <li>Can be combined with <code>0126</code> to display messages like "You have been revived!"</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🚚 <strong>Delivery System (Type 1511,1512,1513)</strong></summary>
+  <br>
+
+  <p>These action types control the log delivery system using a cart (style 991–994). Players can begin a delivery run with a specified wood quantity, unit price, and time limit. During delivery, teleporting is restricted. Delivery ends when the task is complete or aborted manually.</p>
+
+  <h4>💡 Example SQL – Start Delivery (Type 1511)</h4>
+  <pre>
+-- Start delivery: 1000 logs, 100 gold each, 3600 seconds (1 hour), cart style 991
+REPLACE INTO `cq_action` VALUES (1001, 1004, 1003, 1511, 991, '1000 100 3600');
+
+-- Player can't buy logs due to flying status or insufficient gold
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'Unable to buy these logs when you are flying or don`t have enough gold.');
+
+-- Delivery start confirmation message
+REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 0126, 0, 'You must deliver 1,000 logs to the destination within one hour.');
+  </pre>
+
+  <h4>💡 Example SQL – End Delivery (Type 1512)</h4>
+  <pre>
+-- End the delivery run manually or upon completion
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1512, 0, '');
+  </pre>
+
+  <h4>💡 Example SQL – Check Delivery Status (Type 1513)</h4>
+  <pre>
+-- Check if the player is currently in delivery
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1513, 0, '');
+
+-- Player is delivering, block teleport
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Sorry, you can`t be teleported during delivery.');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><strong>1511</strong> – Begins delivery with cart style and parameters:
+      <ul>
+        <li><code>woodquantity</code> – Logs to deliver (e.g. 1000)</li>
+        <li><code>unitprice</code> – Gold per log (e.g. 100)</li>
+        <li><code>endtime</code> – Time limit in seconds (e.g. 3600 = 1 hour)</li>
+      </ul>
+    </li>
+    <li><strong>1512</strong> – Ends the delivery mission.</li>
+    <li><strong>1513</strong> – Checks if delivery is in progress (blocks certain actions).</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Cart styles are 991, 992, 993, 994 – use different IDs for cosmetic or logical variation.</li>
+    <li>Delivery can be interrupted if the player teleports; use <code>1513</code> to block such actions.</li>
+    <li>Always display clear messages using <code>0126</code> so players know delivery status or failure reasons.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🪓 <strong>Life Skills (Type 1514)</strong></summary>
+  <br>
+
+  <p><strong>Type 1514</strong> manages life skills such as Delivery Skill (ID 300). It supports:</p>
+  <ul>
+    <li><code>learn</code> – To learn a new life skill</li>
+    <li><code>check</code> – To check if the player has the skill, or verify its level</li>
+    <li><code>addexp</code> – To increase skill EXP</li>
+  </ul>
+
+  <h4>💡 Example SQL – Learn Delivery Skill</h4>
+  <pre>
+-- Learn delivery skill (ID 300)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1514, 0, 'learn 300');
+  </pre>
+
+  <h4>💡 Example SQL – Check Skill Level</h4>
+  <pre>
+-- Check if skill 300 is level 9
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1514, 0, 'check 300 9');
+  </pre>
+
+  <h4>💡 Example SQL – Add EXP to Skill</h4>
+  <pre>
+-- Add 1000 EXP to skill 300
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1514, 0, 'addexp 300 1000');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>learn [id]</code> – Learns the specified life skill.</li>
+    <li><code>check [id] [level]</code> – Verifies if the player has the skill at that level. Level can be skipped to just check if learned.</li>
+    <li><code>addexp [id] [amount]</code> – Adds EXP to that skill (triggers level-up if thresholds met).</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>check</code> before allowing delivery quests or crafting tasks.</li>
+    <li>EXP gain can be from quests, farming, or delivery success. Use <code>addexp</code> after events.</li>
+    <li><code>TrainReward</code> was supported in older engines but i dont know how it works.</li>
+  </ul>
+</details>
+
 ---
 
 ## Other Tools
