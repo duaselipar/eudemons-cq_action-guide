@@ -3243,6 +3243,308 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1514, 0, 'addexp 300 1000');
   </ul>
 </details>
 
+
+<details>
+  <summary>💥 <strong>Check Current Number of Summoned Eudemons (Type 1515)</strong></summary>
+  <br>
+
+  <p><strong>Type 1515</strong> is used to check how many Eudemons the player currently has summoned. The action checks the value of <code>callout_num</code>, which represents the number of Eudemons currently summoned. Based on the value, the system can return different messages.</p>
+
+  <h4>💡 Example SQL – Check Number of Summoned Eudemons</h4>
+  <pre>
+-- Check if the player has fewer than 1 summoned Eudemon
+REPLACE INTO `cq_action` VALUES (1000, 1003, 1004, 1515, 0, 'callout_num < 1');
+
+-- Check if the player has fewer than 2 summoned Eudemons
+REPLACE INTO `cq_action` VALUES (1001, 1003, 1004, 1515, 0, 'callout_num < 2');
+
+-- Check if the player has fewer than 3 summoned Eudemons
+REPLACE INTO `cq_action` VALUES (1002, 1003, 1004, 1515, 0, 'callout_num < 3');
+
+-- Player message if not all Eudemons are summoned
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'Please summon all eudemons first!');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><strong>callout_num</strong> – Represents the number of Eudemons currently summoned by the player.</li>
+    <li><strong>Operators:</strong> <code><</code>, <code>==</code>, <code>></code></li>
+    <li><strong>Message</strong> – Shows a message based on the number of summoned Eudemons.</li>
+  </ul>
+
+  <h4>📘 Old Engine Notes</h4>
+  <ul>
+    <li><strong>Old engine only supports:</strong> <code>callout_num == 1</code> to check if exactly 1 Eudemon is summoned.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>callout_num < 1</code> or similar checks to ensure that players have summoned the required number of Eudemons for an event or task.</li>
+    <li>Make sure to show clear messages with <code>0126</code> to notify players if they need to summon additional Eudemons.</li>
+    <li>Old engines won’t support the comparison with <code>callout_num < 2</code> or higher. Use <code>callout_num == 1</code> for such checks in older engines.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>⏳ <strong>Experience Time for Level Up (Type 1518)</strong></summary>
+  <br>
+
+  <p>Type 1518 is used to add experience time for leveling up. The experience is calculated based on 432 seconds (1 minute) of monster killing experience multiplied by the monster's experience multiplier.</p>
+
+  <p>The <code>data</code> parameter in this action i cant figure it out what is this:</p>
+
+  <h4>💡 Example SQL – Old Engine (Values: 1, 2, 3)</h4>
+  <pre>
+-- Add 4500 seconds of experience (1 minute = 432 seconds)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1518, 3, 'uplevtime += 4500');
+
+-- Add 304 seconds of experience
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1518, 2, 'uplevtime += 304');
+
+-- Add 1800 seconds of experience
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1518, 1, 'uplevtime += 1800');
+  </pre>
+
+  <h4>💡 Example SQL – New Engine (Only Value 2)</h4>
+  <pre>
+-- Add 77760 seconds of experience in the new engine
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1518, 2, 'uplevtime += 77760');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>uplevtime</code> – The experience time added for leveling up. It is calculated in seconds, and can be modified based on the experience multiplier for the monster type.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Ensure that the time increments match your desired gameplay pacing. If you want faster leveling, adjust the time added in each <code>uplevtime</code> action accordingly.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>💪 <strong>Fill Player's Attributes (Type 1002)</strong></summary>
+  <br>
+
+  <p><strong>Type 1002</strong> is used to fill up a player's attributes, such as their life and mana. You can specify which attribute to fill by passing <code>life</code> or <code>mana</code> as the parameter. This action can be used to instantly restore the player's life or mana to full.</p>
+
+  <h4>💡 Example SQL – Restore Life</h4>
+  <pre>
+-- Restore player's life
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1002, 0, 'life');
+  </pre>
+
+  <h4>💡 Example SQL – Restore Mana</h4>
+  <pre>
+-- Restore player's mana
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1002, 0, 'mana');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>life</code> – Fills the player's life attribute to full.</li>
+    <li><code>mana</code> – Fills the player's mana attribute to full.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>life</code> and <code>mana</code> to instantly restore the respective attributes during battle or events.</li>
+    <li>Ensure to handle both attributes separately if you want to use them independently in different conditions.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🌍 <strong>Change Map (Type 1003)</strong></summary>
+  <br>
+
+  <p><strong>Type 1003</strong> is used to change the player's map. It requires the map ID, the X and Y coordinates, and optionally a flag to allow prison exit. By default, players cannot exit the prison, but setting the <code>bPrisonChk</code> parameter to 1 allows them to do so.</p>
+
+  <h4>💡 Example SQL – Change Map</h4>
+  <pre>
+-- Change map to ID 1000, position (280, 411), allowing prison exit (bPrisonChk = 1)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1003, 0, '1000 280 411 1');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>idMap</code> – The ID of the target map to change to.</li>
+    <li><code>nPosX</code> – The X-coordinate for the new position on the map.</li>
+    <li><code>nPosY</code> – The Y-coordinate for the new position on the map.</li>
+    <li><code>bPrisonChk</code> – Optional parameter:
+      <ul>
+        <li><code>0</code> – Cannot exit the prison (default behavior).</li>
+        <li><code>1</code> – Allows the player to exit the prison.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Ensure that the target map ID and coordinates are valid and accessible for the player.</li>
+    <li>If you want to allow players to exit the prison, remember to set <code>bPrisonChk = 1</code> to enable this feature.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>📍 <strong>Record Map Point (Type 1004)</strong></summary>
+  <br>
+
+  <p><strong>Type 1004</strong> is used to record the player's current position on the map, allowing them to return to this point later. The parameters include the map ID, X-coordinate, and Y-coordinate.</p>
+
+  <h4>💡 Example SQL – Record Map Point</h4>
+  <pre>
+-- Record the player's position on map ID 1000 at coordinates (316, 467)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1004, 0, '1000 316 467');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>idMap</code> – The ID of the map where the point is being recorded.</li>
+    <li><code>nMapX</code> – The X-coordinate for the recorded point.</li>
+    <li><code>nMapY</code> – The Y-coordinate for the recorded point.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this action to create checkpoints for players, which they can return to later in the game.</li>
+    <li>Ensure that the map ID and coordinates are valid and reachable for the player.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🌍 <strong>Change Map to Recorded Point (Type 1006)</strong></summary>
+  <br>
+
+  <p><strong>Type 1006</strong> is used to change the player's map to a previously recorded point. This action helps players quickly travel back to a saved location. Make sure to first set the checkpoint using <code>Type 1004</code> before attempting to use this action.</p>
+
+  <h4>💡 Example SQL – Change Map to Recorded Point</h4>
+  <pre>
+-- Change to the recorded map point (ID 1000030)
+REPLACE INTO `cq_action` VALUES (1000030, 0000, 0000, 1006, 0, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>idMap</code> – The map ID of the recorded point to travel to.</li>
+  </ul>
+
+  <h4>📘 Important Note</h4>
+  <ul>
+    <li>Make sure to set the checkpoint first using <code>Type 1004</code> before using <code>Type 1006</code> to change maps to that recorded point.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Ensure that the recorded map point ID is valid and that the player has access to that location.</li>
+    <li>Use this action to quickly return to important locations within the game, such as dungeons, towns, or personal checkpoints.</li>
+  </ul>
+</details>
+
+
+
+<details>
+  <summary>👤 <strong>Change Player Avatar (Type 1008)</strong></summary>
+  <br>
+
+  <p><strong>Type 1008</strong> is used to change the player's avatar. The parameter for this action is the ID of the new avatar that the player wants to switch to.</p>
+
+  <h4>💡 Example SQL – Change Player Avatar</h4>
+  <pre>
+-- Change the player's avatar to ID 84
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1008, 0, '84');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>id</code> – The avatar ID to change to. This ID corresponds to a specific avatar in the game.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Ensure that the avatar ID is valid and corresponds to an existing avatar.</li>
+    <li>This action can be used for character customization or special events where avatars are changed.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🔎 <strong>Check Player Status (Type 1009)</strong></summary>
+  <br>
+
+  <p>Type 1009 is used to check whether the player is currently in a specific state. This check does not require any timing validation. It simply checks if the specified state is active (i.e. its seconds value is greater than 0).</p>
+
+  <h4>💡 Example SQL – Check EXP Boost State</h4>
+  <pre>
+-- Check if the player is under EXP boost (state 158)
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1009, 0, '158 second > 0');
+
+-- If true, show message
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are currently under an exp boost.');
+
+-- If false, show alternate message
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not in under an exp boost.');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>[state_id] second > 0</code> – Check if a specific state is active. No need to check time; it only checks whether the state exists.</li>
+  </ul>
+
+  <h4>📘 Common State IDs</h4>
+  <ul>
+    <li><code>158</code> – EXP Boost</li>
+    <li><code>43</code> – EXP Boost</li>
+    <li><code>164</code> – Dragon Morph</li>
+    <li><code>184</code> – Flying</li>
+    <li><code>166</code> – Delivery Log</li>
+    <li><code>248</code> – Unknown</li>
+    <li><code>249</code> – Unknown</li>
+    <li><code>1014</code> – Unknown</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this to block or allow features based on whether the player is flying, delivering logs, or under a boost.</li>
+    <li>Supports branching logic with <code>id_next</code> and <code>id_nextfail</code> depending on the result.</li>
+    <li>Stack with message actions (like 0126) to give player feedback.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧑 <strong>Check Player Avatar (Type 1014)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p>Type 1014 is used to check whether the player is currently wearing a specific avatar. This is useful for avatar-based conditions such as quest checks, special dialogue, or restricted access features.</p>
+
+  <h4>💡 Example SQL – Check if Player is Wearing Avatar ID 45</h4>
+  <pre>
+-- Check if the player is equipped with avatar ID 45
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1014, 0, 'ChkFace 45');
+
+-- If true, show message
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You equip this avatar.');
+
+-- If false, show alternate message
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not equip this avatar.');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>ChkFace [id]</code> – Checks if the current player face (avatar) matches the given ID.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this check for unlocking avatar-only content, special access, or triggering rewards for wearing specific looks.</li>
+    <li>Use with <code>0126</code> to show clear feedback to the player.</li>
+    <li>Can be combined with avatar change logic from <code>Type 1008</code>.</li>
+  </ul>
+</details>
+
+
 ---
 
 ## Other Tools
