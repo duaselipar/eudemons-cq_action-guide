@@ -3545,6 +3545,483 @@ REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not equip t
 </details>
 
 
+
+<details>
+  <summary>✨ <strong>God Blessing Status (Type 1012)</strong></summary>
+  <br>
+
+  <p>Type 1012 is used to manage the "God Blessing" status on a player. You can check if the blessing is active, or apply it using either <code>add</code> or <code>addonly</code>. The second parameter is always <code>1</code> (purpose unknown, just required). The last parameter is the duration in hours.</p>
+
+  <h4>💡 Example SQL – Addonly God Blessing (30 days)</h4>
+  <pre>
+-- Adds blessing only if the player does not already have it (720 hours = 30 days)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1012, 0, 'addonly 1 720');
+  </pre>
+
+  <h4>💡 Example SQL – Add God Blessing (1 day)</h4>
+  <pre>
+-- Adds blessing regardless of current status (24 hours = 1 day)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1012, 0, 'add 1 24');
+  </pre>
+
+  <h4>💡 Example SQL – Check Blessing Status</h4>
+  <pre>
+-- Check if player has God Blessing active
+REPLACE INTO `cq_action` VALUES (1001, 1002, 1003, 1012, 0, 'check 1 0');
+
+-- If not active
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You don\'t have blessing on you.');
+
+-- If active
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'You have blessing on you.');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>add</code> – Adds the blessing, even if one already exists. (just my theory)</li>
+    <li><code>addonly</code> – Adds the blessing only if none currently exists. (just my theory)</li>
+    <li><code>check</code> – Verifies if the blessing is active.</li>
+    <li><code>1</code> – Always used in second position (actual meaning unknown, but required).</li>
+    <li><code>duration</code> – Length of the blessing in hours (e.g. 24 = 1 day, 720 = 30 days).</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>addonly</code> if you want to avoid refreshing or overwriting an existing blessing.</li>
+    <li>Use <code>add</code> if you want to forcibly apply or refresh the blessing regardless of status. </li>
+    <li>Use <code>check</code> with branching to show different messages depending on whether the blessing is active.</li>
+    <li>Combine with <code>0126</code> messages to notify players when blessings are applied or missing.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🌀 <strong>Skill Control (Type 1020)</strong></summary>
+  <br>
+
+  <p>Type 1020 is used to manage player skills. It supports checking, learning, leveling up, and adding EXP to specific magic skills. The skill type refers to the skill ID from <code>cq_magictype</code>.</p>
+
+  <h4>💡 Example SQL – Learn Skill</h4>
+  <pre>
+-- Learn skill with ID 33001 (level 1)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1020, 0, 'learn 33001');
+
+-- Learn skill 33001 at level 3 directly
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1020, 0, 'learn 33001 2');
+  </pre>
+
+  <h4>💡 Example SQL – Check Skill</h4>
+  <pre>
+-- Check if player has learned skill ID 1008
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1020, 0, 'check 1008');
+
+-- If learned
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You already learn this skill');
+
+-- If not learned
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You not learn this skill');
+  </pre>
+
+  <h4>💡 Example SQL – Add EXP to Skill</h4>
+  <pre>
+-- Add 5000 EXP to skill ID 5305
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1020, 0, 'addexp 5305 5000');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>check [type]</code> – Checks if the player has learned the skill ID.</li>
+    <li><code>check [type] [level]</code> – Checks if the player has the skill at a specific level.</li>
+    <li><code>learn [type]</code> – Teaches the player a new skill (defaults to level 0).</li>
+    <li><code>learn [type] [level]</code> – Teaches a skill at the specified level.</li>
+    <li><code>uplevel [type]</code> – Increases the level of an existing skill by 1.</li>
+    <li><code>addexp [type] [exp]</code> – Adds experience points to the specified skill.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>check</code> before <code>learn</code> to avoid teaching duplicate skills.</li>
+    <li>Use <code>uplevel</code> to simulate skill mastery over time or quests.</li>
+    <li><code>addexp</code> is useful for skill training systems or battle rewards.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>📝 <strong>GM Log with Player Info (Type 1022)</strong></summary>
+  <br>
+
+  <p>Type 1022 is used to write custom log entries to the GM log. This log is saved to the <code>MSGServer/gmlog</code> directory. The log message supports placeholders that automatically insert the triggering player's information such as name, ID, location, item, and NPC data.</p>
+
+  <h4>💡 Example SQL – Log Player Action</h4>
+  <pre>
+-- Log player info, map, item, and NPC during action
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1022, 0, '%user_name[%user_id] Location(%user_map_id %user_map_x %user_map_y) ITEM(%item_type %target_name) NPC(%name %id %npc_x %npc_y) actionid = 930000070 param = e_money += 54000');
+  </pre>
+
+  <h4>📘 Placeholder Variables</h4>
+  <ul>
+    <li><code>%user_name</code> – Player's name</li>
+    <li><code>%user_id</code> – Player's ID</li>
+    <li><code>%user_map_id</code> – Current map ID</li>
+    <li><code>%user_map_x</code> – Player's X position</li>
+    <li><code>%user_map_y</code> – Player's Y position</li>
+    <li><code>%item_type</code> – Item type ID</li>
+    <li><code>%target_name</code> – Item or target name</li>
+    <li><code>%name</code> – NPC name</li>
+    <li><code>%id</code> – NPC ID</li>
+    <li><code>%npc_x</code> – NPC X coordinate</li>
+    <li><code>%npc_y</code> – NPC Y coordinate</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this for logging sensitive events like item rewards, purchases, quest completions, or suspicious actions.</li>
+    <li>Placeholders are replaced automatically by the system at runtime based on the triggering player and context.</li>
+    <li>The message is saved in <code>MSGServer/gmlog</code> and can be reviewed by server staff.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>💍 <strong>Marriage & Divorce System (Type 1024 & 1025)</strong></summary>
+  <br>
+
+  <p>These action types are used to manage player marriage status in the game. Type 1025 checks if the player is married, while Type 1024 is used to perform a divorce action.</p>
+
+  <h4>💡 Example SQL – Check Marriage Status (Type 1025)</h4>
+  <pre>
+-- Check if the player is married
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1025, 0, '');
+
+-- If not married
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You not married');
+
+-- If already married
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You already married');
+  </pre>
+
+  <h4>💡 Example SQL – Divorce (Type 1024)</h4>
+  <pre>
+-- Perform divorce
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1024, 0, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li>Type 1025 – Checks the marriage status of the player and branches based on result.</li>
+    <li>Type 1024 – Executes a divorce and resets the marriage data of the player.</li>
+    <li>No additional parameters are needed for either action.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>Type 1025</code> before allowing marriage-related actions like teleportation or gifting.</li>
+    <li>Use <code>Type 1024</code> for NPC-based divorce options or special item effects.</li>
+    <li>Pair with message actions (<code>0126</code>) to clearly inform the player of their status.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🚻 <strong>Gender Check (Type 1026)</strong></summary>
+  <br>
+
+  <p>Type 1026 is used to check the player's gender. It branches using <code>id_next</code> for male and <code>id_nextfail</code> for female. This is useful for displaying gender-specific messages or giving gender-specific items like casual outfits.</p>
+
+  <h4>💡 Example SQL – Basic Gender Check</h4>
+  <pre>
+-- Check if player is male or female
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1026, 0, '');
+
+-- Male
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are male');
+
+-- Female
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are female');
+  </pre>
+
+  <h4>💡 New Engine Special Case – Give Gendered Casual by Class</h4>
+  <p>In the new engine, the <code>Star Guardian</code> class (ID 110) uses different casual outfits. You need to check class first, then gender, before giving the appropriate item.</p>
+
+  <pre>
+-- Check if class is Star Guardian (profession 110)
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1010, 1001, 0, 'profession == 110');
+
+-- Star Guardian gender check
+REPLACE INTO `cq_action` VALUES (1001, 1002, 1003, 1026, 0, '0');
+
+-- Male Star Guardian gets item 198500
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0501, 198500, 0);
+
+-- Female Star Guardian gets item 198520
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0501, 198520, 0);
+
+-- Other class gender check
+REPLACE INTO `cq_action` VALUES (1010, 1011, 1012, 1026, 0, '0');
+
+-- Male (other class) gets item 194600
+REPLACE INTO `cq_action` VALUES (1011, 0000, 0000, 0501, 194600, 0);
+
+-- Female (other class) gets item 194620
+REPLACE INTO `cq_action` VALUES (1012, 0000, 0000, 0501, 194620, 0);
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li>No param needed or just <code>0</code> as a placeholder.</li>
+    <li><code>id_next</code> → Male</li>
+    <li><code>id_nextfail</code> → Female</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Always check <code>profession</code> before gender if giving class-specific items.</li>
+    <li>Use <code>Type 0501</code> to give items based on gender.</li>
+    <li>This action is useful for casuals, titles, class-locked visuals, and gender-exclusive quests.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🎆 <strong>Apply Visual Effect (Type 1027)</strong></summary>
+  <br>
+
+  <p>Type 1027 applies a visual special effect to the character or target. It supports different scopes such as only visible to self, only visible to target, or visible to both. In the new engine, you can chain effects with <code>+</code> like <code>void_broken+Screen</code>.</p>
+
+  <h4>💡 Example SQL – Basic Effects</h4>
+  <pre>
+-- Show effect to yourself (nearby can see)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'self skill307');
+
+-- Show effect to target (nearby can see)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'target flower2');
+
+-- Show effect to target (only target sees it)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'targetlone flower-red');
+  </pre>
+
+  <h4>💡 Example SQL – New Engine Special Effect</h4>
+  <pre>
+-- Apply chained visual effect (only self sees it)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'selflone void_broken+Screen');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>opt effect</code> – Two-part parameter with visibility scope and effect name.</li>
+    <li><code>opt</code> options:
+      <ul>
+        <li><code>self</code> – Player sees the effect</li>
+        <li><code>target</code> – Target sees the effect (visible to others too)</li>
+        <li><code>targetlone</code> – Only the target sees the effect</li>
+        <li><code>selflone</code> – Only the triggering player sees the effect</li>
+      </ul>
+    </li>
+    <li><code>effect</code> – Name of the visual effect to play (e.g. <code>skill307</code>, <code>flower2</code>), refer ini/3deffect.ini</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>self</code> or <code>target</code> for shared effects seen by multiple players.</li>
+    <li>Use <code>selflone</code> or <code>targetlone</code> for client-side-only visuals (e.g. secret buffs, hints).</li>
+    <li>Useful for skill animations, buff visuals, NPC reactions, or dramatic cutscene triggers.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧠 <strong>Task Mask Operations (Type 1028)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p>Type 1028 is used to perform operations on task masks. Task masks are used to track task-related flags using bit values (0–31). The action supports checking, adding, and clearing specific mask bits.</p>
+
+  <h4>💡 Example SQL – Check Task Mask</h4>
+  <pre>
+-- Check if task mask index 3 is active
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1028, 0, 'chk 3');
+  </pre>
+
+  <h4>💡 Example SQL – Add Task Mask</h4>
+  <pre>
+-- Set task mask index 4 to active
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1028, 0, 'add 4');
+  </pre>
+
+  <h4>💡 Example SQL – Clear Task Mask</h4>
+  <pre>
+-- Clear task mask index 4
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1028, 0, 'clr 4');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>chk idx</code> – Checks if the bit at index <code>idx</code> is set.</li>
+    <li><code>add idx</code> – Sets the bit at index <code>idx</code> to 1 (mark as complete).</li>
+    <li><code>clr idx</code> – Clears the bit at index <code>idx</code> to 0 (reset).</li>
+    <li><code>idx</code> – The task mask index (range: 0 to 31).</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>chk</code> with <code>id_next</code> and <code>id_nextfail</code> to branch based on task progress.</li>
+    <li>Task masks are ideal for tracking story flags, special rewards, one-time events, or hidden triggers.</li>
+    <li>Be consistent with index usage to avoid conflict between unrelated systems.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🔊 <strong>Media Playback (Type 1029)</strong></summary>
+  <br>
+
+  <p>Type 1029 is used to trigger media playback on the client side. You can use it to play sound or video files that exist in the client directory. The param supports <code>play</code> or <code>broadcast</code> followed by the path to the media file.</p>
+
+  <h4>💡 Example SQL – Play Sound File</h4>
+  <pre>
+-- Play a sound file (trap.wav) located in the "sound" folder of the client
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1029, 0, 'play sound/trap.wav 0 0 1');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>opt media_path [0 0 1]</code></li>
+    <li><code>opt</code> – Action type:
+      <ul>
+        <li><code>play</code> – Play the media for the triggering player only.</li>
+        <li><code>broadcast</code> – Broadcast the media to all nearby players (if supported).</li>
+      </ul>
+    </li>
+    <li><code>media_path</code> – Path to the media file in the client folder (e.g. <code>sound/trap.wav</code>).</li>
+    <li>The remaining <code>0 0 1</code> values are typically reserved or unused in most cases, but must be included for format compatibility.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Make sure the media file exists in the specified path on the client, or the effect won't play.</li>
+    <li>Use <code>play</code> for personalized sound effects (e.g. when opening a chest).</li>
+    <li>Use <code>broadcast</code> if you want the effect shared with other players in the area (new engine required).</li>
+    <li>Best used for immersive effects, alert sounds, or cinematic cutscenes.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🃏 <strong>Checkout Eudemon Point Cards (Type 1032 & 1037)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p>These actions are used to convert Eudemon cards from the <code>cq_card</code> or <code>cq_card2</code> table into Eudemon Points (EP). When triggered, the system checks the player's card table, converts available entries to EP, sends the points to the player, and updates the card entry's <code>used</code> column to <code>1</code> (used).</p>
+
+  <p><code>cq_card</code> cards are worth <strong>270 EP</strong> each.<br>
+  <code>cq_card2</code> cards are worth <strong>1380 EP</strong> each.</p>
+
+  <h4>💡 Example SQL – Type 1032 (cq_card: 270 EP each)</h4>
+  <pre>
+-- Checkout cq_card and convert to EP if exists
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1032, 0, '');
+
+-- Success message
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You`ve taken out a Eudemon Card. Your Eudemon Points increased.');
+
+-- Fail message
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You don`t have a Eudemon Card here.');
+  </pre>
+
+  <h4>💡 Example SQL – Type 1037 (cq_card2: 1380 EP each)</h4>
+  <pre>
+-- Checkout cq_card2 and convert to EP if exists
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1037, 0, '');
+
+-- Success message
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You`ve taken out a Eudemon Card. Your Eudemon Points increased.');
+
+-- Fail message
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You don`t have a Eudemon Card here.');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li>No additional param needed for either type.</li>
+    <li>The system checks for valid cards in the player’s <code>cq_card</code> or <code>cq_card2</code> table.</li>
+    <li>Each valid entry will:
+      <ul>
+        <li>Be converted into EP based on the card type (270 or 1380 EP)</li>
+        <li>Be marked as used by setting <code>used = 1</code> in the database</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>1032</code> for standard card redemption (270 EP).</li>
+    <li>Use <code>1037</code> for higher-tier card redemption (1380 EP).</li>
+    <li>Always provide a clear message using <code>0126</code> to inform the player whether the card was redeemed.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧹 <strong>Delete Multiple Skills (Type 1039)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+
+  <p>Type 1039 is used to permanently delete one or more skills from the player. This type accepts up to 20 skill IDs in the param field. Once a skill is removed using this action, it cannot be restored at its previous level — if the player relearns it, the skill will start again from level 1.</p>
+
+  <h4>💡 Example SQL – Forget Multiple Skills</h4>
+  <pre>
+-- Permanently remove multiple skills from the player
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1039, 0, '7010 7015 7002 7008 7000 7012 7013 7004 7003 6000 6004 6002 6001 6005 6003 6006 6040 6007 6008 6009');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>type1 type2 ... type20</code> – A space-separated list of up to 20 skill type IDs (from <code>cq_magictype</code>) to be permanently removed.</li>
+  </ul>
+
+  <h4>📘 Behavior Notes</h4>
+  <ul>
+    <li>Skills removed using this action are <strong>not recoverable</strong>.</li>
+    <li>If the player relearns the skill using <code>learn</code>, it will restart at <code>level 0</code>.</li>
+    <li>This is useful for skill resets, class transitions, or rebirth systems.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this type only when you want a clean skill wipe — no backups, no memory of previous levels.</li>
+    <li>Combine with <code>0126</code> messages to alert the player before and after removal.</li>
+    <li>Consider using <code>1020 uplevel</code> or <code>addexp</code> afterward if you want to selectively regrant skills at a different progression pace.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🌐 <strong>Open Web Page (Type 1041)</strong></summary>
+  <br>
+
+  <p>Type 1041 is used to notify the client to open a web page in the user's browser. This is useful for directing players to event pages, registration forms, donation portals, patch notes, or community links.</p>
+
+  <h4>💡 Example SQL – Open External Web Page</h4>
+  <pre>
+-- Open Knightfall Online website
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1041, 0, 'https://knightfall-online.com');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>param</code> – The full URL of the web page to open, including <code>http://</code> or <code>https://</code>.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Make sure the link is properly formatted and accessible by the client browser.</li>
+    <li>Ideal for use in NPCs, item interactions, or system announcements that lead players to web-based content.</li>
+    <li>Can be used to open custom help guides, vote links, or real-time event announcements.</li>
+  </ul>
+</details>
+
 ---
 
 ## Other Tools
