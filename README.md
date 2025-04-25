@@ -3783,50 +3783,65 @@ REPLACE INTO `cq_action` VALUES (1012, 0000, 0000, 0501, 194620, 0);
 
 
 <details>
-  <summary>🎆 <strong>Apply Visual Effect (Type 1027)</strong></summary>
+  <summary>🎆 <strong>Apply / Remove Visual Effects (Type 1027 & 1060)</strong></summary>
   <br>
 
-  <p>Type 1027 applies a visual special effect to the character or target. It supports different scopes such as only visible to self, only visible to target, or visible to both. In the new engine, you can chain effects with <code>+</code> like <code>void_broken+Screen</code>.</p>
+  <p>Type 1027 applies a visual special effect to the player or target. The effect can be visible to everyone, only the target, or only the triggering player. The effect name must match one defined in <code>ini/3deffect.ini</code>.</p>
 
-  <h4>💡 Example SQL – Basic Effects</h4>
+  <p>Type 1060 is used to remove effects applied by Type 1027. It uses the same format but clears the visual from the client. This is supported in <strong>new engine only</strong>.</p>
+
+  <h4>💡 Example SQL – Apply Basic Effects</h4>
   <pre>
--- Show effect to yourself (nearby can see)
+-- Show effect to yourself (others can see)
 REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'self skill307');
 
--- Show effect to target (nearby can see)
+-- Show effect to target (others can see)
 REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'target flower2');
 
 -- Show effect to target (only target sees it)
 REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'targetlone flower-red');
   </pre>
 
-  <h4>💡 Example SQL – New Engine Special Effect</h4>
+  <h4>💡 Example SQL – New Engine Only: Self-Only Advanced Effects</h4>
   <pre>
--- Apply chained visual effect (only self sees it)
-REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'selflone void_broken+Screen');
+-- Show chained effect only to self
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1027, 0, 'selflone shfbqqskill_spexx100');
+  </pre>
+
+  <h4>💡 Example SQL – Remove Effect (New Engine Only)</h4>
+  <pre>
+-- Remove previously applied effect from self
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1060, 0, 'self shfbqqskill_spsxx100');
   </pre>
 
   <h4>📘 Parameter Format</h4>
   <ul>
-    <li><code>opt effect</code> – Two-part parameter with visibility scope and effect name.</li>
+    <li><code>opt effect</code> – Two-part value: visibility type and effect name</li>
     <li><code>opt</code> options:
       <ul>
-        <li><code>self</code> – Player sees the effect</li>
-        <li><code>target</code> – Target sees the effect (visible to others too)</li>
-        <li><code>targetlone</code> – Only the target sees the effect</li>
+        <li><code>self</code> – Player sees the effect (public)</li>
+        <li><code>target</code> – Target sees the effect (public)</li>
+        <li><code>targetlone</code> – Only target sees the effect</li>
         <li><code>selflone</code> – Only the triggering player sees the effect</li>
       </ul>
     </li>
-    <li><code>effect</code> – Name of the visual effect to play (e.g. <code>skill307</code>, <code>flower2</code>), refer ini/3deffect.ini</li>
+    <li><code>effect</code> – The effect ID or name as listed in <code>ini/3deffect.ini</code></li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>Type 1060 is only supported in new engine.</li>
+    <li>To remove effects, use the same format as Type 1027 but with script type 1060.</li>
   </ul>
 
   <h4>💡 Tips</h4>
   <ul>
-    <li>Use <code>self</code> or <code>target</code> for shared effects seen by multiple players.</li>
-    <li>Use <code>selflone</code> or <code>targetlone</code> for client-side-only visuals (e.g. secret buffs, hints).</li>
-    <li>Useful for skill animations, buff visuals, NPC reactions, or dramatic cutscene triggers.</li>
+    <li>Use <code>self</code> or <code>target</code> for effects visible to others.</li>
+    <li>Use <code>selflone</code> or <code>targetlone</code> for personal/secret visuals.</li>
+    <li>Type 1060 is useful to clear buffs, transform visuals, or temporary animations.</li>
   </ul>
 </details>
+
 
 <details>
   <summary>🧠 <strong>Task Mask Operations (Type 1028)</strong></summary>
@@ -4125,6 +4140,272 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1052, 0, '');
   <ul>
     <li>This is ideal for auto-respawn or emergency teleport after dungeon runs or failed events.</li>
     <li>Ensure the current map has valid values in <code>reborn_map</code> and portal coordinates in <code>cq_map</code>, or the teleport may fail.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🎲 <strong>Random Teleport on Current Map (Type 1053)</strong></summary>
+  <br>
+
+  <p>Type 1053 randomly teleports the player to any valid coordinate on the current map. This can be used for random warp scrolls, escape abilities, or event-based scattering.</p>
+
+  <h4>💡 Example SQL – Random Teleport</h4>
+  <pre>
+-- Randomly teleport the player somewhere on the current map
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1053, 0, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li>No parameters required. The system automatically selects a valid coordinate within the current map's bounds.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Useful for escape items, events like treasure hunts, or to create chaos in PvP zones.</li>
+    <li>Ensure your map has enough walkable terrain, or teleport may land the player in blocked zones.</li>
+    <li>Can be followed by visual effects using <code>Type 1027</code> to enhance the teleport animation.</li>
+  </ul>
+</details>
+
+
+
+<details>
+  <summary>📋 <strong>Task Manager (Type 1080)</strong></summary>
+  <br>
+
+  <p>Type 1080 is used to manage custom task entries for the player. It supports creating tasks, deleting them, and checking if a task already exists. The task number is stored in <code>cq_taskdetail</code>, where its state can also be tracked or modified manually.</p>
+
+  <h4>💡 Example SQL – Create New Task</h4>
+  <pre>
+-- Create a new task with ID 1114
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1080, 1114, 'new');
+  </pre>
+
+  <h4>💡 Example SQL – Delete Task</h4>
+  <pre>
+-- Delete task ID 1114 from the player's task record
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1080, 1114, 'delete');
+  </pre>
+
+  <h4>💡 Example SQL – Check If Task Exists</h4>
+  <pre>
+-- Check if the player has task ID 1114
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1080, 1114, 'isexit');
+
+-- If task exists
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You task is exist.');
+
+-- If task does not exist
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You task not exist.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task number to manage (e.g. <code>1114</code>).</li>
+    <li><code>param</code> – Operation type:
+      <ul>
+        <li><code>new</code> – Create a new task entry.</li>
+        <li><code>delete</code> – Delete the task entry.</li>
+        <li><code>isexit</code> – Check if the task exists for the player.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>isexit</code> before giving or resetting a task to avoid duplicates.</li>
+    <li>Combine with <code>0126</code> to notify the player if the task was already created or removed.</li>
+    <li>Task entries created with this type are commonly used for quests, flags, or condition tracking outside of the standard quest system.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>⚙️ <strong>Task Operations (Type 1081)</strong></summary>
+  <br>
+
+  <p>Type 1081 is used to operate on internal values of a task created with <code>Type 1080</code>. It can check or update task phase, completion count, or timing data. Useful for multi-stage quests, cooldowns, and advanced task conditions.</p>
+
+  <h4>💡 Example SQL – Reset Task Start Time</h4>
+  <pre>
+-- Reset the start time of task 1114 to current server time
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1081, 1114, 'begintime reset');
+  </pre>
+
+  <h4>💡 Example SQL – Check Task Phase</h4>
+  <pre>
+-- Check if task 1114 is in phase 3
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1081, 1114, 'phase == 3');
+
+-- If task is in phase 3
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You task currently in phase 3.');
+
+-- If task is not in phase 3
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You task is not in phase 3.');
+  </pre>
+
+  <h4>💡 Example SQL – Add Completion Count</h4>
+  <pre>
+-- Add 1 to the completion count of task 1114
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1081, 1114, 'completenum += 1');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID to operate on. Use <code>-1</code> to apply on the task returned by <code>findnext</code>.</li>
+    <li><code>param</code> – Format is: <code>ope opt value</code>
+      <ul>
+        <li><code>phase</code> – Operates on task phase.</li>
+        <li><code>completenum</code> – Operates on completion count.</li>
+        <li><code>begintime</code> – Operates on task start time.</li>
+        <li><code>data1, data2, data3, data4</code> – Custom data fields for new engine.</li>
+      </ul>
+    </li>
+    <li><code>opt</code> – Operator used in the operation:
+      <ul>
+        <li><code>==</code>, <code>>=</code> – Compare values</li>
+        <li><code>=</code> – Assign values</li>
+        <li><code>+=</code> – Increase value (or add seconds for begintime)</li>
+        <li><code>reset</code> – Only for <code>begintime</code>, resets to current time</li>
+      </ul>
+    </li>
+    <li><code>value</code> – Can be number (e.g. <code>3</code>), duration in seconds, or timestamp (<code>yyyy-mm-dd hh:mm:ss</code>)</li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>You can use this to build complex quest logic with cooldowns, progress stages, or repeatable limits.</li>
+    <li>Values for <code>phase</code>, <code>completenum</code>, <code>data1–4</code> have no set limits.</li>
+    <li>Use <code>data = -1</code> if you're using <code>findnext</code> and want to operate on its result.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use with <code>0126</code> to inform the player of their progress or cooldowns.</li>
+    <li>Use <code>+=</code> to advance task phase or increment completion count.</li>
+    <li>Use <code>reset</code> with <code>begintime</code> to track time-based cooldowns or delays between attempts.</li>
+  </ul>
+</details>
+
+<details>
+<summary>⏱️ <strong>Task Cooldown Timer Check (Type 1082)</strong></summary>
+  <br>
+
+  <p>Type 1082 is used to compare the current server time with the start time of a specific task. It checks whether the time passed since the task began exceeds the given number of seconds. This is useful for cooldowns, waiting periods, or time-limited quest progression.</p>
+
+  <h4>💡 Example SQL – Check if 5 Minutes (300 seconds) Have Passed</h4>
+  <pre>
+-- Check if at least 300 seconds have passed since task 1114 started
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1082, 1114, '300');
+
+-- If enough time has passed
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are well-rested and may proceed with your mission.');
+
+-- If not enough time has passed
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You need more rest before continuing. Please come back later.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID (set with Type 1080).</li>
+    <li><code>param</code> – Number of seconds to compare. Returns true if the elapsed time since the task started is greater than this value.</li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>Set the task's start time using <code>1081 begintime reset</code> when the task begins.</li>
+    <li>This action only checks elapsed time; it does not update or modify any task values.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Perfect for implementing cooldowns, delays between attempts, or real-time waiting mechanics.</li>
+    <li>Display clear messages using <code>0126</code> so players understand when they can retry.</li>
+    <li>Combine with <code>1080</code> and <code>1081</code> for full control over task state and timing.</li>
+  </ul>
+</details>
+
+
+
+<details>
+  <summary>🗂️ <strong>Write to Custom Log File (Type 1085)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Type 1085 is used to write custom logs from scripts into a text file. Although originally marked as unused in official sources, it works in practice and allows writing formatted lines into a specified log file. This can be useful for event tracking, race results, or custom admin tools.</p>
+
+  <h4>💡 Example SQL – Write to Log</h4>
+  <pre>
+-- Write to gmlog/action_log.txt with formatted values
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1085, 0, 'gmlog/action_log 340,%user_name[%user_id],0,0,1,0,124,0,0,0');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>folder/filename</code> – Path to the log file, relative to <code>MSGServer</code> (e.g. <code>gmlog/action_log</code>).</li>
+    <li><code>log content</code> – The string to be written. Can include variables like:
+      <ul>
+        <li><code>%user_name</code></li>
+        <li><code>%user_id</code></li>
+      </ul>
+    </li>
+    <li>Use <code>~</code> for spaces in the message (e.g. <code>%user_name~won~the~mount~race</code>).</li>
+  </ul>
+
+  <h4>💡 Customization Tips</h4>
+  <ul>
+    <li>You can replace <code>gmlog</code> with any folder name, such as <code>eventlog</code>, and change the filename like <code>mount_race</code> to create <code>eventlog/mount_race.txt</code>.</li>
+    <li>The folder must exist manually beforehand. If the folder doesn't exist, the log will not be written.</li>
+    <li>This action does not show any message to the player. It's purely for server-side logging.</li>
+  </ul>
+
+  <h4>💡 Usage Examples</h4>
+  <pre>
+-- Custom win message for event
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1085, 0, 'eventlog/mount_race %user_name~won~the~mount~race!');
+  </pre>
+</details>
+
+
+<details>
+<summary>📆 <strong>Task Day-Based Cooldown Check (Type 1086)</strong></summary>
+  <br>
+
+  <p>Type 1086 is used to compare the current date with the start time of a specific task. It checks whether the number of full days passed since the task was created is greater than or equal to the given value. This is typically used for daily/weekly reward cooldowns or time-locked progression.</p>
+
+  <p><strong>Important:</strong> Make sure the task is created first using <code>Type 1080 (new)</code>, and its start time is set using <code>Type 1081 (begintime reset)</code>.</p>
+
+  <h4>💡 Example SQL – Require 4 Days Since Task Start</h4>
+  <pre>
+-- Check if 4 days have passed since task 1114 started
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1086, 1114, '4');
+
+-- If 4 days or more have passed
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You can receive reward now');
+
+-- If not enough days have passed
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Sorry! You have received reward, please come after 4 days.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID created with Type 1080.</li>
+    <li><code>param</code> – Number of days to compare. Returns true if current time is greater than or equal to the required days since task start.</li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>Use <code>Type 1080</code> to create the task.</li>
+    <li>Use <code>Type 1081 begintime reset</code> to set the task start time.</li>
+    <li>This action checks full calendar days, not just 24-hour differences.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this for weekly login rewards, time-gated events, or return-after missions.</li>
+    <li>Combine with <code>0126</code> to inform the player if they can claim or must wait.</li>
+    <li>Can be used with <code>1085</code> to log redemptions when the cooldown expires.</li>
   </ul>
 </details>
 
