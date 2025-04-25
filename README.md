@@ -4022,6 +4022,114 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1041, 0, 'https://knightfall-
   </ul>
 </details>
 
+
+<details>
+  <summary>🧨 <strong>Drop Magic Skills (Type 1044)</strong></summary>
+  <br>
+
+  <p>Type 1044 is used to delete specific magic skills from a player, typically during rebirth, skill reset, or class change. You can specify up to 20 skill type IDs in the parameter (for new engine). Skills removed this way are permanent and will restart from level 0 if relearned.</p>
+
+  <h4>💡 Example SQL – Drop Multiple Skills (New Engine)</h4>
+  <pre>
+-- Remove multiple skills during rebirth
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1044, 0, '17400 17100 17300 17000 18500');
+  </pre>
+
+  <h4>💡 Example SQL – Drop One Skill (Old Engine)</h4>
+  <pre>
+-- Old engine supports only 1 skill per line
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1044, 0, '7012');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>type1 type2 ... type20</code> – Space-separated list of skill type IDs (from <code>cq_magictype</code>).</li>
+  </ul>
+
+  <h4>📘 Engine Support</h4>
+  <ul>
+    <li><strong>Old engine:</strong> Only 1 skill type can be listed per action.</li>
+    <li><strong>New engine:</strong> Supports up to 20 skill types per line.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use during rebirth, job reset, or special quests that wipe specific abilities.</li>
+    <li>Always inform the player with <code>0126</code> messages when deleting important skills.</li>
+    <li>Combine with <code>1020 learn</code> or <code>uplevel</code> to rebuild or replace skill sets.</li>
+  </ul>
+</details>
+
+
+
+
+<details>
+  <summary>🪟 <strong>Open UI Interface (Type 1046)</strong></summary>
+  <br>
+
+  <p>Type 1046 is used to open a client-side interface (UI dialog) by its ID. The <code>data</code> field determines which interface will appear. Different dialog IDs are supported depending on the engine version.</p>
+
+  <h4>💡 Example SQL – Open Compose Interface</h4>
+  <pre>
+-- Open dialog ID 37 (Compose UI)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1046, 37, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li><code>data</code> – ID of the interface/dialog to open on the client.</li>
+  </ul>
+
+  <h4>📘 Supported Dialog IDs</h4>
+
+  <p><strong>Old Engine:</strong></p>
+  <pre>
+301, 300, 71, 70, 62, 61, 60, 59, 58, 56, 55, 53, 51, 50, 49, 48, 47, 46, 45, 44, 43,
+42, 41, 40, 39, 38, 37, 36, 35, 31, 30, 29, 28, 27, 25, 24, 23, 22, 21, 19, 17, 16,
+15, 14, 13, 12, 11, 10, 8, 7, 6, 5, 3, 1
+  </pre>
+
+  <p><strong>New Engine:</strong></p>
+  <pre>
+10020, 10002, 10001, 10000, 1041, 927, 918, 917, 701, 602, 501, 421, 420, 419, 418,
+415, 412, 410, 301, 300, 122, 121, 81, 80, 79, 74, 72, 60, 59, 58, 56, 55, 53, 49, 
+47, 43, 41, 40, 39, 37, 36, 35, 29, 28, 27, 25, 24, 23, 22, 21, 19, 16, 13, 12, 11, 
+10, 3, 1
+  </pre>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Make sure the dialog ID is supported by your engine version.</li>
+    <li>For custom UIs, use new engine IDs like <code>10000+</code>.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🗺️ <strong>Teleport to Main Map Respawn (Type 1052)</strong></summary>
+  <br>
+
+  <p>Type 1052 is used to teleport the player to the main map’s respawn point. This action will automatically use the map's default revival location, based on the fields <code>reborn_map</code>, <code>portal0_x</code>, and <code>portal0_y</code> set in <code>cq_map</code> for the current map.</p>
+
+  <h4>💡 Example SQL – Teleport to Main Map Respawn</h4>
+  <pre>
+-- Teleport to the main map's configured respawn point
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1052, 0, '');
+  </pre>
+
+  <h4>📘 Parameter Explanation</h4>
+  <ul>
+    <li>No param needed. The system will read <code>reborn_map</code>, <code>portal0_x</code>, and <code>portal0_y</code> from <code>cq_map</code> according to the current map ID.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>This is ideal for auto-respawn or emergency teleport after dungeon runs or failed events.</li>
+    <li>Ensure the current map has valid values in <code>reborn_map</code> and portal coordinates in <code>cq_map</code>, or the teleport may fail.</li>
+  </ul>
+</details>
+
+
+
 ---
 
 ## Other Tools
