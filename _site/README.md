@@ -4136,6 +4136,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1052, 0, '');
 
   - [Color Font Generator](color-generator.html)
   - [Cq_card Generator](cq_card-generator.html)
+  - [Register Generator](register.html)
 
 
 ---

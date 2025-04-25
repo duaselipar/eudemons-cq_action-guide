@@ -2,95 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Checksum Calculator - cq_card / cq_card2</title>
+  <title>🛡️ Checksum Calculator - cq_card / cq_card2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg-light: #f8f9fa;
-      --bg-dark: #1e1e1e;
-      --text-light: #2c3e50;
-      --text-dark: #e0e0e0;
-      --card-light: #ffffff;
-      --card-dark: #2a2a2a;
+      --bg: #f9f9f9;
+      --fg: #333;
+      --card: #ffffff;
       --accent: #4CAF50;
-      --code-bg-light: #f4f4f4;
-      --code-bg-dark: #333;
+      --code-bg: #272822;
+      --code-fg: #f8f8f2;
     }
+
+    body.dark {
+      --bg: #121212;
+      --fg: #e0e0e0;
+      --card: #1e1e1e;
+      --accent: #81c784;
+      --code-bg: #1a1a1a;
+      --code-fg: #dcdcdc;
+    }
+
     body {
       margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
+      padding: 2rem;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
       transition: background 0.3s, color 0.3s;
+      max-width: 800px;
+      margin: auto;
     }
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
+
     header {
-      padding: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 2rem;
     }
-    .container {
-      padding: 20px;
+
+    h2 {
+      margin: 0;
+      font-size: 1.8rem;
     }
-    form {
-      background: var(--card-light);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      transition: background 0.3s;
-    }
-    body.dark form {
-      background: var(--card-dark);
-    }
-    label {
-      font-weight: bold;
-    }
-    input, select {
-      padding: 8px;
-      margin: 6px 0 16px;
-      width: 100%;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    input[type="submit"] {
-      background: var(--accent);
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .result {
-      background: #e8f5e9;
-      border-left: 4px solid var(--accent);
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-    body.dark .result {
-      background: #324d39;
-    }
-    code {
-      background: var(--code-bg-light);
-      display: block;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      white-space: pre-wrap;
-      transition: background 0.3s;
-    }
-    body.dark code {
-      background: var(--code-bg-dark);
-    }
-    button.toggle {
+
+    .toggle {
       background: none;
       border: 2px solid var(--accent);
       color: var(--accent);
@@ -99,38 +55,127 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    form {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: var(--card);
+      color: var(--fg);
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      opacity: 0.9;
+    }
+
+    .result {
+      background: #e8f5e9;
+      border-left: 5px solid var(--accent);
+      padding: 20px;
+      margin-top: 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      position: relative;
+    }
+
+    body.dark .result {
+      background: #324d39;
+    }
+
+    code {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      display: block;
+      padding: 25px;
+      margin-top: 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 1.1rem;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <header>
-    <h2>Checksum Calculator</h2>
-    <button class="toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <h2>🛡️ Checksum Calculator</h2>
+    <button class="toggle" onclick="toggleDarkMode()">🌗 Toggle Dark Mode</button>
   </header>
-  <div class="container">
-    <form id="checksumForm">
-      <label for="base_chk_sum">Base Checksum:</label>
-      <select name="base_chk_sum" id="base_chk_sum">
-        <option value="780000">cq_card</option>
-        <option value="780001">cq_card2</option>
-      </select>
 
-      <label for="account_id">Account ID:</label>
-      <input type="number" id="account_id" name="account_id" required />
+  <form id="checksumForm">
+    <label for="base_chk_sum">Base Checksum:</label>
+    <select id="base_chk_sum">
+      <option value="780000">cq_card</option>
+      <option value="780001">cq_card2</option>
+    </select>
 
-      <input type="submit" value="Calculate" />
-    </form>
+    <label for="account_id">Account ID:</label>
+    <input type="number" id="account_id" required>
 
-    <div class="result" id="result" style="display:none;">
-      <p id="chkSumOutput"></p>
-      <p><strong>SQL Query:</strong></p>
-      <code id="sqlOutput"></code>
-    </div>
+    <input type="submit" value="Calculate">
+  </form>
+
+  <div class="result" id="result" style="display:none;">
+    <p id="chkSumOutput"></p>
+    <p><strong>SQL Query:</strong></p>
+    <code id="sqlOutput"></code>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
   </div>
 
   <script>
     function toggleDarkMode() {
       document.body.classList.toggle("dark");
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
     }
+
+    window.onload = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') {
+        document.body.classList.add('dark');
+      }
+    };
 
     document.getElementById("checksumForm").addEventListener("submit", function(event) {
       event.preventDefault();
@@ -145,16 +190,24 @@
       const used = 0;
       const flag = 3;
       const ordernumber = 0;
-      const card_in_time = Math.floor(Date.now() / 1000); // current UNIX timestamp
+      const card_in_time = Math.floor(Date.now() / 1000);
 
       document.getElementById("chkSumOutput").innerHTML =
         `Checksum for account ID <strong>${account_id}</strong> with base checksum <strong>${base_chk_sum}</strong> is: <strong>${chk_sum}</strong>`;
 
-      document.getElementById("sqlOutput").innerText =
+      document.getElementById("sqlOutput").textContent =
         `INSERT INTO \`${table}\` (\`id\`, \`type\`, \`account_id\`, \`ref_id\`, \`chk_sum\`, \`time_stamp\`, \`used\`, \`flag\`, \`ordernumber\`, \`card_in_time\`) VALUES (NULL, ${base_chk_sum}, ${account_id}, ${ref_id}, ${chk_sum}, ${time_stamp}, ${used}, ${flag}, '${ordernumber}', ${card_in_time});`;
 
       document.getElementById("result").style.display = "block";
     });
+
+    function copyCode() {
+      const codeText = document.getElementById('sqlOutput').textContent;
+      navigator.clipboard.writeText(codeText).then(() => {
+        alert("Copied to clipboard!");
+      });
+    }
   </script>
+
 </body>
 </html>
