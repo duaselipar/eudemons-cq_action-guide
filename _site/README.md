@@ -4410,6 +4410,1176 @@ REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Sorry! You have rec
 </details>
 
 
+<details>
+  <summary>📢 <strong>Team Chat Broadcast (Type 1101)</strong></summary>
+  <br>
+
+  <p>Type 1101 is used to send a custom message to the team chat channel. It allows for dynamic player announcements, progress sharing, or event notifications among team members. Variables like <code>%user_name</code> can be used to personalize the broadcast.</p>
+
+  <h4>💡 Example SQL – Broadcast Message to Team</h4>
+  <pre>
+-- Broadcast to team: "[PlayerName]: I have completed Fire Tomb 2 times today."
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1101, 0, '%user_name: I have completed Fire Tomb 2 times today.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>param</code> – The message to send. Can include player variables:
+      <ul>
+        <li><code>%user_name</code> – Player's name</li>
+        <li><code>%user_id</code> – Player's ID (optional if needed)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use <code>%user_name</code> to personalize messages automatically for the triggering player.</li>
+    <li>Best used for quest completions, dungeon announcements, event wins, or custom group activities.</li>
+    <li>This message will only be visible to the player’s current team members, not globally.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>👥 <strong>Team Attribute Check (Type 1102)</strong></summary>
+  <br>
+
+  <p>Type 1102 is used to check or operate on attributes of a team. You can check the number of teammates, the level or god level of members, or if specific types of relations like mate or friend are present. If the player is not in a team, the check will return false immediately.</p>
+
+  <h4>💡 Example SQL – Check if Teammate is Your Mate</h4>
+  <pre>
+-- Check if the player's mate is in the team
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1102, 0, 'mate');
+
+-- If mate is found in the team
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your mate is in your team');
+
+-- If mate is not found
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your mate is not in your team');
+  </pre>
+
+  <h4>💡 Example SQL – Check Team Size</h4>
+  <pre>
+-- Check if team size is less than 2 (need at least 1 teammate)
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1102, 0, 'count < 2');
+
+-- If not enough teammates
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You need at least 1 teammate');
+
+-- If requirement is met
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You can proceed now');
+  </pre>
+
+<h4>📘 Parameter Format</h4>
+<ul>
+  <li><code>param</code> – Format is <code>field opt data</code> depending on the field type.
+    <ul>
+      <li><code>level</code> – Compare team member levels. Supports operators: <code>&lt;</code>, <code>&gt;</code>, <code>==</code>.</li>
+      <li><code>godlev</code> – Compare team member god levels (new engine only). Supports operators: <code>&lt;</code>, <code>&gt;</code>, <code>==</code>.</li>
+      <li><code>count</code> – Check total number of players in the team (including captain). Supports operators: <code>&lt;</code>, <code>==</code>.</li>
+      <li><code>count_near</code> – Check number of alive players on the same map. Supports operators: <code>&lt;</code>, <code>==</code>.</li>
+      <li><code>mate</code> – Check if the player's mate is in the team and alive. No operator needed, only the field name is required (new engine only).</li>
+      <li><code>friend</code> – Check if the player's friend is in the team and alive. No operator needed, only the field name is required (new engine only).</li>
+    </ul>
+  </li>
+</ul>
+
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>If no team is formed, <code>count</code> and other checks will immediately return false.</li>
+    <li>Fields like <code>mate</code> and <code>friend</code> are new engine features and require the players to be alive and near.</li>
+    <li>Use <code>id_next</code> and <code>id_nextfail</code> properly to branch based on check results.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Good for event restrictions (e.g., need a team to enter) or special buffs (team with mate gets bonuses).</li>
+    <li>Combine with <code>0126</code> to show clear reasons when blocking player actions.</li>
+    <li>Can be stacked with team teleportation, buff sharing, or mission entry checks.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧭 <strong>Team Map Teleport (Type 1107)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p>Type 1107 is used to teleport an entire team, including the team leader, to a new location. All team members must be alive, and the teleport must happen within the same map group (grouped maps only, not cross-world teleport).</p>
+
+  <h4>💡 Example SQL – Teleport Team to a New Position</h4>
+  <pre>
+-- Move the entire team to Map ID 8901 at coordinates (35, 48)
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1107, 0, '8901 35 48');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>mapid</code> – Target map ID where the team will teleport.</li>
+    <li><code>x</code> – Target X coordinate.</li>
+    <li><code>y</code> – Target Y coordinate.</li>
+  </ul>
+
+  <h4>📘 Important Notes</h4>
+  <ul>
+    <li>All team members must be alive. Dead members will prevent the teleport.</li>
+    <li>This only works within the same map group. Cannot teleport across unrelated maps.</li>
+    <li>The team leader and members will arrive together at the specified position.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use for team dungeon entries, multi-player boss rooms, or synchronized event stages.</li>
+    <li>Always verify that the team meets teleport conditions using checks like <code>1102 count</code> or <code>count_near</code> before calling this action.</li>
+    <li>Combine with <code>1027</code> visual effects for dramatic entrance effects after teleport.</li>
+  </ul>
+</details>
+
+
+<details>
+<summary>👑 <strong>Team Leader Status Check (Type 1501)</strong></summary>
+  <br>
+
+  <p>Type 1501 is used to check whether the player is currently the team leader. No parameters are needed for this action. This is useful when you want only the team leader to trigger certain actions like entering dungeons or starting events.</p>
+
+  <h4>💡 Example SQL – Check Leader Status</h4>
+  <pre>
+-- Check if the player is the team leader
+REPLACE INTO `cq_action` VALUES (1000, 1002, 1001, 1501, 0, '');
+
+-- If player is leader
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are team leader.');
+
+-- If player is not leader
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are not team leader.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li>No parameters are needed. Simply call the action to check leadership status.</li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>If the player is the team leader, <code>id_next</code> will execute.</li>
+    <li>If the player is not the team leader, <code>id_nextfail</code> will execute.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Use this before starting team-only activities like boss fights, dungeon entries, or team rewards.</li>
+    <li>Always combine with a clear <code>1010</code> or <code>0126</code> message to inform players why an action is blocked.</li>
+    <li>You can also pair it with <code>1102 count</code> to further check if the team has enough members.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🎰 <strong>Lottery (Type 1508)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>data and param format is just my theory,cant find any reference.</strong>
+  </div>
+  <p>Type 1508 is used to trigger a Lottery event related to entries in the <code>cq_lottery</code> table. The action uses <code>data</code> and <code>param</code> fields to specify draw settings, although full behavior depends on server handling and table setup.</p>
+
+  <h4>💡 Example SQL – Lottery Attempt</h4>
+  <pre>
+-- Trigger a Lottery with color = 1 and type = 5
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1508, 1, '5');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Assumed to be the "color" field in <code>cq_lottery</code>.</li>
+    <li><code>param</code> – Assumed to be the "type" field in <code>cq_lottery</code>.</li>
+  </ul>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li>Both <code>color</code> and <code>type</code> must match entries inside <code>cq_lottery</code> for the draw to succeed.</li>
+    <li>The server will search <code>cq_lottery</code> using the color and type values provided and select an appropriate reward randomly.</li>
+    <li>Exact draw rate, reward item, and amount are controlled inside the <code>cq_lottery</code> database entries.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Ensure your <code>cq_lottery</code> table is correctly populated and balanced to avoid empty draws.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧮 <strong>User Variable Control (Type 1521,1522,1523,1524)</strong></summary>
+  <br>
+
+  <p>Types 1521–1524 are used to manage temporary user variables (integer or string) during script execution. These variables are NOT saved into any database. They only exist during the current session and will be lost if the player logs out or if the server restarts. Useful for short-term event tracking, temporary counters, or dynamic scripting without needing database storage.</p>
+
+  <h4>📘 Type 1521 – Initialize Integer Variable</h4>
+  <p>Initialize an integer variable. You can directly set it to a fixed number or assign a random value within a range.</p>
+
+  <h4>💡 Example SQL – Set Integer to 0</h4>
+  <pre>
+-- Initialize var(3) to 0
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1521, 0, 'var(3) set 0');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variable 3 is %iter_var_data3');
+
+  </pre>
+
+  <h4>💡 Example SQL – Random Assignment (New Engine)</h4>
+  <pre>
+-- Initialize var(2) to random between 10 and 50
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1521, 0, 'var(2) randset 10 50');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variable 3 randset is %iter_var_data2');
+  </pre>
+
+  <h4>📘 Type 1522 – Operate on Integer Variable</h4>
+  <p>Perform operations on integer variables like adding, dividing, multiplying, or comparing values.</p>
+
+  <h4>💡 Example SQL – Add 1 to a Variable</h4>
+  <pre>
+-- Increase var(3) by 1
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1522, 0, 'var(5) += 1');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variable 5 is %iter_var_data5');
+  </pre>
+
+  <h4>📘 Supported Operators for Integer Variables</h4>
+  <ul>
+    <li><code>==</code> – Compare if equal</li>
+    <li><code>+=</code> – Add a value</li>
+    <li><code>/=</code> – Divide by a value (New Engine)</li>
+    <li><code>*=</code> – Multiply by a value (New Engine)</li>
+  </ul>
+
+  <h4>📘 Type 1523 – String Variable Comparison</h4>
+  <p>Compare text variables (not case sensitive). Useful for checking user input, answers, or choice selections.</p>
+
+  <h4>💡 Example SQL – Compare String</h4>
+  <pre>
+-- Compare if var(8) equals 50
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1523, 0, 'var(8) == Untungla');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your String variable 8 is Untungla');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'Your String variable 8 is not Untungla');
+  </pre>
+
+  <h4>📘 Type 1524 – Initialize String Variables</h4>
+
+  <h4>💡 Example SQL – Initialize Text List</h4>
+  <pre>
+-- Set var(3) to "Sembang~Lebat"
+REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1524, 0, 'var(3) set Sembang~Lebat');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your string variable 3 is %iter_var_str3');
+  </pre>
+
+  <h4>📘 Notes</h4>
+  <ul>
+    <li><code>var(n)</code> will link to system variables like <code>%iter_var_dataX</code> (integer) or <code>%iter_var_strX</code> (string).</li>
+    <li><strong>New engine:</strong> 
+      <ul>
+        <li><code>%iter_var_data0</code> ~ <code>%iter_var_data99</code> (100 slots for integers)</li>
+        <li><code>%iter_var_str0</code> ~ <code>%iter_var_str19</code> (20 slots for strings)</li>
+      </ul>
+    </li>
+    <li><strong>Old engine:</strong> 
+      <ul>
+        <li><code>%iter_var_data0</code> ~ <code>%iter_var_data9</code> (10 slots for integers)</li>
+        <li><code>%iter_var_str0</code> ~ <code>%iter_var_str9</code> (10 slots for strings)</li>
+      </ul>
+    </li>
+    <li>Random assignment using <code>randset</code> is only available for integers (1521).</li>
+    <li>String comparison (1523) is case-insensitive.</li>
+    <li>All values are temporary and will disappear after player relog or server reboot.</li>
+  </ul>
+
+  <h4>💡 Tips</h4>
+  <ul>
+    <li>Good for temporary event stages, random rewards, guessing games, or timed puzzles.</li>
+    <li>Use integer and string combinations for complex in-memory event flow without database load.</li>
+    <li>Ideal for scripting quick mini-games inside NPC dialogs or event maps.</li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>🐲 <strong>Eudemon Attribute Check & Modify (Type 1533)</strong></summary>
+  <br>
+
+  <p><strong>Type 1533</strong> is used to check or modify Eudemon (pet) attributes such as stars, rebirth, luck, god level, and more.</p>
+
+  <h4>📜 Old Engine Supported Attributes:</h4>
+  <ul>
+    <li><code>star</code> (supports <code>+=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>==</code>)</li>
+    <li><code>uplevtime</code> (supports <code>+=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>==</code>)</li>
+    <li><code>rebornlimitadd</code> (supports <code>+=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>==</code>)</li>
+    <li><code>luck</code> (supports <code>+=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>==</code>)</li>
+    <li><code>iscallout</code> (supports <code>==</code>) — Check if summoned or not</li>
+    <li><code>alive</code> (supports <code>==</code>) — Check if Eudemon is dead or alive</li>
+  </ul>
+
+  <h4>🆕 New Engine Additional Supports:</h4>
+  <ul>
+    <li><code>star</code> (+=, <, >=, ==) – can directly increase/decrease stars</li>
+    <li><code>rebornlimitadd</code> (+=, <, >=, ==)</li>
+    <li><code>luck</code> (+=, <, >=, ==) – ⚠️ New engine: Adjusting <code>luck</code> does NOT affect stars automatically</li>
+    <li><code>damagetype</code> (=, ==)</li>
+    <li><code>alive</code> (==)</li>
+    <li><code>iscallout</code> (==)</li>
+    <li><code>egg</code> (==)</li>
+    <li><code>godlev</code> (+=, <, >=, ==)</li>
+    <li><code>upgodlevtime += value</code> – add divine EXP (multiplying 432)</li>
+    <li><code>reborn</code> (+=, >=, ==) – auto updates score</li>
+    <li><code>rebornandday</code> (+=) – rebirth limited to once per day</li>
+  </ul>
+
+  <h4>📖 Condition Syntax:</h4>
+  <p><code>attribute operator value</code></p>
+  <p>Example: <code>star >= 30</code> or <code>alive == 0</code></p>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚡ <strong>Only ONE condition is allowed per action 1533.</strong>
+  </div>
+
+  <h4>💬 Basic Example – Check if Eudemon is Dead:</h4>
+  <pre>
+-- Check if pet is dead
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1533, 0, 'alive == 0');
+
+-- If dead
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your eudemon is dead.');
+
+-- If alive
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Your eudemon is alive.');
+  </pre>
+
+  <h4>💡 Other Useful Examples:</h4>
+  <pre>
+-- Add +1 to eudemon rebirth (and auto update rating)
+INSERT INTO cq_action VALUES (2000, 0000, 0000, 1533, 0, 'reborn += 1');
+  </pre>
+
+  <pre>
+-- Check if God Level is at least 5
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1533, 0, 'luck >= 50');
+
+-- If above
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your eudemon luck is greater than or equal to 50.');
+
+-- If below 
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Your eudemon luck is less than or equal to 50.');
+  </pre>
+
+
+
+  <h4>📌 Tips:</h4>
+  <ul>
+    <li>Always use one attribute check or operation per 1533 action.</li>
+    <li>Validate eudemon state (alive, summoned, reborn) before applying upgrades.</li>
+    <li>Prefer using <code>reborn</code> and <code>rebornandday</code> for new systems instead of manual <code>rebornlimitadd</code> editing.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🧠 <strong>Reminder:</strong><br>In the new engine, <code>luck += 1</code> does NOT increase pet stars automatically. Use <code>star +=</code> if needed.
+  </div>
+</details>
+
+<details>
+  <summary>⚖️ <strong>Event Attribute Comparison (Type 2003 & 2004)</strong></summary>
+  <br>
+
+  <p><strong>Type 2003</strong> and <strong>Type 2004</strong> are used to compare system or player attributes dynamically during script execution.</p>
+
+  <h4>📘 Type Differences:</h4>
+  <ul>
+    <li><strong>Type 2003:</strong> Signed comparison (normal comparison, can use negative numbers)</li>
+    <li><strong>Type 2004:</strong> Unsigned comparison (only compares positive values)</li>
+  </ul>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data1 opt data2</code></li>
+    <li><strong>data1, data2:</strong> Must use variable with % symbol (e.g., <code>%user_map_id</code>, <code>%user_map_x</code>, <code>%iter_var_data7</code>)</li>
+    <li><strong>opt:</strong> ==, <, <=</li>
+  </ul>
+
+  <h4>📜 Basic Examples:</h4>
+  <pre>
+-- Type 2003 (Signed) - Allow negative number
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2003, 0, '%iter_var_data7 < -4');
+  </pre>
+
+  <pre>
+-- Type 2004 (Unsigned) - Positive only
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2004, 0, '%user_map_id == 8971');
+  </pre>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>Type 2003</code> when your variable might be negative. Use <code>Type 2004</code> when comparing IDs, positions, or timers that are always positive.
+  </div>
+
+</details>
+
+<details>
+  <summary>🐾 <strong>Create Monster (Type 2006)</strong></summary>
+  <br>
+
+  <p><strong>Type 2006</strong> is used to create a monster (or summon) dynamically in the map. You must specify at least 7 parameters. The created monster will exist based on the parameters set.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>nOwnerType idOwner idMap nPosX nPosY idGen idType [nData] [szName]</code></li>
+    <li>Minimum 7 parameters are required</li>
+    <li><strong>idOwner = 0</strong> → The monster will not be saved permanently (temporary summon)</li>
+    <li>If <code>accept</code> parameter is used, it will rename monster based on accept string</li>
+    <li>Otherwise, monster uses <code>szName</code> provided at the end</li>
+  </ul>
+
+  <h4>📜 Basic Example:</h4>
+  <pre>
+-- Create a monster without a custom name
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2006, 0, '0 0 %user_map_id 592 486 2013801 20138');
+  </pre>
+
+  <h4>📜 Example with Custom Name:</h4>
+  <pre>
+-- Create a Void Wraith monster with name
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2006, 0, '0 0 %user_map_id 465 637 9639001 12600 0 Void~Wraith');
+  </pre>
+
+  <h4>✅ Parameter Explanation:</h4>
+  <ul>
+    <li><strong>nOwnerType:</strong> Owner type (0 = no owner, 1 = player, etc.)</li>
+    <li><strong>idOwner:</strong> Owner ID (if 0, monster not saved)</li>
+    <li><strong>idMap:</strong> Map ID to spawn the monster</li>
+    <li><strong>nPosX / nPosY:</strong> Coordinates (X, Y)</li>
+    <li><strong>idGen:</strong> Generator ID (for controlling roaming)</li>
+    <li><strong>idType:</strong> Monster type ID (link to <code>cq_monstertype</code>)</li>
+    <li><strong>nData:</strong> (Optional) Extra data for special behaviors</li>
+    <li><strong>szName:</strong> (Optional) Custom monster name (use <code>~</code> instead of spaces)</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>Void~Wraith</code> format if you want custom monster names (replace spaces with ~).
+  </div>
+
+</details>
+
+<details>
+  <summary>🏗️ <strong>Create New Dynamic NPC (Type 2007)</strong></summary>
+  <br>
+
+  <p><strong>Type 2007</strong> is used to dynamically create a brand new NPC in the map. The created NPC will be stored in <code>cq_dynanpc</code>, not <code>cq_npc</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>name type sort lookface ownertype ownerid mapid posx posy [life base linkid task0-task7 data0-data3 datastr]</code></li>
+    <li>Minimum 9 parameters are required</li>
+    <li>Maximum 25 parameters supported</li>
+  </ul>
+
+  <h4>📜 Example - Minimum (9 parameters):</h4>
+  <pre>
+-- Create basic blocking NPC
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2007, 0, 'Blocker 2 1 520410 0 0 %user_map_id 185 110');
+  </pre>
+
+  <h4>📜 Example - Full (25 parameters):</h4>
+  <pre>
+-- Create full custom NPC with tasks and extra data
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2007, 0, 'Mallos 154 01 762530 0 0 %user_map_id 64 71 0 0 0 20080250 0 0 0 0 0 0 0 0 0 0 0 0');
+  </pre>
+
+  <h4>✅ Parameter Breakdown:</h4>
+  <ul>
+    <li><strong>name:</strong> NPC name (use <code>~</code> instead of space)</li>
+    <li><strong>type:</strong> NPC type ID</li>
+    <li><strong>sort:</strong> NPC sort (behavior type)</li>
+    <li><strong>lookface:</strong> Appearance ID</li>
+    <li><strong>ownertype:</strong> Owner type (0 = none)</li>
+    <li><strong>ownerid:</strong> Owner ID (0 = none)</li>
+    <li><strong>mapid:</strong> Map ID to spawn</li>
+    <li><strong>posx / posy:</strong> Coordinates (X, Y)</li>
+    <li><strong>life, base, linkid:</strong> Optional extra settings</li>
+    <li><strong>task0 - task7:</strong> Optional task links</li>
+    <li><strong>data0 - data3:</strong> Optional extra data</li>
+    <li><strong>datastr:</strong> Optional string field</li>
+  </ul>
+
+  <div style="border-left: 4px solid #03A9F4; background: #e1f5fe; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use minimum 9 parameters if you just need a simple static NPC. Use full 25 parameters if you want NPC linked with tasks, special events, or unique behaviors.
+  </div>
+
+  <hr>
+
+  <h4>👀 NPC Lookface Direction (52041x)</h4>
+
+  <p>When creating an NPC, the <code>lookface</code> field controls its appearance and facing direction. It uses the format <code>52041x</code> where <code>x</code> is the facing direction (0 to 7).</p>
+
+  <ul>
+    <li>Base lookface comes from <code>ini/npc.ini</code> (example: 52041)</li>
+    <li>Last digit (0~7) decides the facing direction of the NPC</li>
+    <li>Without correct direction, NPC might not show properly!</li>
+  </ul>
+
+  <h4>🧭 Basic Direction Guide:</h4>
+  <p style="text-align:center;">
+    <img src="assets/images/arah.png" alt="NPC Direction" style="max-width:300px; margin-top:10px; border-radius:8px;">
+  </p>
+
+  <h4>📸 In-Game Example:</h4>
+  <p style="text-align:center;">
+    <img src="assets/images/contoharah.png" alt="NPC Example" style="max-width:100%; border-radius:8px;">
+  </p>
+
+
+</details>
+
+
+---
+## 📚 Understanding Variables
+
+This section will explain about the types of variables available in the server. Some variables can be modified, while others are read-only and provided by the system.
+
+These variables can be displayed or checked using dialog windows (Type 101), message boxes (Type 126), and other script actions depending on how they are used in the event system.
+
+<details>
+  <summary>🛠️ <strong>System Variables</strong></summary>
+  <details style="margin-left: 20px;">
+    <summary>📅 <strong>%datestamp (New Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the current server date in YYYYMMDD format (e.g., 20250427).</li>
+      <li><strong>Usage:</strong> Useful for date-based rewards, daily event locks, or time-limited quests.</li>
+      <li><strong>Important:</strong> Only available in the new engine. The format is intended for internal calculation, not for direct human-readable formatting.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Current Date</h4>
+    <pre>
+-- Show the current server date using %datestamp
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%datestamp');
+    </pre>
+
+    <p>When displayed using a message box (Type 126), it will appear like this:</p>
+
+    <img src="/assets/images/datestamp.png" alt="%datestamp Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+      ⚠️ <strong>New Engine Only</strong>
+    </div>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>⏰ <strong>%time</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the current server timestamp in seconds since Unix epoch (e.g., 1745688972).</li>
+      <li><strong>Usage:</strong> Useful for time-based calculations, cooldown tracking, logging events, or precise timing comparisons.</li>
+      <li><strong>Important:</strong> The timestamp is intended for internal calculations, not formatted for human reading directly.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Current Timestamp</h4>
+    <pre>
+-- Show the current server time (timestamp) using %time
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%time');
+    </pre>
+
+    <p>When displayed using a message box (Type 126), it will appear like this:</p>
+
+    <img src="/assets/images/timestamp.png" alt="%time Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+  </details>
+
+<details style="margin-left: 20px;">
+  <summary>🌟 <strong>%maxeudemon_starlev (New Engine Only)</strong></summary>
+  <br>
+  <ul>
+    <li><strong>Description:</strong> Returns the maximum Eudemon star limit setting. The value is stored as an integer, where 30000 means 300.00 stars.</li>
+    <li><strong>Usage:</strong> Useful for comparing pet growth, setting evolution limits, or informing players about star caps in events or promotions.</li>
+    <li><strong>Important:</strong> Only available in the new engine. The maximum star value can be modified in the server MSG settings.</li>
+  </ul>
+
+  <h4>💡 Example SQL – Display Maximum Eudemon Star Level</h4>
+  <pre>
+-- Show the maximum allowed Eudemon star level
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%maxeudemon_starlev');
+  </pre>
+
+  <p>When displayed using a message box (Type 126), it will appear like this:</p>
+
+  <img src="/assets/images/maxeudemon.png" alt="%maxeudemon_starlev Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+</details>
+
+
+
+
+</details>
+
+
+
+<details>
+  <summary>🎒 <strong>Item Variables</strong></summary>
+  <details style="margin-left: 20px;">
+    <summary>📦 <strong>%item_type</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the item type ID of the current item. Must be an item listed in <code>cq_itemtype</code>.</li>
+      <li><strong>Usage:</strong> Used for identifying item categories, specific item checks, or triggering item-based events.</li>
+      <li><strong>Important:</strong> When checking player-owned items, the value comes from the <code>TYPE</code> field in <code>cq_item</code> table.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Item Type</h4>
+    <pre>
+-- Show the item type using %item_type
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%item_type');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🛠️ <strong>%item_data</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the item data value of the current item. Must be an item listed in <code>cq_itemtype</code>.</li>
+      <li><strong>Usage:</strong> Used for basic item checks involving item data field.</li>
+      <li><strong>Important:</strong> When checking player-owned items, the value comes from the <code>data</code> field in <code>cq_item</code> table.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Item Data</h4>
+    <pre>
+-- Show the item data using %item_data
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%item_data');
+    </pre>
+  </details>
+
+</details>
+
+
+<details>
+  <summary>🧙‍♂️ <strong>NPC Variables</strong></summary>
+
+NPC Variables are used to retrieve information about static or dynamic NPCs in the server. The NPC must exist in <code>cq_npc</code> or <code>cq_dynanpc</code> to access these variables.
+
+<div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin: 16px 0; border-radius:6px;">
+  🔧 <strong>Tip:</strong> To modify or update NPC attributes, please refer to <strong>Check or Modify NPC Attributes (Type 201 & 206)</strong>.
+</div>
+
+  <details style="margin-left: 20px;">
+    <summary>🏷️ <strong>%datastr</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the <code>datastr</code> field from the NPC record. It can contain letters and numbers.</li>
+      <li><strong>Usage:</strong> Useful for storing text codes or custom NPC properties.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC DataStr</h4>
+    <pre>
+-- Show the datastr field using %datastr
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%datastr');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🔢 <strong>%data0 ~ %data3</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns numeric values from the <code>data0</code> to <code>data3</code> fields of the NPC.</li>
+      <li><strong>Usage:</strong> Useful for custom configurations like NPC type behavior, event triggers, or dynamic settings.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Data0</h4>
+    <pre>
+-- Show data0 field using %data0
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%data0');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🧾 <strong>%name</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the name of the NPC.</li>
+      <li><strong>Usage:</strong> Display the NPC name dynamically in messages or dialogs.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Name</h4>
+    <pre>
+-- Show NPC name using %name
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%name');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🆔 <strong>%id</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the unique ID of the NPC.</li>
+      <li><strong>Usage:</strong> Useful for identification and targeting in custom scripts.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC ID</h4>
+    <pre>
+-- Show NPC ID using %id
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%id');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>📍 <strong>%npc_x and %npc_y</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the X and Y coordinates of the NPC on the map.</li>
+      <li><strong>Usage:</strong> Useful for teleportation systems, event placement, or dynamic map interactions.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Coordinates</h4>
+    <pre>
+-- Show NPC X and Y positions
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'X: %npc_x Y: %npc_y');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>👤 <strong>%npc_ownerid</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player ID that owns the NPC (used for summoned or dynamic NPCs).</li>
+      <li><strong>Usage:</strong> Useful for pet systems, summoned guards, or player-owned dynamic objects.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Owner ID</h4>
+    <pre>
+-- Show the owner ID using %npc_ownerid
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%npc_ownerid');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>❤️ <strong>%npc_maxlife</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the maximum life/HP value of the NPC.</li>
+      <li><strong>Usage:</strong> Used in battle systems, pet management, or boss status displays.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Max Life</h4>
+    <pre>
+-- Show maximum life using %npc_maxlife
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%npc_maxlife');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🗺️ <strong>%npc_mapid (New Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the map ID where the NPC is located.</li>
+      <li><strong>Important:</strong> Only available in the new engine version.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display NPC Map ID</h4>
+    <pre>
+-- Show NPC's current map ID
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%npc_mapid');
+    </pre>
+
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+      ⚠️ <strong>New Engine Only</strong>
+    </div>
+  </details>
+
+<details style="margin-left: 20px;">
+  <summary>🆕 <strong>%newdata1 ~ %newdata8 (New Engine Only)</strong></summary>
+  <br>
+  <ul>
+    <li><strong>Description:</strong> Returns numeric values from extended dynamic NPC data fields. Available only in the new engine.</li>
+    <li><strong>Usage:</strong> Useful for additional properties, event states, or advanced dynamic NPC behaviors.</li>
+  </ul>
+
+  <h4>💡 Example SQL – Display New Numeric Data</h4>
+  <pre>
+-- Show new numeric field using %newdata1
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%newdata1');
+  </pre>
+
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+</details>
+
+<details style="margin-left: 20px;">
+  <summary>🆕 <strong>%newdatastr1 ~ %newdatastr2 (New Engine Only)</strong></summary>
+  <br>
+  <ul>
+    <li><strong>Description:</strong> Returns string values from extended dynamic NPC string fields. Available only in the new engine.</li>
+    <li><strong>Usage:</strong> Useful for saving special string data like names, statuses, event codes, or owner information.</li>
+  </ul>
+
+  <h4>💡 Example SQL – Display New String Data</h4>
+  <pre>
+-- Show new string field using %newdatastr1
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%newdatastr1');
+  </pre>
+
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+</details>
+
+
+</details>
+
+<details>
+  <summary>🧑‍💼 <strong>User Variables</strong></summary>
+
+User Variables are used to retrieve information about the player character. This includes identity, position, name, legion information, and other player-specific attributes. Some variables are only available in the new engine version.
+
+  <details style="margin-left: 20px;">
+    <summary>🆔 <strong>%user_id</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player's unique user ID.</li>
+      <li><strong>Usage:</strong> Useful for identification, tracking, and ownership systems.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display User ID</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_id');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🗺️ <strong>%user_map_id / %user_map_x / %user_map_y</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the current map ID and the player's X, Y coordinates on the map.</li>
+      <li><strong>Usage:</strong> Useful for teleport systems, event zone checks, and movement tracking.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Map and Coordinates</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Map: %user_map_id, X: %user_map_x, Y: %user_map_y');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🏠 <strong>%user_home_id (Old Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player's home map ID. Available only in old engine versions.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Home Map ID</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_home_id');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🏰 <strong>%syn_id / %syn_name</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player's legion (guild) ID and name if they belong to one.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Legion Info</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Legion: %syn_name (%syn_id)');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🧑 <strong>%user_name / %mate_name</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player’s character name and their mate’s name (if married).</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Character Name</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Name: %user_name / Mate: %mate_name');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>📍 <strong>%map_owner_id / %map_owner_type</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the owner ID and owner type of the current map.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Map Ownership</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Map Owner ID: %map_owner_id, Type: %map_owner_type');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🤝 <strong>%ally_syn0 ~ %ally_syn4 / %enemy_syn0 ~ %enemy_syn4 (Old Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns allied or enemy legion IDs. Available only in the old engine.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Alliance and Enemy Syn IDs</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Ally0: %ally_syn0, Enemy0: %enemy_syn0');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🎓 <strong>%tutor_exp / %student_exp (Old Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns mentor (tutor) and student contribution experience points.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Mentor/Student EXP</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Tutor EXP: %tutor_exp, Student EXP: %student_exp');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🧿 <strong>%user_sealmagic (New Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player's current Seal Magic power.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Seal Magic Power</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_sealmagic');
+    </pre>
+
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+      ⚠️ <strong>New Engine Only</strong>
+    </div>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🎚️ <strong>%user_level (New Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player’s current level.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display User Level</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_level');
+    </pre>
+
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+      ⚠️ <strong>New Engine Only</strong>
+    </div>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>⚡ <strong>%user_bp (New Engine Only)</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the player’s Battle Power (BP) value.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Battle Power</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_bp');
+    </pre>
+
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+      ⚠️ <strong>New Engine Only</strong>
+    </div>
+  </details>
+
+</details>
+
+
+
+
+<details>
+  <summary>⚔️ <strong>PK Event Variables</strong></summary>
+
+ PK Event Variables are used specifically inside Daily, Weekly, or Monthly PK Tournament events. These variables help track player performance such as kill count and experience rewards during PK matches.
+
+  <details style="margin-left: 20px;">
+    <summary>⚔️ <strong>%pkgame_user_kill</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the number of enemy players the user has killed during a PK tournament match.</li>
+      <li><strong>Usage:</strong> Useful for calculating rewards, ranking, or progression inside PK tournaments.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display PK Kill Count</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'PK Kills: %pkgame_user_kill');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🎖️ <strong>%pkgame_user_balance_exp</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the experience points rewarded to the player at the end of a PK tournament match.</li>
+      <li><strong>Usage:</strong> Useful for balancing event rewards or displaying end-of-event results.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display PK Balance EXP</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'PK Balance EXP: %pkgame_user_balance_exp');
+    </pre>
+  </details>
+
+</details>
+
+
+<details>
+  <summary>🛡️ <strong>Legion Variables</strong></summary>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+ Legion Variables are used inside the legion system. These variables allow checking and interacting with legion resources such as available funds, ranks, or contributions.
+  <details style="margin-left: 20px;">
+    <summary>💰 <strong>%available_fund</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the amount of legion fund available for allocation or distribution.</li>
+      <li><strong>Usage:</strong> Useful for legion management systems where leaders or officers need to distribute resources among members.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Available Legion Fund</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Available Legion Fund: %available_fund');
+    </pre>
+  </details>
+
+</details>
+
+<details>
+  <summary>🗺️ <strong>Map Variables</strong></summary>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+ Map Variables are used to manage map-specific data during gameplay. Some variables are temporary and exist only in server memory, while others are permanent based on database information.
+
+  <details style="margin-left: 20px;">
+    <summary>🧮 <strong>%map_iter_var_data0 ~ %map_iter_var_data19</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Temporary numeric values stored per map (index 0 to 19).</li>
+      <li><strong>Important:</strong> These values are not saved into the database. They exist only inside MsgServer memory. After server restart, all values reset to 0. You must set the value manually. To modify these variables, use Map Variable Actions (Types 316, 317, 318, 319).</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Map Data Variable</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Map Data 0: %map_iter_var_data0');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>📝 <strong>%map_iter_var_str0 ~ %map_iter_var_str19</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Temporary string values stored per map (index 0 to 19).</li>
+      <li><strong>Important:</strong> These values are not saved into the database. They exist only inside MsgServer memory. After server restart, all values reset to empty. You must set the value manually. To modify these variables, use Map Variable Actions (Types 316, 317, 318, 319).</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Map String Variable</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Map String 0: %map_iter_var_str0');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🧭 <strong>%backmapid / %backmap_x / %backmap_y</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the backup map ID and X, Y coordinates configured for the map.</li>
+      <li><strong>Note:</strong> These values are stored inside <code>cq_map</code> database table.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Backup Map Information</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Backmap ID: %backmapid, X: %backmap_x, Y: %backmap_y');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🌍 <strong>%mapid / %map_name</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the current map ID and map name where the player or NPC is located.</li>
+      <li><strong>Note:</strong> These values are stored inside <code>cq_map</code> database table.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Map ID and Name</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Map ID: %mapid, Map Name: %map_name');
+    </pre>
+  </details>
+
+</details>
+
+
+<details>
+  <summary>🌍 <strong>Global Variables</strong></summary>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Global Variables are used to store server-wide persistent values. These variables are shared across all players, maps, and events. Numeric variables use the <code>cq_vardata</code> table, while string variables use the <code>cq_varstrdata</code> table. To modify these variables, refer to <strong>Global Variable Control (Type 191 & 192)</strong>.</p>
+
+  <details style="margin-left: 20px;">
+    <summary>🧮 <strong>%public_var_data1 ~ %public_var_data99</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Global numeric variables stored in <code>cq_vardata</code>. Supports index 1 to 99.</li>
+      <li><strong>Usage:</strong> Useful for server event tracking, counters, server-wide settings, or broadcast states.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Global Numeric Variable</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Global Data 0: %public_var_data1');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>📝 <strong>%public_var_str1 ~ %public_var_str99</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Global string variables stored in <code>cq_varstrdata</code>. Supports index 1 to 99.</li>
+      <li><strong>Usage:</strong> Useful for server-wide flags, notices, event statuses, or admin messages.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Global String Variable</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Global String 0: %public_var_str1');
+    </pre>
+  </details>
+
+</details>
+
+
+<details>
+  <summary>👹 <strong>Monster Variables</strong></summary>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p>Monster Variables are used to retrieve the position (X, Y coordinates) where a monster was killed. These variables are only available during monster death event triggers. Must be placed on monster kill actions.</p>
+
+  <details style="margin-left: 20px;">
+    <summary>📍 <strong>%killmonster_x / %killmonster_y</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Returns the X and Y coordinates where the monster was killed.</li>
+      <li><strong>Usage:</strong> Useful for spawning rewards, teleport points, or triggering special effects at the kill location.</li>
+      <li><strong>Important:</strong> Must be used inside scripts related to monster events (e.g., after monster killed).</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Monster Kill Coordinates</h4>
+    <pre>
+REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Kill Position: %killmonster_x / %killmonster_y');
+    </pre>
+  </details>
+
+</details>
 
 ---
 
