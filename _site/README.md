@@ -4641,14 +4641,22 @@ REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variab
 REPLACE INTO `cq_action` VALUES (1000, 1001, 0000, 1522, 0, 'var(5) += 1');
 REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variable 5 is %iter_var_data5');
   </pre>
+<h4>💡 Example SQL – Modulo Operation (New Engine)</h4>
+<pre>
+-- Take var(5) and get remainder after division by 3
+REPLACE INTO cq_action VALUES (1000, 1001, 0000, 1522, 0, 'var(5) $= 3');
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your Integer variable 5 after modulo 3 is %iter_var_data5');
+</pre>
 
-  <h4>📘 Supported Operators for Integer Variables</h4>
-  <ul>
-    <li><code>==</code> – Compare if equal</li>
-    <li><code>+=</code> – Add a value</li>
-    <li><code>/=</code> – Divide by a value (New Engine)</li>
-    <li><code>*=</code> – Multiply by a value (New Engine)</li>
-  </ul>
+<h4>📘 Supported Operators for Integer Variables</h4>
+<ul>
+  <li><code>==</code> – Compare if equal</li>
+  <li><code>+=</code> – Add a value</li>
+  <li><code>/=</code> – Divide by a value (New Engine)</li>
+  <li><code>*=</code> – Multiply by a value (New Engine)</li>
+  <li><code>$=</code> – Modulo (remainder after division) operation (New Engine)</li>
+</ul>
+
 
   <h4>📘 Type 1523 – String Variable Comparison</h4>
   <p>Compare text variables (not case sensitive). Useful for checking user input, answers, or choice selections.</p>
@@ -4698,6 +4706,53 @@ REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'Your string variabl
   </ul>
 </details>
 
+<details>
+  <summary>📦 <strong>Save Item Count to Variable (Type 1534)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1534</strong> is used to count how many specific items a player owns, and save the result into a player variable (<code>iter_var_data</code> field).</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = item_type_id</code></li>
+    <li><code>szParam = "var_id bind_flag"</code></li>
+    <li><strong>item_type_id:</strong> ID of the item (from <code>cq_itemtype</code>)</li>
+    <li><strong>var_id:</strong> Which iter_var_data[] index to save the count (1-30)</li>
+    <li><strong>bind_flag:</strong> 
+      <ul>
+        <li>0 = count both bound and non-bound items</li>
+        <li>1 = count only non-bound items</li>
+        <li>2 = count only bound items</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>📜 Example - Save to var(6):</h4>
+  <pre>
+-- Count all 1111210 items (bound + non-bound), save result into var(6)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1534, 1111210, '6 0');
+  </pre>
+
+  <h4>📜 Example - Save only non-bound items to var(1):</h4>
+  <pre>
+-- Count only non-bound 1111210 items, save into var(1)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1534, 1111210, '1 1');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>var_id</strong> must match an available iter_var_data slot (commonly 1-30).</li>
+    <li>Useful for checking if player has enough items for quest, upgrade, or event condition.</li>
+    <li>Use binding flag to separate between bound/unbound inventory checks.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with conditional checks (Type 2003) after saving item counts to create item requirement logic!
+  </div>
+
+</details>
 
 <details>
   <summary>🐲 <strong>Eudemon Attribute Check & Modify (Type 1533)</strong></summary>
@@ -4931,6 +4986,908 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 2007, 0, 'Mallos 154 01 762530 0
 
 
 </details>
+
+<details>
+  <summary>🐉 <strong>Check Monster Count (Type 2008)</strong></summary>
+  <br>
+
+  <p><strong>Type 2008</strong> is used to check the number of monsters in the same map based on their generator ID or monster name. Useful for quests, event triggers, and hunting missions.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>idMap field data opt num</code></li>
+    <li><strong>idMap:</strong> Map ID or %user_map_id</li>
+    <li><strong>field:</strong> "gen_id" (by generator ID) or "name" (by monster name)</li>
+    <li><strong>data:</strong> Generator ID or Monster Name to check</li>
+    <li><strong>opt:</strong> == or &lt; (equal or less than)</li>
+    <li><strong>num:</strong> Target number to compare</li>
+  </ul>
+
+  <h4>📜 Example - Check if Monster Count is Less Than Target:</h4>
+  <pre>
+-- Check if number of monster generator ID 1000500 is less than 30
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 2008, 0, '%user_map_id gen_id 1000500 < 30');
+
+-- If less than 30
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Monster amount is less than 30.');
+
+-- If not
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Monster amount is enough.');
+  </pre>
+
+  <h4>📜 Example - Check if Specific Monster Exists by Name:</h4>
+  <pre>
+-- Check if "Gory" monster is still alive
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 2008, 0, '%user_map_id name Gory == 0');
+
+-- If no Gory left
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'No more Gory monsters on map.');
+
+-- If Gory still exists
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Gory monsters still alive.');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>gen_id:</strong> Taken from <code>cq_generator</code> (generator type ID)</li>
+    <li><strong>name:</strong> Taken from <code>cq_monstertype</code> (monster name)</li>
+    <li>Use <code>id_next</code> and <code>id_nextfail</code> properly to handle success/fail path</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with <code>Type 126</code> to show friendly system messages after checking monster status!
+  </div>
+
+</details>
+
+<details>
+  <summary>🗑️ <strong>Delete Monster from Map (Type 2009)</strong></summary>
+  <br>
+
+  <p><strong>Type 2009</strong> is used to delete monsters from a specific map. You can delete based on monster type alone, or both type and monster name together.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>idMap type [data] [name]</code></li>
+    <li><strong>idMap:</strong> Map ID to delete from</li>
+    <li><strong>type:</strong> Monster type ID (from <code>cq_monstertype</code>)</li>
+    <li><strong>data:</strong> (optional) Extra matching (usually 0)</li>
+    <li><strong>name:</strong> (optional) Specific monster name</li>
+  </ul>
+
+  <h4>📜 Example - Recommended (By Type Only):</h4>
+  <pre>
+-- Delete all monsters of type 23105 from map 1990
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2009, 0, '1990 23105');
+  </pre>
+
+  <h4>📜 Example - By Type and Name:</h4>
+  <pre>
+-- Delete only "Amanyta" monsters of type 23105 from map 1990
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2009, 0, '1990 23105 0 Amanyta');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Using only <code>type</code> is faster and more recommended for large map cleanups</li>
+    <li>Use <code>name</code> if you need to precisely target a specific monster</li>
+    <li>Type ID is from <code>cq_monstertype</code> table</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Tip:</strong> Always check the monster's type ID correctly to avoid deleting wrong monsters!
+  </div>
+
+</details>
+
+<details>
+  <summary>🗑️ <strong>Delete Dynamic NPC by Type (Type 2011)</strong></summary>
+  <br>
+
+  <p><strong>Type 2011</strong> is used to delete all dynamic NPCs (<code>cq_dynanpc</code>) of a specific type in a given map. Once deleted, you cannot perform any further operations on them.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>idMap type</code></li>
+    <li><strong>idMap:</strong> Target map ID or <code>%user_map_id</code> for current user's map</li>
+    <li><strong>type:</strong> NPC type ID to delete</li>
+  </ul>
+
+  <h4>📜 Example - Delete from Specific Map:</h4>
+  <pre>
+-- Delete all NPCs of type 2 from map 1990
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2011, 0, '1990 2');
+  </pre>
+
+  <h4>📜 Example - Delete from Current User's Map:</h4>
+  <pre>
+-- Delete all NPCs of type 23 from current map
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2011, 0, '%user_map_id 23');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only works for <code>cq_dynanpc</code> (dynamic created NPCs)</li>
+    <li>After deletion, do not attempt to interact with the deleted NPCs</li>
+    <li>Recommended to use when clearing event NPCs, temporary guards, barriers, etc.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Warning:</strong> Always ensure the correct type and map ID before running <code>2011</code> or you might remove unintended NPCs.
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🌎 <strong>Run Script for All Players in Map (Type 2012)</strong></summary>
+  <br>
+
+  <p><strong>Type 2012</strong> is used to make every player inside a specific map execute a specified action script immediately. Useful for mass events, global messages, or sudden teleportation.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>idMap idAction -1</code></li>
+    <li><strong>idMap:</strong> Target map ID or <code>%user_map_id</code> for current map</li>
+    <li><strong>idAction:</strong> Action ID from <code>cq_action</code> to execute for each player</li>
+    <li><strong>-1:</strong> Always put <code>-1</code> (purpose unknown but required)</li>
+  </ul>
+
+  <h4>📜 Example - Target Specific Map:</h4>
+  <pre>
+-- Run action 1002 for all players in map 1954
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2012, 0, '1954 1002 -1');
+  </pre>
+
+  <h4>📜 Example - Target Current User's Map:</h4>
+  <pre>
+-- Run action 1002 for all players in user's current map
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2012, 0, '%user_map_id 1002 -1');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Make sure the <code>idAction</code> exists in <code>cq_action</code> or nothing will happen.</li>
+    <li><code>-1</code> is mandatory even though its function is unknown.</li>
+    <li>Useful for teleporting players, sending announcements, or mass event handling.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with <code>Type 126</code> (system messages) or teleport actions for smooth mass events!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🧨 <strong>Create Trap (Type 2101)</strong></summary>
+  <br>
+
+  <p><strong>Type 2101</strong> is used to create a trap in the map. Traps are invisible or visible triggers that perform actions when players step into them. Trap types are based on entries from <code>cq_traptype</code> table.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>type look owner_id map_id pos_x pos_y data [pos_cx pos_cy]</code></li>
+    <li><strong>type:</strong> Trap type ID (from <code>cq_traptype</code>)</li>
+    <li><strong>look:</strong> Appearance (normally 0 if invisible)</li>
+    <li><strong>owner_id:</strong> Owner (0 = no owner)</li>
+    <li><strong>map_id:</strong> Map ID to spawn trap</li>
+    <li><strong>pos_x / pos_y:</strong> Coordinates (X,Y)</li>
+    <li><strong>data:</strong> Special trap data (usually 0)</li>
+    <li><strong>pos_cx / pos_cy:</strong> (New Engine only) – Trap trigger center position offset</li>
+  </ul>
+
+  <h4>📜 Example - Old Engine (7 parameters):</h4>
+  <pre>
+-- Create trap at position (103, 144) on map 1000
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2101, 0, '11506 0 0 1000 103 144 0');
+  </pre>
+
+  <h4>📜 Example - New Engine Extension (9 parameters):</h4>
+  <pre>
+-- Create trap at (103, 144) with center offset (20, 20)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2101, 0, '11506 0 0 1000 103 144 0 20 20');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><code>type</code> must match an ID inside <code>cq_traptype</code></li>
+    <li>Normally set <code>look = 0</code> for invisible traps (invisible teleport, triggers, etc.)</li>
+    <li>Use <code>pos_cx</code> and <code>pos_cy</code> only if using New Engine features (larger trap trigger area)</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine traps with teleport actions, condition checks, or monster spawns for dynamic event maps!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🗑️ <strong>Delete Trap (Type 2102)</strong></summary>
+  <br>
+
+  <p><strong>Type 2102</strong> is used to delete (erase) a trap that was created. Once deleted, the trap is permanently removed and cannot be triggered or operated anymore.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li>No parameters needed (leave param empty)</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Delete the current trap
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2102, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only deletes the current trap that is executing the action.</li>
+    <li>Once deleted, the trap cannot be activated, moved, or modified anymore.</li>
+    <li>Best used after temporary traps, event triggers, or teleport traps are finished.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Warning:</strong> Always make sure the trap has finished its purpose before calling <code>2102</code> because it cannot be recovered after deletion.
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🧮 <strong>Check Trap Count (Type 2103)</strong></summary>
+  <br>
+
+  <p><strong>Type 2103</strong> is used to check the number of traps of a specific type within a defined area of the map. Useful for checking if traps have been activated, removed, or if an area is clear.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>map_id pos_x pos_y pos_cx pos_cy count type</code></li>
+    <li><strong>map_id:</strong> Target map ID or <code>%user_map_id</code></li>
+    <li><strong>pos_x / pos_y:</strong> Starting coordinate (X,Y)</li>
+    <li><strong>pos_cx / pos_cy:</strong> Ending coordinate (X,Y)</li>
+    <li><strong>count:</strong> Maximum number of traps allowed</li>
+    <li><strong>type:</strong> Trap type ID (from <code>cq_traptype</code>)</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Check if number of trap ID 8839 in area (782,734) is less than 1
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 2103, 0, '%user_map_id 782 734 782 734 1 8839');
+
+-- If trap count < 1
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'No traps found in the area.');
+
+-- If trap count >= 1
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'There are still traps active.');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Good for checking if traps were triggered, destroyed, or missing after an event.</li>
+    <li>Use accurate X/Y coordinates to limit the search area precisely.</li>
+    <li><strong>count</strong> is the maximum number allowed. If actual is less, it returns success.</li>
+    <li><strong>type</strong> must match ID inside <code>cq_traptype</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine this with <code>trap erase</code> or <code>teleport traps</code> for smoother map event handling.
+  </div>
+
+</details>
+
+<details>
+  <summary>🗑️ <strong>Delete Trap by Type (Type 2105)</strong></summary>
+  <br>
+
+  <p><strong>Type 2105</strong> is used to delete all traps of a specific type in a specific map. Once deleted, the traps are permanently removed and cannot be triggered or operated anymore.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>map_id type</code></li>
+    <li><strong>map_id:</strong> Map ID where traps will be deleted</li>
+    <li><strong>type:</strong> Trap type ID (from <code>cq_traptype</code>)</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Delete all traps of type 9525 from map 1000
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2105, 0, '1000 9525');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only traps matching both <strong>map_id</strong> and <strong>type</strong> will be deleted.</li>
+    <li>After deletion, you cannot interact with those traps anymore.</li>
+    <li><strong>type</strong> must match an entry from <code>cq_traptype</code>.</li>
+    <li>Useful for clearing event-based traps or cleaning maps after events.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Warning:</strong> Be careful when deleting traps by type — it will remove <u>all</u> matching traps on the map at once!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🛡️ <strong>Set Special Status (Type 4001)</strong></summary>
+  <br>
+
+  <p><strong>Type 4001</strong> is used to apply a special status (buff, debuff, aura, etc.) to the player. Depending on engine version, you can set basic or extended parameters. The status will persist across relogin if saved into <code>cq_special_status</code> table, but will auto-remove after the timer expires.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li>Old Engine: <code>status power secs time</code></li>
+    <li>New Engine: <code>status power secs time other savedb</code></li>
+    <li><strong>status:</strong> Status ID</li>
+    <li><strong>power:</strong> Strength or level of effect</li>
+    <li><strong>secs:</strong> Duration in seconds</li>
+    <li><strong>time:</strong> Timer field (normally 0)</li>
+    <li><strong>other:</strong> Reserved (set 0)</li>
+    <li><strong>savedb:</strong> Save into database (1 = yes, 0 = no)</li>
+  </ul>
+
+  <h4>📜 Example - Old Engine (4 Parameters Only):</h4>
+  <pre>
+-- Give status 245 for 86400 seconds (1 day) without database saving
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 4001, 0, '245 0 86400 0');
+  </pre>
+
+  <h4>📜 Example - New Engine (Save Status into Database):</h4>
+  <pre>
+-- Give status 245 for 86400 seconds (1 day) and save into cq_special_status
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 4001, 0, '245 0 86400 0 0 1');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>Old Engine:</strong> Only supports 4 parameters. Status will disappear after logout if not saved manually elsewhere.</li>
+    <li><strong>New Engine:</strong> Supports up to 6 parameters. Setting <code>savedb = 1</code> stores the status in <code>cq_special_status</code>.</li>
+    <li>When stored in database, the status will persist even after logout and relogin — but will <strong>auto-delete</strong> once <code>secs</code> expires.</li>
+    <li><strong>status</strong> ID must match a valid entry in system settings.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>savedb=1</code> for buffs or event statuses that must survive relogin, but still expire automatically after time ends.
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🌀 <strong>Force Magic Attack (Type 4002)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>Old Engine Only</strong>
+  </div>
+  <p><strong>Type 4002</strong> is used to trigger a magic-type effect directly on a player or target. Only specific types of magic (Detach Status or Steal Status) are supported. It is not used for regular damage skills.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = magic type ID (from magictype table)</code></li>
+    <li><code>szParam = magic level</code> (optional, usually 0)</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Use magic type 5025 (must be MAGICSORT_DETACHSTATUS or MAGICSORT_STEAL)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 4002, 5025, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>MAGICSORT_DETACHSTATUS:</strong> Removes buffs or debuffs from the player.</li>
+    <li><strong>MAGICSORT_STEAL:</strong> Steals active buffs from a target.</li>
+    <li><strong>data</strong> must match a valid entry in <code>magictype</code> table with correct magic sort type.</li>
+    <li>Normal attack magic (damage skills) cannot be used with 4002.</li>
+    <li><code>szParam</code> can specify magic level if needed (leave empty if default).</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use Type 4002 to forcibly clear buffs (detach) or steal buffs (steal) without needing player to manually use skill.
+  </div>
+
+</details>
+
+<details>
+  <summary>📚 <strong>Teach Pet Skill (Type 4003)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 4003</strong> is used to teach a specific skill to a Eudemon (pet). This allows controlling which pets can learn which skills and at what level they are allowed to learn.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = skill_id × 10</code></li>
+    <li><code>szParam = "skill_id * level_requirement"</code></li>
+    <li><strong>skill_id:</strong> ID of the skill from <code>cq_magic</code></li>
+    <li><strong>level_requirement:</strong> Minimum pet level required to learn</li>
+  </ul>
+
+  <h4>📜 Example - Teach Skill 5003:</h4>
+  <pre>
+-- Pet will learn skill 5003 at level 20
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 4003, 50030, '5003 * 20');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>data:</strong> Must be skill ID multiplied by 10 (5003 × 10 = 50030)</li>
+    <li><strong>szParam:</strong> Always format as "skill_id * required_level" (example: "5003 * 20")</li>
+    <li>Use this method to restrict learning certain skills until pet reaches required level.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Useful for making pet skill progression more balanced and level-gated!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>⏳ <strong>Start Countdown Timer (Type 8000)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <img src="/assets/images/8000.png" alt="8000" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p><strong>Type 8000</strong> is used to start a countdown timer for a player. When the countdown reaches zero, a specified script will execute automatically. If <code>data = 0</code>, it will close any existing countdown without executing anything.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = seconds</code> (duration of countdown)</li>
+    <li><code>szParam = action_id</code> (script to execute when countdown ends)</li>
+  </ul>
+
+  <h4>📜 Example - Start 120 Seconds Countdown:</h4>
+  <pre>
+-- Start countdown for 120 seconds, run action 1001 after finish
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8000, 120, '1001');
+  </pre>
+
+  <h4>📜 Example - Stop Countdown Immediately:</h4>
+  <pre>
+-- Stop any existing countdown
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8000, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only one countdown can exist per player at a time.</li>
+    <li>Always close previous countdown before starting a new one to avoid conflicts.</li>
+    <li>If <code>data=0</code>, it simply closes the countdown without running any script.</li>
+    <li>Good for time-limited quests, challenges, or event mechanics.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> You can combine with system messages (Type 126) to notify players when a countdown starts or finishes!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>⏳ <strong>Advanced Countdown Timer (Type 8001)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <img src="/assets/images/8001.png" alt="8001" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p><strong>Type 8001</strong> is an advanced countdown for players, supporting visual effects and interruption controls. It will display a message, optionally show an animation, and execute a script when the countdown ends. Countdown can be interrupted if configured.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = seconds</code> (duration of countdown)</li>
+    <li><code>szParam = "can_interrupt action_id effect_name display_text"</code></li>
+    <li><strong>can_interrupt:</strong> 1 = can be interrupted by moving, clicking NPC, using skills; 0 = cannot interrupt</li>
+    <li><strong>action_id:</strong> Action ID to run after countdown ends</li>
+    <li><strong>effect_name:</strong> Visual effect name from <code>3deffect.ini</code> (use "null" if no effect)</li>
+    <li><strong>display_text:</strong> Text shown during countdown</li>
+  </ul>
+
+  <h4>📜 Example - Simple Countdown:</h4>
+  <pre>
+-- 2 seconds countdown, can interrupt, no effect, shows "Collecting"
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8001, 2, '1 1001 null Collecting');
+  </pre>
+
+  <h4>📜 Example - Countdown with Effect:</h4>
+  <pre>
+-- 5 seconds countdown, cannot interrupt, shows "Pulling out the Holy Sword" with RichGod_Ground effect
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8001, 5, '0 1001 RichGod_Ground Pulling~out~the~Holy~Sword');
+  </pre>
+
+  <h4>📜 Example - Stop Countdown:</h4>
+  <pre>
+-- Stop any existing countdown immediately
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8001, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only one countdown can exist per player at a time.</li>
+    <li>If player interrupts (move/use skill/talk to NPC) and <code>can_interrupt=1</code>, countdown will stop.</li>
+    <li><code>effect_name</code> must exist in <code>3deffect.ini</code> if not set to "null".</li>
+    <li><code>display_text</code> spaces must be replaced with <code>~</code> symbol.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine this with system messages or teleport scripts for immersive event mechanics!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>⏳ <strong>Instance Map Countdown (Type 8002)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <img src="/assets/images/8002.png" alt="8002" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p><strong>Type 8002</strong> is used to start a countdown timer specific for players inside a duplicate (instance) map. If the player leaves the map before the countdown ends, the timer is automatically cancelled without executing anything.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = duplicate ID</code> (must be from <code>cq_duplicate</code>)</li>
+    <li><code>szParam = action_id</code> (script to run after countdown ends)</li>
+  </ul>
+
+  <h4>📜 Example - Start Countdown:</h4>
+  <pre>
+-- Start a countdown linked to duplicate ID 303, execute action 1001 when finished
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8002, 303, '1001');
+  </pre>
+
+  <h4>✅ Important Notes:</h4>
+  <ul>
+    <li>Must be used only <strong>after teleporting</strong> the player into the instance map.</li>
+    <li>The map ID must be <strong>4000000000+</strong> (special instance maps only).</li>
+    <li>If player leaves the instance map before timer ends, the countdown will automatically stop without executing the script.</li>
+    <li>Duplicate map settings are configured in <code>cq_duplicate</code> and <code>Duplicate.ini</code>.</li>
+    <li><strong>x, y</strong> fields in <code>cq_duplicate</code> set the teleport arrival coordinates.</li>
+    <li>Players already inside instance maps will not be invited again automatically.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Tip:</strong> Always teleport players into the instance map before running Type 8002 countdown!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🕶️ <strong>Hidden Countdown Timer (Type 8003)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 8003</strong> is used to start a hidden countdown timer for a player. The countdown will not display any visible time or message on the client's screen. When the countdown reaches zero, a specified action script will execute. Useful for stealth events, traps, or silent triggers.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = seconds</code> (duration of countdown)</li>
+    <li><code>szParam = action_id</code> (script to run after countdown ends)</li>
+  </ul>
+
+  <h4>📜 Example - Hidden Countdown:</h4>
+  <pre>
+-- Start hidden countdown for 300 seconds, then run action 1001
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8003, 300, '1001');
+  </pre>
+
+  <h4>📜 Example - Stop Countdown:</h4>
+  <pre>
+-- Stop any existing hidden countdown immediately
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8003, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Hidden countdown will not show any timer to the player.</li>
+    <li>Only one countdown can exist per player at a time (shared with other countdown types).</li>
+    <li>If <code>data = 0</code>, it closes the countdown without running the script.</li>
+    <li>Useful for surprise triggers, timed missions, or background event controls.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine hidden countdown with teleport, spawn monster, or reward actions for surprise events!
+  </div>
+
+</details>
+
+
+
+<details>
+  <summary>🧍 <strong>Set Player Pose (Type 8010)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <img src="/assets/images/8010.png" alt="8010" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p><strong>Type 8010</strong> is used to change the player's pose (animation) based on the pose ID. The pose IDs are configured in the <code>3dmotion.ini</code> file.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = pose ID</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Set player pose to ID 335
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8010, 335, '');
+  </pre>
+
+  <h4>✅ Common Pose IDs:</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Pose ID</th><th>Pose ID</th><th>Pose ID</th><th>Pose ID</th><th>Pose ID</th><th>Pose ID</th><th>Pose ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>100</td><td>101</td><td>210</td><td>233</td><td>256</td><td>260</td><td>261</td></tr>
+      <tr><td>265</td><td>335</td><td>351</td><td>532</td><td>533</td><td>534</td><td>535</td></tr>
+      <tr><td>536</td><td>537</td><td>538</td><td>778</td><td>779</td><td>780</td><td>781</td></tr>
+      <tr><td>782</td><td>783</td><td>784</td><td>851</td><td>853</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use Type 8010 to trigger animations like resting, falling, celebration, or unique reactions during gameplay events!
+  </div>
+
+</details>
+
+<details>
+  <summary>🗺️ <strong>Across Map Auto Path (Type 8011)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <img src="/assets/images/8011.png" alt="8011" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p><strong>Type 8011</strong> is used to initiate an automatic pathfinding movement across different maps. The system will automatically calculate the route based on predefined path information.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = mapid x y</code></li>
+    <li><strong>mapid:</strong> Target map ID</li>
+    <li><strong>x, y:</strong> Target coordinate inside the target map</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Auto path to (388,476) on map 1000
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 8011, 0, '1000 388 476');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><strong>cq_acrossmappathinfo</strong> must be properly configured in the database for each map jump point.</li>
+    <li><strong>AcrossMapPathInfo.ini</strong> must also be properly configured on the client side to support pathing.</li>
+    <li>If either setting is missing, the auto-path will fail or the character will stop moving.</li>
+    <li>This type is useful for quest auto-navigation, long travel auto-walks, or teleport redirection.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Always double-check <code>cq_acrossmappathinfo</code> and <code>AcrossMapPathInfo.ini</code> entries are correct for smooth auto-path transitions!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🏛️ <strong>Celebrity Hall Scripts (Type 230 & 231)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 230</strong> and <strong>Type 231</strong> are used exclusively for the Celebrity Hall system. They must be performed by Celebrity Hall related NPCs only (Type 100).</p>
+
+  <h4>🧠 Type Overview:</h4>
+  <ul>
+    <li><strong>Type 230:</strong> Register for Celebrity Hall</li>
+    <li><strong>Type 231:</strong> Sign up for Celebrity Hall actions</li>
+    <li>Only used with NPCs in <code>cq_npc</code> ID range <strong>10200 to 11199</strong></li>
+  </ul>
+
+  <h4>📜 Example - Register (Type 230):</h4>
+  <pre>
+-- Register player into Celebrity Hall
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0230, 0, '');
+  </pre>
+
+  <h4>📜 Example - Sign Up (Type 231):</h4>
+  <pre>
+-- Sign up player for Celebrity Hall event
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0231, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only Celebrity Hall NPCs should use these types.</li>
+    <li>General NPCs outside 10200-11199 range should not use these script types.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF9800; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚡ <strong>Tip:</strong> For correct setup, always refer to <code>cq_npc</code> range 10200–11199 and official Celebrity Hall system flow.
+  </div>
+
+</details>
+
+<details>
+  <summary>🧿 <strong>Check Eudemon Celebrity Hall Registration (Type 1067)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1067</strong> is used to check if the player's currently summoned Eudemon has already been registered by another player into the Celebrity Hall for this week. If yes, it will block further registration.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li>No parameters needed (<code>param</code> empty)</li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Check if current summoned Eudemon is already registered
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1067, 0, '');
+
+-- If already registered
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Eudemons that you are currently summon already register in other statues and cannot be re-registered this week!');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only affects the Eudemon currently summoned by the player.</li>
+    <li>Validation is limited to this week's Celebrity Hall registration.</li>
+    <li>If already registered, it blocks and shows system message (Type 126).</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this before allowing players to submit Eudemons into the Celebrity Hall!
+  </div>
+
+</details>
+
+
+<details>
+  <summary>🔥 <strong>Register Divine Fire Statue Ranking (Type 232)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 232</strong> is used to register the player's ranking into the Divine Fire Statue system. This script type must only be performed by Divine Fire Statue NPCs inside Cronus whic is using type 125.</p>
+
+  <h4>🧠 Type Overview:</h4>
+  <ul>
+    <li>Designed only for Divine Fire Statue system registration.</li>
+    <li>Must be used by specific NPCs:</li>
+    <ul>
+      <li>NPC ID 12116</li>
+      <li>NPC ID 12117</li>
+      <li>NPC ID 12118</li>
+    </ul>
+    <li>Located inside Cronus map.</li>
+  </ul>
+
+  <h4>📜 Example - Divine Fire Registration:</h4>
+  <pre>
+-- Register player into Divine Fire Statue ranking
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0232, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Do not use this type outside of the Divine Fire Statue NPCs.</li>
+    <li>Normal NPCs should not use Type 232.</li>
+    <li>Double-check NPC IDs to match official settings.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF5722; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚡ <strong>Tip:</strong> Always verify that only Divine Fire Statue NPCs (ID 12116, 12117, 12118) are allowed to trigger Type 232!
+  </div>
+
+</details>
+
+
+
+<details>
+  <summary>📍 <strong>Run Script for Players in Area (Type 2020)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 2020</strong> is used to execute a script on players located inside a specific area on a map. You can define a rectangular zone and choose to affect all players or a limited number of players.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = mapid x y cx cy scriptid count</code></li>
+    <li><strong>mapid:</strong> Target map ID</li>
+    <li><strong>x, y:</strong> Starting coordinates</li>
+    <li><strong>cx, cy:</strong> Area size (coordinate range)</li>
+    <li><strong>scriptid:</strong> Action ID to execute</li>
+    <li><strong>count:</strong> 
+      <ul>
+        <li>-1 = trigger for all players</li>
+        <li>Other number = limit to specific number of players</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>📜 Example - Affect All Players in Area:</h4>
+  <pre>
+-- Trigger action 10519091 for all players inside area (106,406) ~ (118,418) on map 1000
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2020, 0, '1000 106 406 12 12 10519091 -1');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>The selected area forms a square or rectangle based on <code>x,y</code> and <code>cx,cy</code>.</li>
+    <li>Use <code>count = -1</code> if you want to trigger for all players in the zone.</li>
+    <li>Useful for area events, auto-teleport, mass rewards, or trapping zones.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Good for dynamic events where players standing inside a zone are affected simultaneously!
+  </div>
+
+</details>
+
+<details>
+  <summary>🏆 <strong>PK Tournament Statue Update (Type 1602)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1602</strong> and <strong>NPC Type 126</strong> are used together to manage PK Tournament Statue behavior inside the server. These functions allow updating the PK statue's appearance or settings during PK events.</p>
+
+  <h4>🧠 Type Overview:</h4>
+  <ul>
+    <li><strong>NPC Type 126:</strong> PK Tournament Statue type. Editable fields allowed in <code>cq_npc</code>.</li>
+    <li><strong>Script Type 1602:</strong> Updates the PK statue's information if it exists.</li>
+  </ul>
+
+  <h4>📜 Example - Update PK Statue:</h4>
+  <pre>
+-- Update PK Statue info for NPC 12850
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1602, 0, '');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>This setup only applies to NPC ID <strong>12850</strong>.</li>
+    <li>The PK statue must be created as <code>type = 126</code> inside <code>cq_npc</code>.</li>
+    <li>If the statue does not exist when script 1602 runs, no action will be taken.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚡ <strong>Tip:</strong> Always make sure PK Statue (NPC 12850) is spawned properly before using Type 1602 to avoid missing updates!
+  </div>
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ---
