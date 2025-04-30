@@ -22,7 +22,7 @@
 {"@context":"https://schema.org","@type":"WebSite","description":"A complete guide to using cq_action in Eudemons Online private servers.","headline":"🧠 Eudemons Online cq_action Table Guide","name":"CQ_Action Guide","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=22a334008bd6bd96a9521f4f9a1b09bf0c10f00c">
+    <link rel="stylesheet" href="/assets/css/style.css?v=ffd0699858ca1a481597bb7b7e96249fe2ab6a37">
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
 
 <!-- Setup Google Analytics -->
@@ -359,6 +359,18 @@ eudemon_attack1 eudemon_attack2 eudemon_attack3 eudemon_attack4 special_effect G
 
 
   <h4>📌 Special Variants:</h4>
+
+
+  <pre>
+-- Type 501 (New Engine): Give Necro Eudemon Egg
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0501, 1081610, '1');
+
+-- Notes:
+When giving a Eudemon Egg (e.g., 1081610), setting the first param to <code>1</code> marks it as a <strong>Necro Eudemon</strong>.
+This applies only in the <strong>New Engine</strong> and only for specific Necro Eudemon egg items.
+  </pre>
+
+  <img src="assets/images/501-1.png" style="max-width:100%; border-radius:8px; margin:10px 0;" />
 
   <pre>
 -- Type 525 (New Engine Only): Same as 501 but "availabletime" becomes "aging days"
@@ -5864,6 +5876,1763 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1602, 0, '');
 
 </details>
 
+<details>
+  <summary>🐉 <strong>Delete All Monsters in Map (Type 2015)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 2015</strong> deletes all monsters currently existing in the specified map.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = mapid</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Delete all monsters in map 11052
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2015, 0, '11052');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This affects all monsters, regardless of how they were spawned (generator or script).</li>
+    <li>Use carefully during events or map resets.</li>
+  </ul>
+
+</details>
+
+<details>
+  <summary>🗿 <strong>Delete All Dynamic NPCs in Map (Type 2016)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 2016</strong> removes all <code>cq_dynanpc</code> entries from the given map. This clears all scripted or event-based NPCs.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = mapid</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Delete all dynamic NPCs in map 11052
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2016, 0, '11052');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Does not affect permanent NPCs from <code>cq_npc</code>.</li>
+    <li>Good for clearing temporary quest NPCs after completion.</li>
+  </ul>
+
+</details>
+
+<details>
+  <summary>🧨 <strong>Delete All Traps in Map (Type 2017)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 2017</strong> deletes all traps from the specified map, regardless of type or origin.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = mapid</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Delete all traps in map 11052
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2017, 0, '11052');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Removes everything placed with <code>Type 2101</code> or related trap scripts.</li>
+    <li>Best used after time-based trap events or map resets.</li>
+  </ul>
+
+</details>
+
+<details>
+  <summary>🎁 <strong>Spawn Item on Map (Type 324)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 324</strong> is used to spawn one or more items on the map at a specified coordinate. This can be used as a reward drop, quest item spawn, or map event chest drop.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>Param = idItemType itemCount idMap x y nRange aliveSecs privSecs</code></li>
+    <li><strong>idItemType:</strong> Item ID from <code>cq_itemtype</code></li>
+    <li><strong>itemCount:</strong> Number of items to drop (max 100)</li>
+    <li><strong>idMap:</strong> Map ID where item appears (can use <code>%user_map_id</code>)</li>
+    <li><strong>x, y:</strong> Coordinates or dynamic vars like <code>%killmonster_x</code>, <code>%user_pos_x</code></li>
+    <li><strong>nRange:</strong> Drop radius from center point (max 20)</li>
+    <li><strong>aliveSecs:</strong> Time in seconds before the item disappears</li>
+    <li><strong>privSecs:</strong> Protection time (only owner can pick up)</li>
+  </ul>
+
+  <h4>📜 Example - Drop Item at Monster Death Location:</h4>
+  <pre>
+-- Spawn 30x item 1042068 near kill location, radius 16, lasts 10 minutes, protected for 10 seconds
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0324, 0, '1042068 30 %user_map_id %killmonster_x %killmonster_y 16 600 10');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Item ID must exist in <code>cq_itemtype</code></li>
+    <li>Max itemCount = 100</li>
+    <li>Max nRange = 20 tiles</li>
+    <li>After <code>privSecs</code>, item becomes free-for-all</li>
+    <li>Use wisely to avoid server lag from mass spawning</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Perfect for dynamic event drops or rewarding players on monster kills or timed events!
+  </div>
+
+</details>
+
+<details>
+  <summary>👹 <strong>Create Advanced Monster (Type 2019)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 2019</strong> creates a monster with extended attributes such as HP, damage reduction, and magic power. It's an upgraded version of Type 2018 with more control over the monster's stats.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>nOwnerType idOwner idMap nPosX nPosY nDir idGen idType nHP nDefence2 nSealDevilVal nData szName</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Spawn Trial Judge monster with custom HP, defence, and power
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 2019, 0, '0 0 %user_map_id 71 67 7 0 43003 100000000 10000 0 0 Trial~Judge');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Must include at least the first 10 parameters</li>
+    <li><strong>nHP:</strong> Min value is 1 — server will auto-correct anything lower</li>
+    <li><strong>idOwner = 0:</strong> monster won't be saved</li>
+    <li><strong>idGen:</strong> controls the movement range (from <code>cq_generator</code>, but <code>type</code> field is ignored)</li>
+    <li>If using <code>accept</code>, monster name will follow accepted value, else use <code>szName</code></li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Great for boss events or scripted monster waves with specific stats and behavior.
+  </div>
+
+</details>
+
+<details>
+  <summary>🪟 <strong>Open UI Window (Type 187)</strong></summary>
+  <br />
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+    <img src="/assets/images/187.png" alt="185" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p><strong>Type 187</strong> is used to open a specific UI window on the client. This is typically used to trigger interfaces like Divine Furnace or other special panels. The <code>param</code> value is passed to the client and included in the packet, but its purpose is currently unknown.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = window ID</code></li>
+    <li><code>param = client-side argument</code> (optional, usage unknown)</li>
+  </ul>
+
+  <h4>📜 Example – Open Divine Furnace:</h4>
+  <pre>
+-- Open Divine Furnace UI (Window ID 13047)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0187, 13047, '0');
+  </pre>
+
+  <h4>✅ Known Window IDs:</h4>
+  <ul>
+    <li><code>13047</code> – (Divine Furnace)</li>
+    <!-- Add more if discovered -->
+  </ul>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>This only affects the client (shows UI window).</li>
+    <li>Used to trigger panels related to upgrades, events, or systems.</li>
+    <li><code>param</code> is included in the sent packet but function unknown (can sniff via packet capture).</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this to create shortcut NPCs that trigger in-game upgrade panels or system UIs!
+  </div>
+
+</details>
+
+<details>
+  <summary>🏯 <strong>Open Divine Furnace Stages and Send Extra Info (Type 1601)</strong></summary>
+  <br />
+   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1601</strong> is used to send stage unlock and player-specific data to the client, usually after opening the Divine Furnace UI using <code>Type 187</code>. After stage unlocking (1202), two additional info are sent: last dungeon level (1203) and remaining entries (1204).</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>szParam = ID data</code></li>
+    <li><strong>1202:</strong> Stages unlocked (example: <code>1|2|3|4|5</code>)</li>
+    <li><strong>1203:</strong> Last entered dungeon level (<code>%iter_taskdetail_1data800</code>)</li>
+    <li><strong>1204:</strong> Remaining number of entries (<code>%iter_taskdetail_completenum800</code>)</li>
+  </ul>
+
+  <h4>📜 Full Example - Open UI and Send Data:</h4>
+  <pre>
+-- Step 1: Open Divine Furnace UI
+INSERT INTO cq_action VALUES (1000, 1001, 0000, 0187, 13047, '0');
+
+-- Step 2: Send unlocked stages (1 to 5)
+INSERT INTO cq_action VALUES (1001, 1002, 0000, 1601, 0, '1202 1|2|3|4|5');
+
+-- Step 3: Send last entered dungeon level
+INSERT INTO cq_action VALUES (1002, 1003, 0000, 1601, 0, '1203 %iter_taskdetail_1data800');
+
+-- Step 4: Send remaining entry times
+INSERT INTO cq_action VALUES (1003, 0000, 0000, 1601, 0, '1204 %iter_taskdetail_completenum800');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li><code>1202</code> - Shows which stages are unlocked</li>
+    <li><code>1203</code> - Displays last dungeon difficulty player entered</li>
+    <li><code>1204</code> - Shows remaining allowed entries</li>
+    <li>Always use <code>Type 1601</code> immediately after <code>Type 187</code> to sync the UI correctly.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Keep the order correct to avoid client UI desync issues!
+  </div>
+
+</details>
+
+<details>
+  <summary>🧠 <strong>Trigger and Check CAPTCHA (Type 1064 &amp; 1065)</strong></summary>
+  <br />
+   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+    <img src="/assets/images/1065.png" alt="1065" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p>These types are used to implement a CAPTCHA-style quiz system. When triggered, a question will appear on the screen and the player must answer within the given time. You can check whether it's currently active and respond accordingly.</p>
+
+  <h4>🧠 Script Type Overview:</h4>
+  <ul>
+    <li><strong>Type 1065:</strong> Trigger CAPTCHA UI, with countdown in seconds</li>
+    <li><strong>Type 1064:</strong> Check if CAPTCHA is currently active</li>
+  </ul>
+
+  <h4>📜 Example – Trigger CAPTCHA:</h4>
+  <pre>
+-- Show CAPTCHA for 99 seconds
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1065, 99, '');
+  </pre>
+
+  <h4>📜 Example – Check CAPTCHA Result:</h4>
+  <pre>
+-- Check if CAPTCHA UI is active, and branch accordingly
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1064, 0, '');
+
+-- If wrong
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You answer wrong');
+
+-- If right
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You answer right');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>UI will display a basic math challenge with 20 answer buttons.</li>
+    <li>Type 1065 defines the active countdown timer.</li>
+    <li>Type 1064 checks the status and branches result depending on correctness.</li>
+    <li>Client UI auto-handles input, you only manage logic.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Great for bot protection, AFK checks, or quick player interaction events!
+  </div>
+
+</details>
+
+<details>
+  <summary>🚪 <strong>Force Logout Player (Type 1066)</strong></summary>
+  <br />
+ <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1066</strong> is used to forcefully disconnect a player from the server. This script must always be used as the final line in an action chain to prevent unexpected behavior.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code> (unused)</li>
+    <li><code>param = reason for disconnect</code></li>
+  </ul>
+
+  <h4>📜 Example – Force Disconnect:</h4>
+  <pre>
+-- Kick player with reason "Detected cheating behavior"
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1066, 0, 'Detected cheating behavior');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>This type immediately disconnects the player.</li>
+    <li>Always place this as the <strong>final action</strong> in the sequence.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #f44336; background: #ffebee; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Warning:</strong> Use responsibly and only when necessary. Always put as the last action line!
+  </div>
+
+</details>
+
+<details>
+  <summary>🎯 <strong>Run Script on Target (Type 134)</strong></summary>
+  <br />
+ <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 134</strong> is used to run a specific script (action ID) on a targeted player or guild. Only one target condition can be used per call. This is useful for personal rewards, guild triggers, or conditional execution based on name or ID.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>param = [action_id] [target_type] [value]</code></li>
+    <li><strong>Target types:</strong></li>
+    <ul>
+      <li><code>user_id</code> – Player UID (unique account/player ID)</li>
+      <li><code>user_name</code> – Exact player name (case-sensitive)</li>
+      <li><code>syn_id</code> – Guild ID</li>
+    </ul>
+  </ul>
+
+  <h4>📜 Example – Run on Player by ID:</h4>
+  <pre>
+-- Run action 1001 for player with user_id 100000
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0134, 0, '1001 user_id 100000');
+  </pre>
+
+  <h4>📜 Example – Run on Player by Name:</h4>
+  <pre>
+-- Run action 1001 for player named "DuaSelipar"
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0134, 0, '1001 user_name DuaSelipar');
+  </pre>
+
+  <h4>📜 Example – Run on Guild by ID:</h4>
+  <pre>
+-- Run action 1001 for all players in guild ID 10
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0134, 0, '1001 syn_id 10');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only one condition per script call is allowed.</li>
+    <li>If the condition doesn’t match (e.g., wrong name), the script will not run.</li>
+    <li>The target script (action ID) must already exist and be valid.</li>
+    <li>Used in targeted event rewards, name-specific triggers, or guild-wide effects.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this to send private mail rewards, trigger scripts for VIPs, or launch guild-specific events!
+  </div>
+
+</details>
+
+<details>
+  <summary>⚡ <strong>Add Divine EXP to Summoned Divine Pets (Type 1063)</strong></summary>
+  <br />
+ <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1063</strong> grants divine experience to all currently summoned pets that have evolved into Divine form. The amount of divine experience added is based on a multiplier formula depending on the duration specified.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = minutes</code> (length of boost time)</li>
+    <li><code>param = empty</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Add Divine EXP equivalent to 5 minutes to all active Divine pets
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1063, 5, '');
+  </pre>
+
+  <h4>✅ Calculation:</h4>
+  <ul>
+    <li>Divine EXP added = <code>divine EXP rate × 432 × minutes</code></li>
+    <li><strong>432</strong> is the system multiplier constant.</li>
+  </ul>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only affects summoned pets that have been upgraded to "Divine" status.</li>
+    <li>Good for implementing divine EXP potions, events, or boss clear rewards.</li>
+    <li>Setting <code>data = 0</code> does nothing.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Perfect for creating power-up items like Divine Energy Potions!
+  </div>
+
+</details>
+
+<details>
+  <summary>🤝 <strong>Team Task Manager (Type 1480)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1480</strong> checks whether team members have accepted a specific task. It operates based on the <code>isexit</code> condition, ensuring task requirements across the team.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [requirement] isexit</code></li>
+    <ul>
+      <li><code>1 isexit</code> – All team members must have the task.</li>
+      <li><code>0 isexit</code> – Only one team member needs to have the task.</li>
+    </ul>
+  </ul>
+
+  <h4>📜 Example – Check All Team Members for Task 1164:</h4>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1480, 1164, '1 isexit');
+
+-- If all have the task
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'All of your team members have accepted this task.');
+
+-- If any member does not have the task
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Some of your team members have not accepted this task.');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Only supports <code>isexit</code> condition (task existence check).</li>
+    <li>Very useful for team-based quests or dungeon entry requirements.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with team teleport or reward actions to control group quest flow!
+  </div>
+
+</details>
+
+<details>
+  <summary>👥 <strong>Team Task Operation (Type 1481)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1481</strong> is the team version of <code>Type 1081</code>, used to check internal task values (like phase or completion count) across party members. It only supports <code>==</code> and <code>&gt;=</code> operations and must begin with a check mode flag.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [check_mode] field operator value</code></li>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID to operate on</li>
+    <li><code>param</code> – Format: <code>[0/1] field operator value</code>
+      <ul>
+        <li><strong>0</strong> = only one member must meet the condition</li>
+        <li><strong>1</strong> = all members must meet the condition</li>
+      </ul>
+    </li>
+    <li><strong>field</strong> = task variable
+      <ul>
+        <li><code>phase</code>, <code>completenum</code>, <code>data1–data4</code></li>
+      </ul>
+    </li>
+    <li><strong>operator</strong> = only <code>==</code> or <code>&gt;=</code></li>
+    <li><strong>value</strong> = comparison value</li>
+  </ul>
+
+  <h4>📜 Example – All Members Must Be in Phase 2:</h4>
+  <pre>
+-- Check if all team members have task 1200 in phase 2
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1481, 1200, '1 phase == 2');
+
+-- If all match
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'All team members are in phase 2.');
+
+-- If someone doesn't match
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team is not in phase 2.');
+  </pre>
+
+  <h4>📜 Example – At Least One Has completenum &gt;= 5:</h4>
+  <pre>
+-- Check if at least one player has completed 5 times
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1481, 1200, '0 completenum &gt;= 5');
+
+-- If one or more match
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'Someone in your team has done this 5 or more times.');
+
+-- If no one matches
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team has done this 5 times yet.');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Supports only <code>==</code> and <code>&gt;=</code> operators.</li>
+    <li>Good for team-based stage gating, reward eligibility, or boss challenge locks.</li>
+    <li>Combine with <code>0126</code> to give feedback to players.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this when entering high-level instances where all team members must meet certain conditions.
+  </div>
+
+</details>
+
+<details>
+  <summary>⏱️ <strong>Team Task Cooldown Timer Check (Type 1482)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1482</strong> is the team-based version of <code>Type 1082</code>. It checks whether the cooldown period (in seconds) has passed since the start time of a specific task for one or all team members. Useful for team entry conditions, cooldown gates, and timed challenges.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [0/1] seconds</code></li>
+    <ul>
+      <li><code>0</code> – at least one member must satisfy the time condition</li>
+      <li><code>1</code> – all members must satisfy the time condition</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID to check</li>
+    <li><code>param</code> – Format: <code>[check_mode] seconds</code></li>
+    <ul>
+      <li><strong>check_mode</strong>: <code>0</code> = any member, <code>1</code> = all members</li>
+      <li><strong>seconds</strong>: minimum time elapsed since task start</li>
+    </ul>
+  </ul>
+
+  <h4>📜 Example – All Members Must Wait 5 Minutes (300s):</h4>
+  <pre>
+-- Check if all members' task 1200 started more than 5 minutes ago
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1482, 1200, '1 300');
+
+-- All passed
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'All of your team may proceed.');
+
+-- At least one did not wait long enough
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team must wait longer before proceeding.');
+  </pre>
+
+  <h4>📜 Example – Any One Member Waited Enough:</h4>
+  <pre>
+-- Check if any member passed cooldown
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1482, 1200, '0 300');
+
+-- Success
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'At least one member is ready.');
+
+-- Failure
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team is ready yet.');
+  </pre>
+
+  <h4>✅ Quick Notes:</h4>
+  <ul>
+    <li>Use <code>1081 begintime reset</code> to set the task start time.</li>
+    <li>This only checks elapsed time. It doesn’t change task state.</li>
+    <li>Perfect for time-gated events, group cooldowns, or retry limits.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Best used for team-based dungeon entry cooldowns or real-time wait logic!
+  </div>
+
+</details>
+
+<details>
+  <summary>📆 <strong>Team Task Day-Based Cooldown Check (Type 1486)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1486</strong> checks if a specified number of full days have passed since the <code>begintime</code> of a task, for all or part of a team. This is the team-based version of <code>Type 1086</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [0/1] days</code></li>
+    <ul>
+      <li><strong>0</strong> – At least one member must meet the requirement</li>
+      <li><strong>1</strong> – All members must meet the requirement</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID assigned via <code>1080</code></li>
+    <li><code>param</code> – Format: <code>[check_mode] [day_count]</code></li>
+  </ul>
+
+  <h4>📜 Example – All Members Must Wait 4 Days:</h4>
+  <pre>
+-- Check if 4 days have passed for all team members
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1486, 1114, '1 4');
+
+-- If all okay
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Everyone in your team can now continue.');
+
+-- If at least one hasn't waited enough
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team must wait longer before continuing.');
+  </pre>
+
+  <h4>📜 Example – Any Member Can Proceed:</h4>
+  <pre>
+-- Check if any member waited at least 4 days
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1486, 1114, '0 4');
+
+-- If one or more passed
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'One of your teammates is ready to proceed.');
+
+-- If no one passed
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'None of your teammates have reached the cooldown time.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>If the player has no party, the check is skipped completely.</li>
+    <li>Use <code>1081 begintime reset</code> to initialize the cooldown start time.</li>
+    <li>This script only checks cooldowns – it doesn’t update or modify task data.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Great for weekly events or team-locked progression that requires days of wait before retrying.
+  </div>
+
+</details>
+
+<details>
+  <summary>🆕 <strong>New Task Manager (Type 1180)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <img src="/assets/images/1180.png" alt="1180" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p><strong>Type 1180</strong> is used to manage new UI-based task entries. These tasks are displayed in the in-game panel (Story / Daily / Event), and stored in <code>cq_newtaskdetail</code>. It supports creating, deleting, and checking for task existence. It does not trigger any scripts from <code>cq_newtaskconfig</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = new task ID</code></li>
+    <li><code>param = new | delete | isexit</code></li>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>new</code> – Creates a new task entry</li>
+    <li><code>delete</code> – Deletes the task entry</li>
+    <li><code>isexit</code> – Checks whether the task exists for the player</li>
+  </ul>
+
+  <h4>📜 Example – Create New Task:</h4>
+  <pre>
+-- Create task 2001 (e.g., Beast Hunting)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1180, 2001, 'new');
+  </pre>
+
+  <h4>📜 Example – Delete Task:</h4>
+  <pre>
+-- Remove task 2001
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1180, 2001, 'delete');
+  </pre>
+
+  <h4>📜 Example – Check If Task Exists:</h4>
+  <pre>
+-- Check if task 2001 exists
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1180, 2001, 'isexit');
+
+-- If task exists
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'This task is already active.');
+
+-- If task doesn't exist
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You don\'t have this task yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Task data is saved in <code>cq_newtaskdetail</code>.</li>
+    <li>This type only manages data; it does NOT trigger scripts from <code>cq_newtaskconfig</code>.</li>
+    <li>UI will reflect task immediately when created.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>Type 1180</code> to prepare new UI tasks, and combine with <code>Type 1181</code> to update their status and data.
+  </div>
+
+</details>
+
+<details>
+  <summary>🛠️ <strong>New Task Operations (Type 1181)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1181</strong> is used to manipulate or compare values within <code>cq_newtaskdetail</code>. This is the backbone for progressing new UI-based tasks. You can change phase, mark task complete, set custom counters (like kill count), and reset cooldown timers.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = field operator value</code></li>
+  </ul>
+
+  <h4>📘 Supported Fields:</h4>
+  <ul>
+    <li><code>phase</code> – Task phase or stage</li>
+    <li><code>complete</code> – Task completion state</li>
+    <li><code>begintime</code> – Time the task started</li>
+    <li><code>data1 ~ data10</code> – Task-specific progress variables</li>
+  </ul>
+
+  <h4>📘 Supported Operators:</h4>
+  <ul>
+    <li><code>==</code> – Equal to (check only)</li>
+    <li><code>&gt;=</code> – Greater or equal (check only)</li>
+    <li><code>+=</code> – Increment (add number)</li>
+    <li><code>=</code> – Assign (set to specific value)</li>
+    <li><code>reset</code> – Only for <code>begintime</code>, resets to current time</li>
+  </ul>
+
+  <h4>📜 Example – Increment Kill Count (data1 += 1):</h4>
+  <pre>
+-- Add 1 kill to Beast Hunting Common Beast (task 2001, data1)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1181, 2001, 'data1 += 1');
+  </pre>
+
+  <h4>📜 Example – Set Task to Complete:</h4>
+  <pre>
+-- Mark task 2001 as complete
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 1181, 2001, 'complete = 1');
+  </pre>
+
+  <h4>📜 Example – Set Start Time to Now:</h4>
+  <pre>
+-- Reset task 2001 start time
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 1181, 2001, 'begintime reset');
+  </pre>
+
+  <h4>📜 Example – Check If Phase &gt;= 3:</h4>
+  <pre>
+-- Conditional check on task phase
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1181, 2001, 'phase &gt;= 3');
+
+-- If true
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'You have reached phase 3.');
+
+-- If false
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'You have not reached phase 3 yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Used after <code>1180 new</code> to progress or update task state.</li>
+    <li>All data is stored in <code>cq_newtaskdetail</code>.</li>
+    <li><code>complete</code> should be set to <code>1</code> when task is done.</li>
+    <li><code>phase</code> is often used for multi-stage growth tasks.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>data1~data10</code> for things like kill count, collection progress, etc. Phase is ideal for story or growth tasks!
+  </div>
+
+</details>
+
+<details>
+  <summary>⏱️ <strong>New Task Cooldown Timer Check (Type 1182)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1182</strong> checks whether a specified number of seconds has passed since the <code>begintime</code> of a new UI-based task stored in <code>cq_newtaskdetail</code>. This is useful for cooldown enforcement, retry restrictions, or time-locked progression.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = seconds</code> (e.g. <code>300</code> for 5 minutes)</li>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID that has a <code>begintime</code> set</li>
+    <li><code>param</code> – Duration in seconds to check against current time</li>
+  </ul>
+
+  <h4>📜 Example – Check if 5 Minutes Have Passed:</h4>
+  <pre>
+-- Check if 300 seconds (5 minutes) have passed since task 2001 started
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1182, 2001, '300');
+
+-- If enough time has passed
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You are well-rested and may proceed.');
+
+-- If not enough time
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You need to wait a bit longer before continuing.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Use <code>1181 begintime = now</code> to set start time when task begins.</li>
+    <li>This action only checks elapsed time — it doesn’t modify task state.</li>
+    <li>Perfect for real-time delays or retry cooldown logic.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with <code>Type 1181</code> to manage cooldown windows and progression delays.
+  </div>
+
+</details>
+
+<details>
+  <summary>📆 <strong>New Task Day-Based Cooldown Check (Type 1186)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1186</strong> checks whether a specified number of full calendar days has passed since the <code>begintime</code> of a new UI task stored in <code>cq_newtaskdetail</code>. This is perfect for time-gated features such as daily rewards, long-term quests, or event re-entry limits.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = number of days</code> (e.g. <code>4</code> for 4 days)</li>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID assigned using <code>Type 1180</code></li>
+    <li><code>param</code> – Integer number of days since task start</li>
+  </ul>
+
+  <h4>📜 Example – Require 4 Days Since Task 2001 Started:</h4>
+  <pre>
+-- Check if 4 days have passed since task 2001 started
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1186, 2001, '4');
+
+-- If 4+ days have passed
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You are now eligible to proceed.');
+
+-- If not enough days have passed
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You must wait a few more days before continuing.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Task must be initialized using <code>Type 1180</code></li>
+    <li><code>begintime</code> should be set using <code>Type 1181 begintime reset</code></li>
+    <li>This script only checks days – it does not modify any task state</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Best for login rewards, growth quests, or long-term task unlocks that require real waiting periods!
+  </div>
+
+</details>
+
+<details>
+  <summary>🐲 <strong>Check Eudemon Attributes (Type 1971)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1971</strong> is used to check the attributes of a player's eudemons. If <u>at least one</u> eudemon matches all conditions, the result is considered <strong>true</strong>. The scope of which eudemons are checked depends on the <code>data</code> value.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = Eudemon scope (0, 1, or 2)</li>
+    <li><code>param</code> = comma-separated attribute checks</li>
+  </ul>
+
+  <h4>📘 Scope (data value):</h4>
+  <ul>
+    <li><code>0</code> – Only summoned and alive</li>
+    <li><code>1</code> – Summoned (including dead)</li>
+    <li><code>2</code> – All pets (summoned or not, alive or dead)</li>
+  </ul>
+
+  <h4>📘 Supported Conditions:</h4>
+  <ul>
+    <li><code>level</code> – Eudemon level</li>
+    <li><code>starlev</code> – Star level</li>
+    <li><code>callout</code> – 1 if summoned</li>
+    <li><code>godlev</code> – Divine level</li>
+  </ul>
+
+  <h4>📜 Example – Check if Any Summoned Pet Has Level ≥ 20:</h4>
+  <pre>
+-- One of your summoned &amp; alive pets must have level 20+
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1971, 0, 'level &gt;= 20');
+
+-- If condition true
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'At least one of your pets is level 20 or higher.');
+
+-- If condition false
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'None of your pets meet the level requirement.');
+  </pre>
+
+  <h4>📜 Example – Check Combined Conditions:</h4>
+  <pre>
+-- Check if any summoned pet is called out AND star level ≥ 1000 AND not Divine
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1971, 0, 'callout == 1,starlev &gt;= 1000,godlev == 0');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Multiple conditions are combined with AND logic.</li>
+    <li>Only one pet needs to match all conditions to return true.</li>
+    <li>Useful for unlocking actions based on pet training or Divine evolution.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with <code>Type 0126</code> to show messages depending on your pet’s power, star level, or evolution.
+  </div>
+
+</details>
+
+<details>
+  <summary>👥 <strong>New Task Team Manager (Type 1580)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1580</strong> is used to check whether a specified new task exists for players in a party. It works like <code>Type 1180</code> but supports team-based checking. It only supports the <code>isexit</code> operation.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [check_mode] isexit</code></li>
+    <ul>
+      <li><code>0 isexit</code> – At least one member must have the task</li>
+      <li><code>1 isexit</code> – All members must have the task</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><strong>data:</strong> Task ID from <code>cq_newtaskdetail</code></li>
+    <li><strong>param:</strong> One of:
+      <ul>
+        <li><code>0 isexit</code> – One member is enough</li>
+        <li><code>1 isexit</code> – All members must have the task</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>📜 Example – All Members Must Have Task 2001:</h4>
+  <pre>
+-- Check if all team members have task 2001
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1580, 2001, '1 isexit');
+
+-- If true
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'All your team members have accepted the task.');
+
+-- If false
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team has not accepted the task.');
+  </pre>
+
+  <h4>📜 Example – Only One Member Required:</h4>
+  <pre>
+-- Check if any member has task 2001
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1580, 2001, '0 isexit');
+
+-- If true
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'One of your teammates has the required task.');
+
+-- If false
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team has accepted the task yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Only works on tasks created with <code>Type 1180</code> (new UI quests)</li>
+    <li>Use before entering team-based dungeons or challenge gates</li>
+    <li>Combine with <code>0126</code> to notify player clearly</li>
+  </ul>
+
+  <div style="border-left: 4px solid #2196F3; background: #e3f2fd; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use <code>1580</code> to control access to multiplayer content that requires synchronized task progress!
+  </div>
+
+</details>
+
+<details>
+  <summary>👥 <strong>New Task Team Operations (Type 1581)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1581</strong> is the team-based version of <code>Type 1181</code>. It checks whether the values in <code>cq_newtaskdetail</code> for all or some members meet a specified condition. It only supports comparison operators <code>==</code> and <code>&gt;=</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [check_mode] field operator value</code></li>
+    <ul>
+      <li><code>0</code> – Only one team member must meet the condition</li>
+      <li><code>1</code> – All team members must meet the condition</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Supported Fields:</h4>
+  <ul>
+    <li><code>phase</code></li>
+    <li><code>data1</code> ~ <code>data10</code></li>
+  </ul>
+
+  <h4>📘 Supported Operators:</h4>
+  <ul>
+    <li><code>==</code></li>
+    <li><code>&gt;=</code></li>
+  </ul>
+
+  <h4>📜 Example – All Members Must Be in Phase ≥ 2:</h4>
+  <pre>
+-- Check if all members have task 2001 at phase 2 or above
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1581, 2001, '1 phase &gt;= 2');
+
+-- If true
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your entire team has reached phase 2.');
+
+-- If false
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team is still below phase 2.');
+  </pre>
+
+  <h4>📜 Example – At Least One Member Has Collected 5 Items (data1):</h4>
+  <pre>
+-- Check if any member has collected 5 or more
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1581, 2001, '0 data1 &gt;= 5');
+
+-- If true
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'One of your teammates has enough items.');
+
+-- If false
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team has collected enough yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Only supports <code>==</code> and <code>&gt;=</code> operators.</li>
+    <li>Perfect for shared progress validation (e.g. dungeon entry, event boss eligibility).</li>
+    <li>Combine with <code>Type 0126</code> to give user feedback.</li>
+    <li>Only evaluates <strong>existing</strong> tasks created via <code>Type 1180</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF9800; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Good for multi-stage co-op quests where all team members must meet progress conditions!
+  </div>
+
+</details>
+
+<details>
+  <summary>⏱️ <strong>New Task Team Cooldown Timer Check (Type 1582)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1582</strong> is the team-based version of <code>Type 1182</code>. It checks whether the specified cooldown duration (in seconds) has passed since the task <code>begintime</code> for all or some members in the team. Useful for real-time co-op cooldown gates or retry control.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [check_mode] seconds</code></li>
+    <ul>
+      <li><code>0</code> – at least one member must pass</li>
+      <li><code>1</code> – all members must pass</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Parameter Format</h4>
+  <ul>
+    <li><code>data</code> – Task ID assigned via <code>Type 1180</code></li>
+    <li><code>param</code> – Format: <code>[0/1] seconds</code></li>
+  </ul>
+
+  <h4>📜 Example – All Members Must Wait 5 Minutes (300s):</h4>
+  <pre>
+-- Check if 5 minutes have passed for all members
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1582, 2001, '1 300');
+
+-- If passed
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Your team is ready to continue.');
+
+-- If failed
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team still needs to wait.');
+  </pre>
+
+  <h4>📜 Example – At Least One Member is Ready:</h4>
+  <pre>
+-- Check if any member waited 300 seconds
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1582, 2001, '0 300');
+
+-- If success
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'Someone in your team is ready.');
+
+-- If all failed
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team has finished the cooldown yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Make sure <code>begintime</code> is set using <code>1181 begintime reset</code> at task start.</li>
+    <li>Only checks cooldown time; doesn’t update task values.</li>
+    <li>Used in real-time retry systems or timed boss access.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Pair with <code>Type 1186</code> for calendar-day cooldowns and <code>Type 1581</code> for team-based phase/data checks!
+  </div>
+
+</details>
+
+<details>
+  <summary>📆 <strong>New Task Team Day-Based Cooldown Check (Type 1586)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+
+  <p><strong>Type 1586</strong> checks if a specified number of full calendar days have passed since the <code>begintime</code> of a task (from <code>cq_newtaskdetail</code>) for some or all members in a team. It is the team-based version of <code>Type 1186</code>. If the player is not in a party, no check is performed.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = task ID</code></li>
+    <li><code>param = [check_mode] days</code></li>
+    <ul>
+      <li><code>0</code> – at least one member must meet the condition</li>
+      <li><code>1</code> – all members must meet the condition</li>
+    </ul>
+  </ul>
+
+  <h4>📘 Parameter Format:</h4>
+  <ul>
+    <li><strong>data:</strong> Task ID (created using <code>Type 1180</code>)</li>
+    <li><strong>param:</strong> Format: <code>[0/1] [day_count]</code></li>
+  </ul>
+
+  <h4>📜 Example – All Team Members Must Wait 4 Days:</h4>
+  <pre>
+-- Check if all team members have waited 4 days
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1586, 2001, '1 4');
+
+-- All passed
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Everyone in your team is eligible.');
+
+-- At least one didn’t wait enough
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Someone in your team still needs to wait.');
+  </pre>
+
+  <h4>📜 Example – Any Member Has Waited Enough:</h4>
+  <pre>
+-- At least one member waited long enough
+INSERT INTO cq_action VALUES (2000, 2001, 2002, 1586, 2001, '0 4');
+
+-- Passed
+INSERT INTO cq_action VALUES (2001, 0000, 0000, 0126, 0, 'Someone in your team is ready.');
+
+-- None passed
+INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team is ready yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>If the player is not in a team, this check does nothing.</li>
+    <li>Uses <code>cq_newtaskdetail.begintime</code> to compare full calendar days.</li>
+    <li>Task must be initialized with <code>Type 1180</code> and <code>begintime</code> set via <code>1181 begintime reset</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Best for weekly group quests, delayed event entries, or multi-day mission gating.
+  </div>
+
+</details>
+
+<details>
+  <summary>🔁 <strong>Run Script for All Team Members (Type 1412)</strong></summary>
+  <br />
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1412</strong> is used to trigger a specific action script for all members in the current team, including the one who initiated it. If the player is not in a team, the script will not be executed for anyone.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code></li>
+    <li><code>param = action ID to execute (for all teammates)</code></li>
+  </ul>
+
+  <h4>📜 Example – Trigger Script 1001 for All Party Members:</h4>
+  <pre>
+-- Execute action ID 1001 for each teammate
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1412, 0, '1001');
+  </pre>
+
+  <h4>📜 Example – Script 1001 (Type 126):</h4>
+  <pre>
+-- Show message to each team member
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'This message was sent to every member of your team.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This is useful for team rewards, synchronized triggers, or team-based cutscenes.</li>
+    <li>The target action ID (e.g., 1001) must exist and be valid for each player.</li>
+    <li>Only executes if the player is currently in a team.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Combine with reward scripts or countdown triggers to sync events across all teammates!
+  </div>
+
+</details>
+
+<details>
+  <summary>📨 <strong>Invitation Dialog with Confirmation (Type 7001)</strong></summary>
+  <br />
+    <img src="/assets/images/7001.png" alt="7001" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p><strong>Type 7001</strong> triggers an invitation-style dialog box for the player, using a message string from <code>strres.ini</code>. A countdown is shown, and if the player confirms before it ends, a predefined script will be executed. This script ID is set server-side via <code>邀请对话框确认执行脚本 = [ActionID]</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = message ID (from strres.ini)</code></li>
+    <li><code>param = countdown time in seconds</code> (optional)</li>
+  </ul>
+
+  <h4>📜 Example – Show Dialog with 20 Seconds Countdown:</h4>
+  <pre>
+-- Show invitation dialog with message 5010010, wait 20 seconds
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 7001, 5010010, '20');
+  </pre>
+
+  <h4>✅ Server-Side Trigger:</h4>
+  <pre>
+邀请对话框确认执行脚本 = 1001
+  </pre>
+
+  <h4>📜 Example – Confirmation Script (Type 126):</h4>
+  <pre>
+-- Message after player accepts the dialog
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have accepted the invitation.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>If player presses “OK” before countdown ends, confirmation script will be triggered.</li>
+    <li>If player ignores or closes dialog, no script is executed.</li>
+    <li>Text is pulled from <code>strres.ini</code> using the ID in <code>data</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Tip:</strong> Use this for party invites, challenge prompts, entry confirmations, or real-time interactive choices!
+  </div>
+
+</details>
+
+<details>
+  <summary>🌍 <strong>Global Invitation Dialog (Type 197)</strong></summary>
+  <br />
+
+  <p><strong>Type 197</strong> broadcasts an invitation dialog to all players in a specific map or globally. It uses a message from <code>strres.ini</code> and shows a countdown. If a player confirms before it expires, the server executes a predefined script via <code>邀请对话框确认执行脚本 = [ActionID]</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = message ID (from strres.ini)</code></li>
+    <li><code>param = mapid countdown</code></li>
+  </ul>
+
+  <h4>📘 Examples:</h4>
+
+  <pre>
+-- Global invitation dialog (all maps), 300s countdown
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0197, 191123, '0 300');
+
+-- Send dialog only to players in map 7000, countdown 300s
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0197, 191123, '7000 300');
+  </pre>
+
+  <h4>✅ Server-Side Setting:</h4>
+  <pre>
+邀请对话框确认执行脚本 = 1001
+  </pre>
+
+  <h4>📜 Example – Confirmation Script (Type 126):</h4>
+  <pre>
+-- Display confirmation message after player clicks "OK"
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You accepted the event invitation!');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Only players in the <code>mapid</code> specified will receive the dialog.</li>
+    <li>If <code>mapid = 0</code>, all online players will receive it.</li>
+    <li>Use this for real-time events, global raids, boss warnings, etc.</li>
+    <li>Player must confirm within countdown seconds or script won't run.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #03A9F4; background: #e1f5fe; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🌟 <strong>Tip:</strong> Use <code>197</code> to announce server-wide challenges or dungeon invites with real-time confirmation.
+  </div>
+
+</details>
+
+<details>
+  <summary>🧛‍♂️ <strong>Vampire Awakening Trigger (Type 1964)</strong></summary>
+  <br />
+
+  <p><strong>Type 1964</strong> is used to activate the Vampire Awakening form. It should only be triggered if the player is not already in the <code>status 1014</code>. This awakening grants enhanced power and visuals for the Vampire class.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code></li>
+    <li><code>param = 0</code></li>
+  </ul>
+
+  <h4>📘 Prerequisite:</h4>
+  <p>Check if player does NOT already have <code>status 1014</code> before triggering.</p>
+
+  <h4>📜 Example – Check Status and Trigger Awakening:</h4>
+  <pre>
+-- If not awakened, trigger awakening
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1964, 0, '0');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Status ID <code>1014</code> indicates the player is already in awakening mode.</li>
+    <li>Only use this for characters in the Vampire class (recommended to validate class externally).</li>
+    <li>This script handles transformation and possible visual changes automatically.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #673AB7; background: #ede7f6; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🧛 <strong>Tip:</strong> Use as part of storyline, reward, or after a PvE challenge to unlock Vampire transformation!
+  </div>
+
+</details>
+
+<details>
+  <summary>🐲 <strong>Custom Eudemon Creator (Type 549)</strong></summary>
+  <br />
+
+  <p><strong>Type 549</strong> creates a new Eudemon directly in the player's Eudemon backpack with customized stats. You can define its level, divine level, star rating, binding status, and whether it is a necro-type pet.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = Eudemon Type ID (e.g. 1071960)</li>
+    <li><code>param</code> = <code>level godlevel score [bind] [is_necro]</code></li>
+  </ul>
+
+  <h4>📘 Parameter Format:</h4>
+  <ul>
+    <li><strong>level</strong> – Eudemon level (e.g. 81)</li>
+    <li><strong>godlevel</strong> – Divine level</li>
+    <li><strong>score</strong> – Star rating (e.g. 2500 = 25 stars)</li>
+    <li><strong>bind</strong> (optional) – Set to <code>1</code> to force bind the pet</li>
+    <li><strong>is_necro</strong> (optional) – Set to <code>1</code> to make it a Necro-type Eudemon</li>
+  </ul>
+
+  <h4>📜 Example – Give a 25-Star Divine Eudemon (XO Type):</h4>
+  <pre>
+-- Create a 25-star, divine Level 1 XO-type Eudemon (unbound)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0549, 1071960, '81 1 2500');
+  </pre>
+
+  <h4>📜 Example – Give a Bound Necro-Type Eudemon:</h4>
+  <pre>
+-- Create a 25-star Necro-type Eudemon that is bound to the player
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0549, 1071960, '81 1 2500 1 1');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>The player must have at least 1 empty Eudemon slot available.</li>
+    <li>Omitting the 4th param will allow the item pack to decide bind status.</li>
+    <li>Setting the 5th param to <code>1</code> makes it a Necro Eudemon (compatible with "Spirit" fusion).</li>
+  </ul>
+
+  <div style="border-left: 4px solid #9C27B0; background: #f3e5f5; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this type for high-tier pet reward packs, starter bundles, or class-specific unlocks!
+  </div>
+
+</details>
+
+<details>
+  <summary>📍 <strong>Check If Player Is in Cronus Market (Type 1968)</strong></summary>
+  <br />
+
+  <p><strong>Type 1968</strong> checks if the player is currently located in the Cronus Market map (also known as 雷鸣市场). It requires no parameters and simply returns true if the player is in the correct map.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code></li>
+    <li><code>param = (empty)</code></li>
+  </ul>
+
+  <h4>📜 Example – Allow Action Only in Cronus Market:</h4>
+  <pre>
+-- Check if player is in Cronus Market
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1968, 0, '');
+
+-- If true
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You are currently in Cronus Market.');
+
+-- If false
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'This feature is only available in Cronus Market.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This only checks the current map — no teleport or movement occurs.</li>
+    <li>Use before market-exclusive actions, like NPC exchanges or events.</li>
+    <li>Common Cronus Market Map ID is <code>1000</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this to restrict actions like pack opening, VIP shops, or trading to the market area only.
+  </div>
+
+</details>
+
+<details>
+  <summary>📱 <strong>Check Mobile Client Login (Type 1969)</strong></summary>
+  <br />
+
+  <p><strong>Type 1969</strong> checks if the current player is logged in from a mobile client. This is useful for triggering mobile-exclusive content, messages, or limiting features that are not supported on mobile devices.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code></li>
+    <li><code>param = (empty)</code></li>
+  </ul>
+
+  <h4>📜 Example – Show Message for Mobile Players:</h4>
+  <pre>
+-- Check if player is using mobile client
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1969, 0, '');
+
+-- If mobile
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Welcome mobile player! You are now connected via the mobile client.');
+
+-- If not mobile (likely PC)
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You are currently using the PC client.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This only checks login source — no effect on gameplay.</li>
+    <li>Can be used to disable or redirect certain features depending on client type.</li>
+    <li>No parameters needed beyond <code>data = 0</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FF9800; background: #fff3e0; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this to offer tailored rewards or simplified interactions for mobile users.
+  </div>
+
+</details>
+
+<details>
+  <summary>📩 <strong>Send Broadcast Message (Type 196)</strong></summary>
+  <br />
+
+  <p><strong>Type 196</strong> sends a pigeon system message (normal or golden). It works like <code>Type 125</code>, but includes the player's name in the <code>param</code>. All spaces in the message must be replaced with <code>~</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = message type:
+      <ul>
+        <li><code>0</code> = normal pigeon</li>
+        <li><code>1</code> = golden pigeon</li>
+      </ul>
+    </li>
+    <li><code>param</code> = <code>[type] [player_name] [message_with_tildes]</code></li>
+  </ul>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Send golden pigeon (VIP boradcast)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0196, 2017, '1 DuaSelipar[PM] Hello~World');
+  </pre>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Send normal pigeon 
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0196, 2017, '0 DuaSelipar[PM] Hello~World');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li><strong>Use <code>~</code> instead of spaces</strong> in the message content to avoid script parsing errors.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #2196F3; background: #e3f2fd; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    📢 <strong>Tip:</strong> Combine with rewards or events to directly notify individual players about rare drops, achievements, or wins.
+  </div>
+
+</details>
+
+<details>
+  <summary>🧭 <strong>Auto Pathfinding to NPC (Type 1532)</strong></summary>
+  <br />
+
+  <p><strong>Type 1532</strong> automatically moves the player to the specified NPC using pathfinding and opens its dialog. Commonly used in guided quests, tutorials, and main storyline scenes.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = 0</li>
+    <li><code>param</code> = <code>x y npc_id map_id</code></li>
+  </ul>
+
+  <h4>📜 Example – Auto path to NPC 1034 at (335, 455) in map 1000:</h4>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1532, 0, '335 455 1034 1000');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Performs auto pathfinding to the given coordinates and opens the NPC dialog.</li>
+    <li>Primarily works with <strong>static NPCs</strong> defined in the <code>cq_npc</code> table.</li>
+    <li><strong>Supports cross-map navigation</strong> — the player will auto-transfer to the target map if needed.</li>
+    <li>Often used at the end of a cutscene or to guide players during storyline steps.</li>
+  </ul>
+
+
+</details>
+
+<details>
+  <summary>🐾 <strong>Summon Follow Pet / Auto-Loot Assistant (Type 1967)</strong></summary>
+  <br />
+
+  <p><strong>Type 1967</strong> is used to summon a follow pet (non-Eudemon) that follows the player around and typically auto-collects dropped items. The player must already own the follow pet before this script can successfully summon it.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = follow pet ID</li>
+    <li><code>param</code> = leave empty</li>
+  </ul>
+
+  <h4>📜 Example – Summon Follow Pet ID 1:</h4>
+  <pre>
+-- Summon follow pet with ID 1 (must be owned)
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 1967, 1, '');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This is <strong>not an Eudemon</strong> — it's a cosmetic/helper pet like auto-collector.</li>
+    <li>If a different follow pet is already active, it will be recalled before summoning the new one.</li>
+    <li>The follow pet must be <strong>owned/unlocked</strong> by the player for this to work.</li>
+  </ul>
+
+
+</details>
+
+<details>
+  <summary>🎬 <strong>Play Animation / Visual Effect (Type 194)</strong></summary>
+  <br />
+
+  <p><strong>Type 194</strong> is used to trigger animation or scripted visual effects from <code>luapartscript.ini</code>. It's typically used for cinematic effects, transformations, special skill triggers, or cutscene visuals.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data = 0</code></li>
+    <li><code>param = type param1 param2</code></li>
+  </ul>
+
+  <h4>📘 Known Param Types:</h4>
+  <ul>
+    <li><code>0 0 0</code> – Likely stops all current effects (optional)</li>
+    <li><code>10 0 LuaScriptName</code> – Runs a script from <code>luapartscript.ini</code></li>
+    <li><code>1 effect_id duration</code> – Plays a single effect (e.g. stealth for 8s)</li>
+  </ul>
+
+  <h4>📜 Example – Run Lua Animation Script:</h4>
+  <pre>
+-- Plays Lua script from luapartscript.ini [10]
+INSERT INTO cq_action VALUES (1000, 1001, 0000, 0194, 0, '10 0 PerformanceScript_10');
+  </pre>
+
+  <h4>📜 Example – Play Visual Effect (ID 52000) for 10s:</h4>
+  <pre>
+-- This will apply an invisible/stealth-like effect
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0194, 0, '1 52000 10');
+  </pre>
+
+  <h4>📜 (Optional) – Stop Current Effects:</h4>
+  <pre>
+-- Optional: Clear current effect layers
+INSERT INTO cq_action VALUES (1000, 0000, 0000, 0194, 0, '0 0 0');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Script names like <code>PerformanceScript_10</code> must be defined inside <code>luapartscript.ini</code>.</li>
+    <li>Effect IDs like <code>52000</code> are internal and engine-specific.</li>
+    <li>Use to build cutscene sequences, intro effects, or skill unlocks.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #673AB7; background: #ede7f6; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Chain multiple <code>194</code> actions for scripted cinematics or epic scene transitions!
+  </div>
+
+</details>
+
+<details>
+  <summary>🔊 <strong>Play Sound Effect (Type 195)</strong></summary>
+  <br />
+
+  <p><strong>Type 195</strong> plays a sound from <code>SoundRes.ini</code>. It can be used in events, NPC interactions, transformations, or dramatic reveals.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = 0</li>
+    <li><code>param</code> = <code>sound_id sound_name</code></li>
+  </ul>
+
+  <h4>📜 Example – Play BGM_State1 (ID 20015):</h4>
+  <pre>
+-- Sound must be defined in SoundRes.ini
+INSERT INTO cq_action VALUES (20006403, 0000, 0000, 0195, 0, '20015 BGM_State1');
+  </pre>
+
+  <h4>📘 Example Entry in SoundRes.ini:</h4>
+  <pre>
+[20015]
+Sound=sound/BGM_State1.wav
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Make sure the <code>sound_id</code> and <code>sound name</code> match <code>SoundRes.ini</code> exactly.</li>
+    <li>This will play client-side and may vary by map or scene.</li>
+    <li>Supports both music and short effects.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #03A9F4; background: #e1f5fe; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🎧 <strong>Tip:</strong> Combine with <code>Type 194</code> for full audiovisual cutscenes or boss intro effects.
+  </div>
+
+</details>
+
+<details>
+  <summary>🔥 <strong>Check Divine Fire Status (Type 1987)</strong></summary>
+  <br />
+    <img src="/assets/images/1987.png" alt="1987" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p><strong>Type 1987</strong> checks whether the player has access to the Divine Fire system. Returns true if it is unlocked and available.</p>
+
+  <h4>📜 Example:</h4>
+  <pre>
+-- Check if Divine Fire is unlocked
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1987, 0, '');
+
+-- If unlocked
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Divine Fire system is already unlocked.');
+
+-- If locked
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You have not unlocked the Divine Fire system yet.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>No parameters are needed for this check.</li>
+    <li>Use this to gate access to Divine Fire-related content or upgrades.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🧩 <strong>Check Divine Fire Slot (Type 1988)</strong></summary>
+  <br />
+
+  <p><strong>Type 1988</strong> checks whether a specific Divine Fire slot is open (1–4). Each slot controls 2 grid positions in the interface.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = 1 ~ 4 (slot number)</li>
+  </ul>
+
+  <h4>📜 Example – Check if Slot 2 is Open:</h4>
+  <pre>
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1988, 2, '');
+
+-- If open
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'Slot 2 is already open.');
+
+-- If not open
+INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Slot 2 is still locked.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Check before upgrades or gear placement in Divine Fire system.</li>
+  </ul>
+</details>
+
+<details>
+  <summary>🔓 <strong>Unlock Divine Fire Slot (Type 1989)</strong></summary>
+  <br />
+
+  <p><strong>Type 1989</strong> unlocks a specific Divine Fire slot. This is typically triggered via reward, quest, or item usage.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = 1 ~ 4 (slot number to unlock)</li>
+  </ul>
+
+  <h4>📜 Example – Unlock Slot 3:</h4>
+  <pre>
+-- Unlock slot 3
+INSERT INTO cq_action VALUES (1000, 1001, 0000, 1989, 3, '');
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have unlocked Divine Fire Slot 3.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Each slot includes 2 grids — unlocking slot 3 enables grid 5 and 6.</li>
+    <li>Only works if the Divine Fire system is already unlocked (check with <code>1987</code>).</li>
+  </ul>
+</details>
+
 <hr />
 <h2 id="-understanding-variables">📚 Understanding Variables</h2>
 
@@ -6510,7 +8279,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Kill Position: %kil
 <ul>
   <li><a href="/color-generator.html">Color Font Generator</a></li>
   <li><a href="/cq_card-generator.html">Cq_card Generator</a></li>
-  <li><a href="register.html">Register Generator</a></li>
+  <li><a href="/register.html">Register Generator</a></li>
 </ul>
 
 <hr />
