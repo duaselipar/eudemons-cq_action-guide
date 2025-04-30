@@ -3510,7 +3510,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1008, 0, '84');
   <summary>🔎 <strong>Check Player Status (Type 1009)</strong></summary>
   <br />
 
-  <p>Type 1009 is used to check whether the player is currently in a specific state. This check does not require any timing validation. It simply checks if the specified state is active (i.e. its seconds value is greater than 0).</p>
+  <p><strong>Type 1009</strong> is used to check whether the player is currently in a specific state. It simply checks whether a status exists (i.e. whether the <code>seconds</code> remaining is greater than 0), without needing to calculate time ranges or expiration.</p>
 
   <h4>💡 Example SQL – Check EXP Boost State</h4>
   <pre>
@@ -3518,15 +3518,28 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 1008, 0, '84');
 REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1009, 0, '158 second &gt; 0');
 
 -- If true, show message
-REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are currently under an exp boost.');
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are currently under an EXP boost.');
 
 -- If false, show alternate message
-REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not in under an exp boost.');
+REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not under an EXP boost.');
   </pre>
 
-  <h4>📘 Parameter Explanation</h4>
+  <h4>💡 Example SQL – Check Drop Rate Boost (State 889)</h4>
+  <pre>
+-- Check if Drop Rate Boost (State 889) is active
+REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 1009, 0, '889 second &gt; 0');
+
+-- If active
+REPLACE INTO `cq_action` VALUES (1001, 0000, 0000, 0126, 0, 'You are already in Drop Rate Boost status.');
+
+-- If not active, apply 10x drop boost for 20s
+REPLACE INTO `cq_action` VALUES (1002, 1003, 0000, 4001, 0, '889 1000 20 0');
+REPLACE INTO `cq_action` VALUES (1003, 0000, 0000, 0126, 0, 'You have received 10x drop boost for 20 seconds.');
+  </pre>
+
+  <h4>📘 Parameter Format</h4>
   <ul>
-    <li><code>[state_id] second &gt; 0</code> – Check if a specific state is active. No need to check time; it only checks whether the state exists.</li>
+    <li><code>[state_id] second &gt; 0</code> – Returns true if the player is in that status</li>
   </ul>
 
   <h4>📘 Common State IDs</h4>
@@ -3536,16 +3549,15 @@ REPLACE INTO `cq_action` VALUES (1002, 0000, 0000, 0126, 0, 'You are not in unde
     <li><code>164</code> – Dragon Morph</li>
     <li><code>184</code> – Flying</li>
     <li><code>166</code> – Delivery Log</li>
-    <li><code>248</code> – Unknown</li>
-    <li><code>249</code> – Unknown</li>
-    <li><code>1014</code> – Unknown</li>
+    <li><code>889</code> – Drop Rate Boost</li>
+    <li><code>248</code>, <code>249</code>, <code>1014</code> – Unknown</li>
   </ul>
 
   <h4>💡 Tips</h4>
   <ul>
-    <li>Use this to block or allow features based on whether the player is flying, delivering logs, or under a boost.</li>
-    <li>Supports branching logic with <code>id_next</code> and <code>id_nextfail</code> depending on the result.</li>
-    <li>Stack with message actions (like 0126) to give player feedback.</li>
+    <li>Use this to enable or restrict content (e.g. flying-only access, EXP boost bonuses).</li>
+    <li>Works well with <code>0126</code> to provide user feedback.</li>
+    <li>Can be used with <code>Type 4001</code> to apply statuses conditionally.</li>
   </ul>
 </details>
 
@@ -5367,6 +5379,65 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 4001, 0, '245 0 86400 0 0 1');
 </details>
 
 <details>
+  <summary>🧹 <strong>Delete Special Status (Type 4004)</strong></summary>
+  <br />
+
+  <p><strong>Type 4004</strong> is used to remove an active player status. If the status is stored in <code>cq_special_status</code>, it can also be deleted from the database by setting <code>DelDB = 1</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = unused (use 0)</li>
+    <li><code>param</code> = <code>statusID DelDB</code></li>
+  </ul>
+
+  <h4>📘 Details:</h4>
+  <ul>
+    <li><code>statusID</code> = The ID of the state to remove</li>
+    <li><code>DelDB</code> = <code>1</code> to delete from <code>cq_special_status</code>, <code>0</code> to remove from memory only</li>
+  </ul>
+
+  <h4>📜 Example – Remove status 2000 (from memory only):</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (11000, 0000, 0000, 4004, 0, '2000 0');
+  </pre>
+
+  <h4>📜 Example – Remove status 2000 (from memory + cq_special_status):</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (11001, 0000, 0000, 4004, 0, '2000 1');
+  </pre>
+
+  <h4>📛 Known Stackable Title Statuses:</h4>
+  <ul>
+    <li>2000 ~ 2012</li>
+  </ul>
+
+  <h4>⚠️ Warning:</h4>
+  <p>Status effects can stack. Before applying a new title/status, always clear the previous ones to avoid visual or effect overlaps.</p>
+
+  <h4>📦 Batch Clear Example (All 13 Title Statuses):</h4>
+  <pre>
+-- Clear all known title statuses (2000 to 2012) from cq_special_status and memory
+REPLACE INTO cq_action VALUES (12000, 12001, 0000, 4004, 0, '2000 1');
+REPLACE INTO cq_action VALUES (12001, 12002, 0000, 4004, 0, '2001 1');
+REPLACE INTO cq_action VALUES (12002, 12003, 0000, 4004, 0, '2002 1');
+REPLACE INTO cq_action VALUES (12003, 12004, 0000, 4004, 0, '2003 1');
+REPLACE INTO cq_action VALUES (12004, 12005, 0000, 4004, 0, '2004 1');
+REPLACE INTO cq_action VALUES (12005, 12006, 0000, 4004, 0, '2005 1');
+REPLACE INTO cq_action VALUES (12006, 12007, 0000, 4004, 0, '2006 1');
+REPLACE INTO cq_action VALUES (12007, 12008, 0000, 4004, 0, '2007 1');
+REPLACE INTO cq_action VALUES (12008, 12009, 0000, 4004, 0, '2008 1');
+REPLACE INTO cq_action VALUES (12009, 12010, 0000, 4004, 0, '2009 1');
+REPLACE INTO cq_action VALUES (12010, 12011, 0000, 4004, 0, '2010 1');
+REPLACE INTO cq_action VALUES (12011, 12012, 0000, 4004, 0, '2011 1');
+REPLACE INTO cq_action VALUES (12012, 0000, 0000, 4004, 0, '2012 1');
+  </pre>
+
+  <div style="border-left: 4px solid #F44336; background: #ffebee; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    🛡️ <strong>Tip:</strong> Always clear all title statuses before applying a new one to avoid visual bugs or duplicate effects.
+  </div>
+</details>
+
+<details>
   <summary>🌀 <strong>Force Magic Attack (Type 4002)</strong></summary>
   <br />
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
@@ -5570,12 +5641,12 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 8002, 303, '1001');
 </details>
 
 <details>
-  <summary>🕶️ <strong>Hidden Countdown Timer (Type 8003)</strong></summary>
+  <summary>🕶️ <strong>Hidden Countdown Timer (Type 8003,8005,8006)</strong></summary>
   <br />
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <p><strong>Type 8003</strong> is used to start a hidden countdown timer for a player. The countdown will not display any visible time or message on the client's screen. When the countdown reaches zero, a specified action script will execute. Useful for stealth events, traps, or silent triggers.</p>
+  <p><strong>Type 8003,8005,8006</strong> is used to start a hidden countdown timer for a player. The countdown will not display any visible time or message on the client's screen. When the countdown reaches zero, a specified action script will execute. Useful for stealth events, traps, or silent triggers.</p>
 
   <h4>🧠 Syntax:</h4>
   <ul>
@@ -7631,6 +7702,328 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have unlocked Divi
     <li>Each slot includes 2 grids — unlocking slot 3 enables grid 5 and 6.</li>
     <li>Only works if the Divine Fire system is already unlocked (check with <code>1987</code>).</li>
   </ul>
+</details>
+
+<details>
+  <summary>🎖️ <strong>Check / Unlock / Equip Title (Type 1996, 1997, 1998)</strong></summary>
+  <br />
+    <img src="/assets/images/1996.png" alt="1996" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p>These script types are used to manage player titles based on the <code>title.ini</code> file. Titles are stored in <code>cq_titleid</code> and can be unlocked, equipped, or checked using the following actions:</p>
+
+  <h4>📘 Type Overview:</h4>
+  <ul>
+    <li><code>1996</code> – Check if a title is already unlocked</li>
+    <li><code>1997</code> – Unlock a title for the player</li>
+    <li><code>1998</code> – Equip an unlocked title</li>
+  </ul>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = Title ID (must match <code>title.ini</code>)</li>
+    <li><code>param</code> = (leave blank)</li>
+  </ul>
+
+  <h4>📜 Example – Full Chain (Check → Unlock → Equip Title 45):</h4>
+  <pre>
+-- Step 1: Check if title 45 is already unlocked
+INSERT INTO cq_action VALUES (1000, 1001, 1002, 1996, 45, '');
+
+-- If unlocked
+INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have already unlocked this title,please equip in wardrobe.');
+
+-- Step 2: If not unlocked → Unlock it first
+INSERT INTO cq_action VALUES (1002, 1003, 0000, 1997, 45, '');
+
+-- Step 3: Equip after unlocking
+INSERT INTO cq_action VALUES (1003, 1004, 0000, 1998, 45, '');
+  </pre>
+
+  <h4>💬 Message Feedback (Optional with Type 126):</h4>
+  <pre>
+-- Title equipped
+INSERT INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Title equipped successfully.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Title IDs must exist in <code>title.ini</code></li>
+    <li>Unlocked titles are saved to <code>cq_titleid</code></li>
+    <li>Use <code>1996</code> before equipping to avoid invalid equip attempts</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Perfect for achievements, ranking rewards, seasonal events, or permanent unlockable content.
+  </div>
+
+</details>
+
+<details>
+  <summary>📬 <strong>Send Mail to Player (Type 1980)</strong></summary>
+  <br />
+    <img src="/assets/images/1980.png" alt="1980" style="border:1px solid #ccc; border-radius:6px;" />
+
+  <p><strong>Type 1980</strong> is used to send mail with attachments (items, EP, PP, Lunar Point) to players. The mail format uses a template from <code>cq_mailtemplate</code> and stores the sent data in <code>cq_mailinfo</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = Mail Template ID (from <code>cq_mailtemplate</code>)</li>
+    <li><code>param</code> = Mail content (see breakdown below)</li>
+  </ul>
+
+  <h4>📜 Example SQL :</h4>
+  <pre>
+--INSERT INTO cq_action VALUES (1000, 0000, 0000, 1980, 1,'30 5000 4000 3000 754859 1 1 1025491 1 1 751022 1 1 2000 1000'
+);
+  </pre>
+  <h4>📦 Param Format (in order):</h4>
+
+  <table cellspacing="0" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Field</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>saveday</td><td>How many days the mail stays. Use <code>0</code> = permanent (100 days)</td><td>30</td></tr>
+      <tr><td>2</td><td>money</td><td>Gold</td><td>5000</td></tr>
+      <tr><td>3</td><td>emoney</td><td>EP</td><td>4000</td></tr>
+      <tr><td>4</td><td>emoney2</td><td>PP</td><td>3000</td></tr>
+
+      <tr><td>5</td><td>item1</td><td>First item ID to send</td><td>754859</td></tr>
+      <tr><td>6</td><td>item1Amount</td><td>Amount (must be 1 for equipment)</td><td>1</td></tr>
+      <tr><td>7</td><td>item1Lock</td><td><code>1</code> = Bound, <code>0</code> = Unbound</td><td>1</td></tr>
+
+      <tr><td>8</td><td>item2</td><td>Second item ID</td><td>1025491</td></tr>
+      <tr><td>9</td><td>item2Amount</td><td>Amount</td><td>1</td></tr>
+      <tr><td>10</td><td>item2Lock</td><td>Bound status</td><td>1</td></tr>
+
+      <tr><td>11</td><td>item3</td><td>Third item ID</td><td>751022</td></tr>
+      <tr><td>12</td><td>item3Amount</td><td>Amount</td><td>1</td></tr>
+      <tr><td>13</td><td>item3Lock</td><td>Bound status</td><td>1</td></tr>
+
+      <tr><td>14</td><td>moonvalue</td><td>Lunar Point</td><td>2000</td></tr>
+      <tr><td>15</td><td>starvalue</td><td>Star Point</td><td>1000</td></tr>
+    </tbody>
+  </table>
+
+
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Item amount must be <strong>1</strong> for non-stackable items (e.g. equipment).</li>
+    <li>Use <code>lock = 1</code> to make items bound to the player.</li>
+    <li>Only send valid, stackable items or pre-wrapped packs to prevent issues.</li>
+    <li>All mail content is stored in <code>cq_mailinfo</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #009688; background: #e0f2f1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ✅ <strong>Tip:</strong> Use this for login rewards, compensation gifts, milestone rewards, or event prize delivery.
+  </div>
+
+</details>
+
+<details>
+  <summary>🆕 <strong>Character Rename (Rerole) Check &amp; Action (Type 1990, 1991, 1992)</strong></summary>
+  <br />
+
+  <p>This set of scripts is used to allow players to rename their characters, specifically those with default names like <code>rerole[123456]</code>. It includes validation, duplication checks, and rename request logic.</p>
+
+  <h4>📘 Type Functions:</h4>
+  <ul>
+    <li><strong>1990</strong> – Check if player name starts with <code>rerole[</code> (e.g. <code>rerole[20345]</code>)</li>
+    <li><strong>1991</strong> – Check if the player has already applied for rename</li>
+    <li><strong>1992</strong> – Apply the rename request (takes effect after maintenance)</li>
+  </ul>
+
+  <h4>📜 Rename Flow – Example SQL Chain:</h4>
+  <pre>
+-- Step 1: Ask for new name input
+REPLACE INTO cq_action VALUES (1000, 1001, 0000, 0101, 0, 'Please enter your new name.');
+REPLACE INTO cq_action VALUES (1001, 1002, 0000, 0103, 0, '15 1003 New~name:');
+REPLACE INTO cq_action VALUES (1002, 4000000, 0000, 0104, 0, '0 0 0');
+
+-- Step 2: Check if current name is in rerole[xxxx] format
+REPLACE INTO cq_action VALUES (1003, 1005, 1004, 1990, 0, '');
+REPLACE INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Your current name is not a temporary name. Rename is not required.');
+
+-- Step 3: Check if player already applied for rename
+REPLACE INTO cq_action VALUES (1005, 1007, 1006, 1991, 0, '');
+REPLACE INTO cq_action VALUES (1006, 0000, 0000, 0126, 0, 'You have already submitted a rename request. Please wait for it to be applied.');
+
+-- Step 4: Store new name input into var(0)
+REPLACE INTO cq_action VALUES (1007, 1008, 0000, 1524, 0, 'var(0) set %accept0');
+
+-- Step 5: Ask for confirmation (re-type)
+REPLACE INTO cq_action VALUES (1008, 1009, 0000, 0101, 0, 'Please enter your new name again.');
+REPLACE INTO cq_action VALUES (1009, 1010, 0000, 0103, 0, '15 1011 Re-enter~new~name:');
+REPLACE INTO cq_action VALUES (1010, 4000000, 0000, 0104, 0, '0 0 0');
+
+-- Step 6: Compare both entries (var(0) vs second input)
+REPLACE INTO cq_action VALUES (1011, 1012, 1014, 1523, 0, 'var(0) == %accept0');
+
+-- Step 7A: If match, apply rename request
+REPLACE INTO cq_action VALUES (1012, 1013, 10025049, 1992, 0, '%iter_var_str0');
+REPLACE INTO cq_action VALUES (1013, 0000, 0000, 0126, 0, 'Your rename request has been submitted. It will take effect after the next maintenance.');
+
+-- Step 7B: If mismatch
+REPLACE INTO cq_action VALUES (1014, 0000, 0000, 0126, 0, 'The two name entries do not match. Please try again.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li><code>1990</code> only allows rename for characters named <code>rerole[xxxx]</code>.</li>
+    <li><code>1991</code> prevents duplicate rename requests.</li>
+    <li><code>1992</code> will not instantly rename — it marks the request to be applied after restart/maintenance.</li>
+    <li>You must input and re-confirm the name to avoid mistakes.</li>
+  </ul>
+
+
+</details>
+
+<details>
+  <summary>🏷️ <strong>Legion Rename (Resyn) Check &amp; Action (Type 1993, 1994, 1995)</strong></summary>
+  <br />
+
+  <p>This script flow allows legion leaders with default names like <code>resyn[xxxxx]</code> to rename their guild. It checks for leader permission, validates if the name is still default, prevents duplicate requests, and requires confirmation of the new name.</p>
+
+  <h4>📘 Script Types Used:</h4>
+  <ul>
+    <li><code>1993</code> – Check if current legion name is <code>resyn[xxx]</code></li>
+    <li><code>1994</code> – Check if a rename request has already been submitted</li>
+    <li><code>1995</code> – Submit the legion rename request (applies on next maintenance)</li>
+  </ul>
+
+  <h4>📜 SQL Example – Legion Rename Flow:</h4>
+  <pre>
+-- Ask for new legion name
+REPLACE INTO cq_action VALUES (1000, 1001, 0000, 0101, 0, 'Please enter your new legion name.');
+REPLACE INTO cq_action VALUES (1001, 1002, 0000, 0103, 0, '15 1003 New~legion~name:');
+REPLACE INTO cq_action VALUES (1002, 4000000, 0000, 0104, 0, '0 0 0');
+
+-- Only the leader can rename
+REPLACE INTO cq_action VALUES (1003, 1005, 1004, 1001, 0, 'ranksshow == 1000');
+REPLACE INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Only the legion leader can rename the legion.');
+
+-- Check if name is still resyn[xxx]
+REPLACE INTO cq_action VALUES (1005, 1007, 1006, 1993, 0, '');
+REPLACE INTO cq_action VALUES (1006, 0000, 0000, 0126, 0, 'This legion already has a custom name. Rename is not required.');
+
+-- Check if rename was already submitted
+REPLACE INTO cq_action VALUES (1007, 1009, 1008, 1994, 0, '');
+REPLACE INTO cq_action VALUES (1008, 0000, 0000, 0126, 0, 'A rename request has already been submitted. Please wait for the next maintenance.');
+
+-- Save first input
+REPLACE INTO cq_action VALUES (1009, 1010, 0000, 1524, 0, 'var(0) set %accept0');
+
+-- Confirm re-entry
+REPLACE INTO cq_action VALUES (1010, 1011, 0000, 0101, 0, 'Please enter your new legion name again.');
+REPLACE INTO cq_action VALUES (1011, 1012, 0000, 0103, 0, '15 1013 Re-enter~legion~name:');
+REPLACE INTO cq_action VALUES (1012, 4000000, 0000, 0104, 0, '0 0 0');
+
+-- Compare both inputs
+REPLACE INTO cq_action VALUES (1013, 1014, 1017, 1523, 0, 'var(0) == %accept0');
+
+-- Attempt rename
+REPLACE INTO cq_action VALUES (1014, 1015, 1016, 1995, 0, '%iter_var_str0');
+REPLACE INTO cq_action VALUES (1015, 0000, 0000, 0126, 0, 'Your legion rename request has been submitted. The new name will take effect after the next maintenance.');
+REPLACE INTO cq_action VALUES (1016, 0000, 0000, 0126, 0, 'That name is already taken or invalid. Please choose another.');
+
+-- Name mismatch
+REPLACE INTO cq_action VALUES (1017, 0000, 0000, 0126, 0, 'The two name entries do not match. Please try again.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Only the leader (<code>ranksshow == 1000</code>) can rename the legion.</li>
+    <li>This flow is designed specifically for renaming default-format legions (<code>resyn[xxxxx]</code>).</li>
+    <li>The rename will take effect after the next server maintenance.</li>
+    <li>All name inputs are compared using <code>var(0)</code> and <code>1523</code>.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #3F51B5; background: #e8eaf6; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> You can pair this system with an announcement or mail alert once the rename is successful.
+  </div>
+</details>
+
+<details>
+  <summary>⚔️ <strong>Check Legion War Active (Type 193)</strong></summary>
+  <br />
+
+  <p><strong>Type 193</strong> is used to determine if a Legion War is currently ongoing. It behaves similarly to <code>Type 226</code>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = <code>0</code> (required)</li>
+    <li><code>param</code> = (leave blank)</li>
+  </ul>
+
+  <h4>📜 Example – Check for active legion war:</h4>
+  <pre>
+-- If legion war is active
+REPLACE INTO cq_action VALUES (1000, 1001, 1002, 193, 0, '');
+
+-- If true
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'A legion war is currently in progress!');
+
+-- If false
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'There is no legion war happening right now.');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This script returns <strong>true</strong> if a legion war is ongoing.</li>
+    <li>Useful for conditionally enabling NPCs, zones, buffs, or messages related to the event.</li>
+    <li>Can be combined with <code>Type 126</code> to inform players through dialog.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #607D8B; background: #eceff1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use this script to lock certain features during war hours or activate special buffs/shops for participants only.
+  </div>
+</details>
+
+<details>
+  <summary>📢 <strong>Map Broadcast Messages (Type 320 &amp; 321)</strong></summary>
+  <br />
+
+  <p>These script types are used to send announcements to players within a specific map. Similar to <code>Type 303</code>.</p>
+
+  <h4>📘 Script Types:</h4>
+  <ul>
+    <li><strong>320</strong> – Display message in the <strong>bottom-left corner</strong> of the screen</li>
+    <li><strong>321</strong> – Display message in the <strong>center of the screen</strong></li>
+  </ul>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = map ID where the message will be shown</li>
+    <li><code>param</code> = message text</li>
+  </ul>
+
+  <h4>📜 Example – Bottom Left Message (Type 320):</h4>
+  <pre>
+-- Show message in lower-left of map 1000
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 320, 1000, 'Legion War has started! Join now!');
+  </pre>
+
+  <h4>📜 Example – Center Screen Message (Type 321):</h4>
+  <pre>
+-- Show center-screen message on map 1000
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 321, 1000, 'BOSS has appeared in the center of the battlefield!');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>The messages are visible only to players inside the map defined by <code>data</code>.</li>
+    <li>Best used during war events, boss spawns, or timed PvP announcements.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #2196F3; background: #e3f2fd; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use <code>320</code> for passive info (e.g., tips or alerts), and <code>321</code> for impactful messages (e.g., countdowns or boss spawn).
+  </div>
 </details>
 
 <hr />
