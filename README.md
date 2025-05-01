@@ -7002,9 +7002,6 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong>
-  </div>
 
   <p><strong>Type 1581</strong> is the team-based version of <code>Type 1181</code>. It checks whether the values in <code>cq_newtaskdetail</code> for all or some members meet a specified condition. It only supports comparison operators <code>==</code> and <code>>=</code>.</p>
 
@@ -7076,9 +7073,6 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong>
-  </div>
 
   <p><strong>Type 1582</strong> is the team-based version of <code>Type 1182</code>. It checks whether the specified cooldown duration (in seconds) has passed since the task <code>begintime</code> for all or some members in the team. Useful for real-time co-op cooldown gates or retry control.</p>
 
@@ -7142,9 +7136,7 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong>
-  </div>
+
 
   <p><strong>Type 1586</strong> checks if a specified number of full calendar days have passed since the <code>begintime</code> of a task (from <code>cq_newtaskdetail</code>) for some or all members in a team. It is the team-based version of <code>Type 1186</code>. If the player is not in a party, no check is performed.</p>
 
@@ -7207,9 +7199,7 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team is
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
-    ⚠️ <strong>New Engine Only</strong>
-  </div>
+
   <p><strong>Type 1412</strong> is used to trigger a specific action script for all members in the current team, including the one who initiated it. If the player is not in a team, the script will not be executed for anyone.</p>
 
   <h4>🧠 Syntax:</h4>
