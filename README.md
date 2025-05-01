@@ -277,7 +277,7 @@ This applies only in the <strong>New Engine</strong> and only for specific Necro
   <img src="assets/images/501-1.png" style="max-width:100%; border-radius:8px; margin:10px 0;">
 
   <pre>
--- Type 525 (New Engine Only): Same as 501 but "availabletime" becomes "aging days"
+-- Type 525 (New Engine Only): Same as 501 but "availabletime" becomes "aging days".This type can only be used for 820xxxx items only.
 REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0525, 820646, '0 0 0 0 0 0 0 0 0 0 0 30');
 -- 30 = 30 days
   </pre>
@@ -459,14 +459,14 @@ INSERT INTO `cq_action` VALUES (1000, 0000, 0000, 1001, 0, 'e_money += -13500');
   <h4>📘 Supported Attributes & Operators:</h4>
   <div style="background:#f4f4f4; padding:12px 16px; border-radius:8px; font-size:14px; line-height:1.7; overflow:auto; max-height:500px;">
     <ul style="margin:0; padding-left:20px;">
-      <li><code>life</code>, <code>mana</code>, <code>money</code>, <code>exp</code>, <code>pk</code> — <strong>(+=, ==, &lt;)</strong></li>
-      <li><code>xp</code> — <strong>(+=)</strong></li>
+      <li><code>life</code>, <code>mana</code>, <code>money</code>, <code>exp</code>, <code>pk</code>, <code>energy(stamina)</code> — <strong>(+=, ==, &lt;)</strong></li>
+      <li><code>xp</code>, <code>nob_rank_donate</code> — <strong>(+=)</strong></li>
       <li><code>profession</code> — <strong>(==, set, &gt;=, &lt;=)</strong></li>
       <li><code>level</code>, <code>force</code>, <code>dexterity</code>, <code>speed</code>, <code>health</code>, <code>soul</code> — <strong>(+=, ==, &lt;)</strong></li>
       <li><code>rank</code>, <code>rankshow</code> — <strong>(==, &lt;)</strong></li>
       <li><code>iterator</code> — <strong>(=, &lt;=, +=, ==)</strong></li>
       <li><code>crime</code> — <strong>(==, set)</strong></li>
-      <li><code>gamecard</code>, <code>gamecard2</code> — <strong>(==, &gt;=, &lt;=)</strong></li>
+      <li><code>gamecard</code>, <code>gamecard2</code>, <code>totalbattlelev</code> — <strong>(==, &gt;=, &lt;=)</strong></li>
       <li><code>metempsychosis</code> — <strong>(==, &lt;)</strong></li>
       <li><code>mercenary_rank</code>, <code>mercenary_exp</code>, <code>exploit</code> — <strong>(==, &lt;, +=)</strong></li>
       <li><code>maxlifepercent</code> — <strong>(+=, ==, &lt;)</strong></li>
@@ -2670,6 +2670,7 @@ REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 1010, 2005, '%target_name has
     <li><code>ismyselfeudemon</code> ensures the target belongs to the player</li>
     <li><code>iscallout</code> ensures the Eudemon is currently summoned</li>
     <li><code>isalive</code> ensures it's not dead or dismissed</li>
+    
   </ul>
   </div>
 
@@ -2680,6 +2681,8 @@ REPLACE INTO `cq_action` VALUES (1004, 0000, 0000, 1010, 2005, '%target_name has
     <li><code>isalive == 1</code> → not dead</li>
     <li><code>level == 1</code> → required level</li>
     <li><code>damage != 5</code> → not already thunder</li>
+    <li><code>godlevel == 1</code> → required level</li>
+
   </ul>
 
   <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
@@ -6996,6 +6999,9 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
 <details>
   <summary>👥 <strong>New Task Team Operations (Type 1581)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
@@ -7067,6 +7073,9 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
 <details>
   <summary>⏱️ <strong>New Task Team Cooldown Timer Check (Type 1582)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
@@ -7130,6 +7139,9 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team ha
 <details>
   <summary>📆 <strong>New Task Team Day-Based Cooldown Check (Type 1586)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
@@ -7192,6 +7204,9 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'No one in your team is
 <details>
   <summary>🔁 <strong>Run Script for All Team Members (Type 1412)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
@@ -7231,6 +7246,9 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'This message was sent 
 <details>
   <summary>📨 <strong>Invitation Dialog with Confirmation (Type 7001)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
     <img src="/assets/images/7001.png" alt="7001" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 7001</strong> triggers an invitation-style dialog box for the player, using a message string from <code>strres.ini</code>. A countdown is shown, and if the player confirms before it ends, a predefined script will be executed. This script ID is set server-side via <code>邀请对话框确认执行脚本 = [ActionID]</code>.</p>
@@ -7274,7 +7292,9 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have accepted the 
 <details>
   <summary>🌍 <strong>Global Invitation Dialog (Type 197)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 197</strong> broadcasts an invitation dialog to all players in a specific map or globally. It uses a message from <code>strres.ini</code> and shows a countdown. If a player confirms before it expires, the server executes a predefined script via <code>邀请对话框确认执行脚本 = [ActionID]</code>.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7323,7 +7343,9 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You accepted the event
 <details>
   <summary>🧛‍♂️ <strong>Vampire Awakening Trigger (Type 1964)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1964</strong> is used to activate the Vampire Awakening form. It should only be triggered if the player is not already in the <code>status 1014</code>. This awakening grants enhanced power and visuals for the Vampire class.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7360,7 +7382,9 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1964, 0, '0');
 <details>
   <summary>🐲 <strong>Custom Eudemon Creator (Type 549)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 549</strong> creates a new Eudemon directly in the player's Eudemon backpack with customized stats. You can define its level, divine level, star rating, binding status, and whether it is a necro-type pet.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7407,7 +7431,9 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0549, 1071960, '81 1 2500 1 1');
 <details>
   <summary>📍 <strong>Check If Player Is in Cronus Market (Type 1968)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1968</strong> checks if the player is currently located in the Cronus Market map (also known as 雷鸣市场). It requires no parameters and simply returns true if the player is in the correct map.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7444,7 +7470,9 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'This feature is only a
 <details>
   <summary>📱 <strong>Check Mobile Client Login (Type 1969)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1969</strong> checks if the current player is logged in from a mobile client. This is useful for triggering mobile-exclusive content, messages, or limiting features that are not supported on mobile devices.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7482,7 +7510,9 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You are currently usin
 <details>
   <summary>📩 <strong>Send Broadcast Message (Type 196)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 196</strong> sends a pigeon system message (normal or golden). It works like <code>Type 125</code>, but includes the player's name in the <code>param</code>. All spaces in the message must be replaced with <code>~</code>.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7523,7 +7553,9 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 0196, 2017, '0 DuaSelipar[PM] He
 <details>
   <summary>🧭 <strong>Auto Pathfinding to NPC (Type 1532)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1532</strong> automatically moves the player to the specified NPC using pathfinding and opens its dialog. Commonly used in guided quests, tutorials, and main storyline scenes.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7553,7 +7585,9 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1532, 0, '335 455 1034 1000');
 <details>
   <summary>🐾 <strong>Summon Follow Pet / Auto-Loot Assistant (Type 1967)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1967</strong> is used to summon a follow pet (non-Eudemon) that follows the player around and typically auto-collects dropped items. The player must already own the follow pet before this script can successfully summon it.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7584,7 +7618,9 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 1967, 1, '');
 <details>
   <summary>🎬 <strong>Play Animation / Visual Effect (Type 194)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 194</strong> is used to trigger animation or scripted visual effects from <code>luapartscript.ini</code>. It's typically used for cinematic effects, transformations, special skill triggers, or cutscene visuals.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7634,7 +7670,9 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 0194, 0, '0 0 0');
 <details>
   <summary>🔊 <strong>Play Sound Effect (Type 195)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 195</strong> plays a sound from <code>SoundRes.ini</code>. It can be used in events, NPC interactions, transformations, or dramatic reveals.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7672,6 +7710,9 @@ Sound=sound/BGM_State1.wav
 <details>
   <summary>🔥 <strong>Check Divine Fire Status (Type 1987)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
     <img src="/assets/images/1987.png" alt="1987" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 1987</strong> checks whether the player has access to the Divine Fire system. Returns true if it is unlocked and available.</p>
@@ -7698,7 +7739,9 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'You have not unlocked 
 <details>
   <summary>🧩 <strong>Check Divine Fire Slot (Type 1988)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1988</strong> checks whether a specific Divine Fire slot is open (1–4). Each slot controls 2 grid positions in the interface.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7727,7 +7770,9 @@ INSERT INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'Slot 2 is still locked
 <details>
   <summary>🔓 <strong>Unlock Divine Fire Slot (Type 1989)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 1989</strong> unlocks a specific Divine Fire slot. This is typically triggered via reward, quest, or item usage.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -7753,6 +7798,9 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have unlocked Divi
 <details>
   <summary>🎖️ <strong>Check / Unlock / Equip Title (Type 1996, 1997, 1998)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
     <img src="/assets/images/1996.png" alt="1996" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These script types are used to manage player titles based on the <code>title.ini</code> file. Titles are stored in <code>cq_titleid</code> and can be unlocked, equipped, or checked using the following actions:</p>
@@ -7810,6 +7858,9 @@ INSERT INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Title equipped success
 <details>
   <summary>📬 <strong>Send Mail to Player (Type 1980)</strong></summary>
   <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
     <img src="/assets/images/1980.png" alt="1980" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 1980</strong> is used to send mail with attachments (items, EP, PP, Lunar Point) to players. The mail format uses a template from <code>cq_mailtemplate</code> and stores the sent data in <code>cq_mailinfo</code>.</p>
@@ -7879,7 +7930,9 @@ INSERT INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Title equipped success
 <details>
   <summary>🆕 <strong>Character Rename (Rerole) Check & Action (Type 1990, 1991, 1992)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p>This set of scripts is used to allow players to rename their characters, specifically those with default names like <code>rerole[123456]</code>. It includes validation, duplication checks, and rename request logic.</p>
 
   <h4>📘 Type Functions:</h4>
@@ -7937,7 +7990,9 @@ REPLACE INTO cq_action VALUES (1014, 0000, 0000, 0126, 0, 'The two name entries 
 <details>
   <summary>🏷️ <strong>Legion Rename (Resyn) Check & Action (Type 1993, 1994, 1995)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p>This script flow allows legion leaders with default names like <code>resyn[xxxxx]</code> to rename their guild. It checks for leader permission, validates if the name is still default, prevents duplicate requests, and requires confirmation of the new name.</p>
 
   <h4>📘 Script Types Used:</h4>
@@ -8003,7 +8058,9 @@ REPLACE INTO cq_action VALUES (1017, 0000, 0000, 0126, 0, 'The two name entries 
 <details>
   <summary>⚔️ <strong>Check Legion War Active (Type 193)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p><strong>Type 193</strong> is used to determine if a Legion War is currently ongoing. It behaves similarly to <code>Type 226</code>.</p>
 
   <h4>🧠 Syntax:</h4>
@@ -8039,7 +8096,9 @@ REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'There is no legion wa
 <details>
   <summary>📢 <strong>Map Broadcast Messages (Type 320 & 321)</strong></summary>
   <br>
-
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
   <p>These script types are used to send announcements to players within a specific map. Similar to <code>Type 303</code>.</p>
 
   <h4>📘 Script Types:</h4>
@@ -8076,6 +8135,341 @@ REPLACE INTO cq_action VALUES (1000, 0000, 0000, 321, 1000, 'BOSS has appeared i
     💡 <strong>Tip:</strong> Use <code>320</code> for passive info (e.g., tips or alerts), and <code>321</code> for impactful messages (e.g., countdowns or boss spawn).
   </div>
 </details>
+
+
+
+<details>
+  <summary>🔁 <strong>Recall All Summoned Eudemons (Type 1986)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1986</strong> is used to unsummon all currently <strong>summoned</strong> from the player. This is needed because <strong>modern engines no longer auto-recall summoned Eudemons when switching maps</strong>.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = <code>0</code></li>
+    <li><code>param</code> = (leave blank)</li>
+  </ul>
+
+  <h4>📜 Example – Unsummon All Pets:</h4>
+  <pre>
+-- Recall all currently summoned (visible) Eudemons
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 1986, 0, '');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This only affects <strong>summoned Eudemons</strong> (main or secondary), not fused or deployed pets.</li>
+    <li>Useful before teleport, dungeon entry, challenge mode, PvP gate, or cutscenes.</li>
+    <li>Summon state will need to be reapplied manually if needed after this.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #FFC107; background: #fff8e1; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Reminder:</strong> This does NOT cancel fighting pets or states like fusion — only removes the visual summoned Eudemons.
+  </div>
+</details>
+
+
+<details>
+  <summary>🧝‍♀️ <strong>Servant of the Goddess System (Types 1983, 1984, 1985)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+    <img src="/assets/images/1983.png" alt="1983" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p>These scripts are used to manage the <strong>Servants of the Goddess</strong> system. There are two servants: <strong>Gift Master</strong> (1) and <strong>Spirit Master</strong> (2). Scripts let you check if they’re activated, activate them, and give them EXP.</p>
+
+  <h4>📘 Script Overview:</h4>
+  <ul>
+    <li><code>1983</code> – Check if a servant is activated (data = 1 or 2)</li>
+    <li><code>1984</code> – Activate a servant (data = 1 or 2)</li>
+    <li><code>1985</code> – Add EXP to a servant (data = 1 or 2, param = EXP)</li>
+  </ul>
+
+  <h4>🧪 Example – Check if Gift Master is Activated:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (16000, 16001, 16002, 1983, 1, '');
+
+-- If activated
+REPLACE INTO cq_action VALUES (16001, 0000, 0000, 0126, 0, 'Gift Master is already activated.');
+
+-- If not
+REPLACE INTO cq_action VALUES (16002, 0000, 0000, 0126, 0, 'Gift Master is not activated.');
+  </pre>
+
+  <h4>✨ Example – Activate Servants:</h4>
+  <pre>
+-- Activate Gift Master
+REPLACE INTO cq_action VALUES (16010, 16011, 0000, 1984, 1, '');
+REPLACE INTO cq_action VALUES (16011, 0000, 0000, 0126, 0, 'Gift Master has been activated.');
+
+-- Activate Spirit Master
+REPLACE INTO cq_action VALUES (16012, 16013, 0000, 1984, 2, '');
+REPLACE INTO cq_action VALUES (16013, 0000, 0000, 0126, 0, 'Spirit Master has been activated.');
+  </pre>
+
+  <h4>📈 Example – Add EXP to Servants (Type 1985):</h4>
+  <pre>
+-- Add 1000 EXP to Gift Master
+REPLACE INTO cq_action VALUES (16020, 0000, 0000, 1985, 1, '1000');
+
+-- Add 2500 EXP to Spirit Master
+REPLACE INTO cq_action VALUES (16021, 0000, 0000, 1985, 2, '2500');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Always check with <code>1983</code> before activating using <code>1984</code>.</li>
+    <li>EXP via <code>1985</code> can be tied to quests, kill rewards, achievements, etc.</li>
+    <li>You can show progress with <code>0126</code> messages or title unlocks.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #8E24AA; background: #f3e5f5; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Use this for Goddess Trial modes, shrine blessings, or divine mission reward scaling.
+  </div>
+</details>
+
+
+<details>
+  <summary>⚔️ <strong>Set Player PK Mode (Type 1527)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1527</strong> sets the player's PK (player-kill) mode. This allows you to force or script PK mode changes for dungeon rules, arenas, PvP zones, or specific events. Each mode determines who the player can or cannot attack.</p>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><code>data</code> = unused (set as 0)</li>
+    <li><code>param</code> = PK mode (0–5)</li>
+  </ul>
+
+  <h4>📘 PK Mode Reference:</h4>
+  <table cellspacing="0" cellpadding="6">
+    <thead>
+      <tr><th>Param</th><th>Mode</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>0</code></td><td>Peace Mode</td><td>Attack monsters only. Cannot attack any players.</td></tr>
+      <tr><td><code>1</code></td><td>Team Mode</td><td>Attack monsters and players not in your team.</td></tr>
+      <tr><td><code>2</code></td><td>Capture Mode</td><td>Attack monsters, red-named (PK) and blue-named (criminal) players only.</td></tr>
+      <tr><td><code>3</code></td><td>Free PK Mode</td><td>Attack anyone freely without restriction.</td></tr>
+      <tr><td><code>4</code></td><td>Legion Mode</td><td>Attack all except your own legion members.</td></tr>
+      <tr><td><code>5</code></td><td>Ally Mode</td><td>Attack all except your legion and allied legions.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>📜 Example – Set Player to Legion Mode (4):</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (17000, 0000, 0000, 1527, 0, '4');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>This change is immediate and affects combat behavior instantly.</li>
+    <li>Only affects the local player using the script.</li>
+    <li>Good for PvP dungeons, special zones, or safe areas (set to 0).</li>
+  </ul>
+
+  <div style="border-left: 4px solid #E53935; background: #ffebee; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    ⚠️ <strong>Reminder:</strong> For event maps or boss zones, always reset PK mode back to <code>0 (Peace)</code> after exit.
+  </div>
+</details>
+
+<details>
+  <summary>💇‍♂️ <strong>Hairstyle Unlock System (Type 1974 & 1975)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+    <img src="/assets/images/1974.png" alt="1974" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p>These scripts are used to check and unlock character hairstyles. Hair styles are defined in <code>HairData.ini</code> and <code>DressRoomItem.ini</code> (where <code>type = 2</code>).</p>
+
+  <h4>🧠 Script Functions:</h4>
+  <ul>
+    <li><code>1974</code> – Check if a specific hairstyle is already unlocked</li>
+    <li><code>1975</code> – Unlock a specific hairstyle</li>
+  </ul>
+
+  <h4>📘 Hairstyle Source:</h4>
+  <ul>
+    <li><strong>data</strong> = Hairstyle ID (from <code>HairData.ini</code>)</li>
+    <li>These IDs must exist in <code>DressRoomItem.ini</code> as type <code>2</code></li>
+  </ul>
+
+  <h4>📜 Example – Check If Hair 225 Is Unlocked:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (18000, 18001, 18002, 1974, 225, '');
+
+-- If already unlocked
+REPLACE INTO cq_action VALUES (18001, 0000, 0000, 0126, 0, 'This hairstyle is already unlocked!');
+
+-- If not yet unlocked
+REPLACE INTO cq_action VALUES (18002, 0000, 0000, 0126, 0, 'This hairstyle is not yet unlocked.');
+  </pre>
+
+  <h4>📜 Example – Unlock Hair 225:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (18010, 18011, 0000, 1975, 225, '');
+REPLACE INTO cq_action VALUES (18011, 0000, 0000, 0126, 0, 'You have unlocked hairstyle 225!');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Hairstyles must be listed in both <code>HairData.ini</code> and <code>DressRoomItem.ini</code> (with type 2).</li>
+    <li>Script can be used as a cosmetic reward, fashion shop feature, or quest unlock.</li>
+    <li>Use <code>0126</code> to notify player about success or already-unlocked status.</li>
+  </ul>
+
+  <div style="border-left: 4px solid #AB47BC; background: #f3e5f5; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Make sure the hair ID exists in <code>cq_hairinfotype</code>. Once unlocked, the data is stored in <code>cq_hairinfo</code>.
+  </div>
+</details>
+
+
+<details>
+  <summary>🖼️ <strong>Avatar Unlock System (Type 1976 & 1977)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+    <img src="/assets/images/1976.png" alt="1976" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p>These script types are used to check and unlock player avatar icons (also called head icons or portraits). Avatar data must exist in <code>cq_faceinfotype</code>, and unlocked data is stored in <code>cq_faceinfo</code>.</p>
+
+  <h4>📘 Script Functions:</h4>
+  <ul>
+    <li><code>1976</code> – Check if a specific avatar is already unlocked</li>
+    <li><code>1977</code> – Unlock a specific avatar</li>
+  </ul>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><strong>data</strong> = Avatar ID (must match an entry in <code>cq_faceinfotype</code>)</li>
+    <li><strong>param</strong> = (leave blank)</li>
+  </ul>
+
+  <h4>📜 Example – Check If Avatar ID 85 Is Unlocked:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1000, 1001, 1002, 1976, 85, '');
+
+-- If already unlocked
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'This avatar is already unlocked.');
+
+-- If not yet unlocked
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'This avatar is not yet unlocked.');
+  </pre>
+
+  <h4>📜 Example – Unlock Avatar ID 85:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1000, 1001, 0000, 1977, 85, '');
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have successfully unlocked avatar 85!');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Avatar IDs must exist in <code>cq_faceinfotype</code></li>
+    <li>Unlocked avatars are stored in <code>cq_faceinfo</code></li>
+    <li>Ideal for login rewards, battle pass, achievements, or title progression</li>
+  </ul>
+
+  <div style="border-left: 4px solid #4CAF50; background: #e8f5e9; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+    💡 <strong>Tip:</strong> Avatar icons are managed using <code>cq_faceinfotype</code> and saved per player in <code>cq_faceinfo</code>.
+  </div>
+</details>
+
+
+<details>
+  <summary>🐲 <strong>Eudemon Skin Unlock System (Type 1972 & 1973)</strong></summary>
+  <br>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+    <img src="/assets/images/1972.png" alt="1972" style="border:1px solid #ccc; border-radius:6px;">
+
+  <p>These script types manage the unlocking of <strong>Eudemon Skins</strong>. Skins are defined in <code>cq_eudlookinfotype</code>, and once unlocked, are stored in <code>cq_eudlookinfo</code>.</p>
+
+  <h4>📘 Script Overview:</h4>
+  <ul>
+    <li><strong>1972</strong> – Check if a specific Eudemon skin is unlocked</li>
+    <li><strong>1973</strong> – Unlock a specific Eudemon skin</li>
+  </ul>
+
+  <h4>🧠 Syntax:</h4>
+  <ul>
+    <li><strong>data</strong> = Skin ID (from <code>cq_eudlookinfotype</code>)</li>
+    <li><strong>param</strong> = (leave blank)</li>
+  </ul>
+
+  <h4>📜 Example – Check If Skin ID 22 Is Unlocked:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1000, 1001, 1002, 1972, 22, '');
+
+-- If unlocked
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have already unlocked this Eudemon skin.');
+
+-- If not unlocked
+REPLACE INTO cq_action VALUES (1002, 0000, 0000, 0126, 0, 'This Eudemon skin has not been unlocked yet.');
+  </pre>
+
+  <h4>📜 Example – Unlock Eudemon Skin ID 22:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (1000, 1001, 0000, 1973, 22, '');
+REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have successfully unlocked Eudemon skin 22!');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Skin IDs must exist in <code>cq_eudlookinfotype</code></li>
+    <li>Unlocks are saved in <code>cq_eudlookinfo</code></li>
+    <li>Skins may be tied to limited-time events, promotions, or pet rankings</li>
+  </ul>
+</details>
+
+
+
+
+<details>
+  <summary>🌟 <strong>Divinize Eudemons (Type 1970)</strong></summary>
+  <br>
+  <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
+    ⚠️ <strong>New Engine Only</strong>
+  </div>
+  <p><strong>Type 1970</strong> is used to <strong>divinize</strong> Eudemons on your character. It targets pets that are <strong>summoned/unsummoned</strong> (visible or stored).</p>
+
+  <h4>🧠 Parameters:</h4>
+  <ul>
+    <li><code>data</code> defines the scope of pets affected:</li>
+    <ul>
+      <li><strong>0</strong> — Only summoned and alive Eudemons</li>
+      <li><strong>1</strong> — Summoned, including dead ones</li>
+      <li><strong>2</strong> — All pets (summoned or not, alive or dead)</li>
+    </ul>
+    <li><code>param</code> = stat requirements, must match all to trigger:
+      <ul>
+        <li>Supports: <code>level</code> and <code>starlev</code></li>
+        <li>Operators: <code>&lt;</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code></li>
+        <li>Use comma to separate conditions</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>📜 Example – Apply to All Pets with Level ≥ 1 and Star Level ≥ 4000:</h4>
+  <pre>
+REPLACE INTO cq_action VALUES (21000, 0000, 0000, 1970, 2, 'level >= 1,starlev >= 4000');
+  </pre>
+
+  <h4>✅ Notes:</h4>
+  <ul>
+    <li>Used for divine upgrade events, evolution quests, or system unlocks.</li>
+  </ul>
+
+</details>
+
+
 
 
 
