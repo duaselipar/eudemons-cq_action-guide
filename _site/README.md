@@ -5519,7 +5519,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 4003, 50030, '5003 * 20');
     ⚠️ <strong>New Engine Only</strong>
   </div>
 
-  <img src="/assets/images/8000.png" alt="8000" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/8000.png" alt="8000" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 8000</strong> is used to start a countdown timer for a player. When the countdown reaches zero, a specified script will execute automatically. If <code>data = 0</code>, it will close any existing countdown without executing anything.</p>
 
@@ -5562,7 +5562,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 8000, 0, '');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <img src="/assets/images/8001.png" alt="8001" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/8001.png" alt="8001" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 8001</strong> is an advanced countdown for players, supporting visual effects and interruption controls. It will display a message, optionally show an animation, and execute a script when the countdown ends. Countdown can be interrupted if configured.</p>
 
@@ -5615,7 +5615,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 8001, 0, '');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <img src="/assets/images/8002.png" alt="8002" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/8002.png" alt="8002" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 8002</strong> is used to start a countdown timer specific for players inside a duplicate (instance) map. If the player leaves the map before the countdown ends, the timer is automatically cancelled without executing anything.</p>
 
@@ -5696,7 +5696,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 8003, 0, '');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <img src="/assets/images/8010.png" alt="8010" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/8010.png" alt="8010" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 8010</strong> is used to change the player's pose (animation) based on the pose ID. The pose IDs are configured in the <code>3dmotion.ini</code> file.</p>
 
@@ -5738,7 +5738,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 8010, 335, '');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-  <img src="/assets/images/8011.png" alt="8011" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/8011.png" alt="8011" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 8011</strong> is used to initiate an automatic pathfinding movement across different maps. The system will automatically calculate the route based on predefined path information.</p>
 
@@ -6136,7 +6136,7 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 2019, 0, '0 0 %user_map_id 71 67
     ⚠️ <strong>New Engine Only</strong>
   </div>
 
-    <img src="/assets/images/187.png" alt="185" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/187.png" alt="185" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 187</strong> is used to open a specific UI window on the client. This is typically used to trigger interfaces like Divine Furnace or other special panels. The <code>param</code> value is passed to the client and included in the packet, but its purpose is currently unknown.</p>
 
@@ -6223,7 +6223,7 @@ INSERT INTO cq_action VALUES (1003, 0000, 0000, 1601, 0, '1204 %iter_taskdetail_
     ⚠️ <strong>New Engine Only</strong>
   </div>
 
-    <img src="/assets/images/1065.png" alt="1065" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1065.png" alt="1065" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These types are used to implement a CAPTCHA-style quiz system. When triggered, a question will appear on the screen and the player must answer within the given time. You can check whether it's currently active and respond accordingly.</p>
 
@@ -6639,7 +6639,7 @@ INSERT INTO cq_action VALUES (2002, 0000, 0000, 0126, 0, 'None of your teammates
     ⚠️ <strong>New Engine Only</strong>
   </div>
 
-  <img src="/assets/images/1180.png" alt="1180" style="border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/1180.png" alt="1180" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 1180</strong> is used to manage new UI-based task entries. These tasks are displayed in the in-game panel (Story / Daily / Event), and stored in <code>cq_newtaskdetail</code>. It supports creating, deleting, and checking for task existence. It does not trigger any scripts from <code>cq_newtaskconfig</code>.</p>
 
@@ -7239,7 +7239,7 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'This message was sent 
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/7001.png" alt="7001" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/7001.png" alt="7001" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 7001</strong> triggers an invitation-style dialog box for the player, using a message string from <code>strres.ini</code>. A countdown is shown, and if the player confirms before it ends, a predefined script will be executed. This script ID is set server-side via <code>邀请对话框确认执行脚本 = [ActionID]</code>.</p>
 
@@ -7703,7 +7703,7 @@ Sound=sound/BGM_State1.wav
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1987.png" alt="1987" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1987.png" alt="1987" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 1987</strong> checks whether the player has access to the Divine Fire system. Returns true if it is unlocked and available.</p>
 
@@ -7791,7 +7791,7 @@ INSERT INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have unlocked Divi
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1996.png" alt="1996" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1996.png" alt="1996" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These script types are used to manage player titles based on the <code>title.ini</code> file. Titles are stored in <code>cq_titleid</code> and can be unlocked, equipped, or checked using the following actions:</p>
 
@@ -7851,7 +7851,7 @@ INSERT INTO cq_action VALUES (1004, 0000, 0000, 0126, 0, 'Title equipped success
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1980.png" alt="1980" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1980.png" alt="1980" style="border:1px solid #ccc; border-radius:6px;">
 
   <p><strong>Type 1980</strong> is used to send mail with attachments (items, EP, PP, Lunar Point) to players. The mail format uses a template from <code>cq_mailtemplate</code> and stores the sent data in <code>cq_mailinfo</code>.</p>
 
@@ -8167,7 +8167,7 @@ REPLACE INTO cq_action VALUES (1000, 0000, 0000, 1986, 0, '');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1983.png" alt="1983" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1983.png" alt="1983" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These scripts are used to manage the <strong>Servants of the Goddess</strong> system. There are two servants: <strong>Gift Master</strong> (1) and <strong>Spirit Master</strong> (2). Scripts let you check if they’re activated, activate them, and give them EXP.</p>
 
@@ -8274,7 +8274,7 @@ REPLACE INTO cq_action VALUES (17000, 0000, 0000, 1527, 0, '4');
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1974.png" alt="1974" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1974.png" alt="1974" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These scripts are used to check and unlock character hairstyles. Hair styles are defined in <code>HairData.ini</code> and <code>DressRoomItem.ini</code> (where <code>type = 2</code>).</p>
 
@@ -8326,7 +8326,7 @@ REPLACE INTO cq_action VALUES (18011, 0000, 0000, 0126, 0, 'You have unlocked ha
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1976.png" alt="1976" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1976.png" alt="1976" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These script types are used to check and unlock player avatar icons (also called head icons or portraits). Avatar data must exist in <code>cq_faceinfotype</code>, and unlocked data is stored in <code>cq_faceinfo</code>.</p>
 
@@ -8378,7 +8378,7 @@ REPLACE INTO cq_action VALUES (1001, 0000, 0000, 0126, 0, 'You have successfully
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
   </div>
-    <img src="/assets/images/1972.png" alt="1972" style="border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/1972.png" alt="1972" style="border:1px solid #ccc; border-radius:6px;">
 
   <p>These script types manage the unlocking of <strong>Eudemon Skins</strong>. Skins are defined in <code>cq_eudlookinfotype</code>, and once unlocked, are stored in <code>cq_eudlookinfo</code>.</p>
 
@@ -8498,7 +8498,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%datestamp');
 
     <p>When displayed using a message box (Type 126), it will appear like this:</p>
 
-    <img src="/assets/images/datestamp.png" alt="%datestamp Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/datestamp.png" alt="%datestamp Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
 
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
       ⚠️ <strong>New Engine Only</strong>
@@ -8522,7 +8522,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%time');
 
     <p>When displayed using a message box (Type 126), it will appear like this:</p>
 
-    <img src="/assets/images/timestamp.png" alt="%time Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+    <img src="assets/images/timestamp.png" alt="%time Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
   </details>
 
 <details style="margin-left: 20px;">
@@ -8542,7 +8542,7 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%maxeudemon_starlev
 
   <p>When displayed using a message box (Type 126), it will appear like this:</p>
 
-  <img src="/assets/images/maxeudemon.png" alt="%maxeudemon_starlev Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
+  <img src="assets/images/maxeudemon.png" alt="%maxeudemon_starlev Example" style="max-width:200px; border:1px solid #ccc; border-radius:6px;">
 
   <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:12px 16px; margin-bottom:16px; border-radius:6px;">
     ⚠️ <strong>New Engine Only</strong>
