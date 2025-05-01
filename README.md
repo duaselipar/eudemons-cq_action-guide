@@ -1,4 +1,4 @@
-# 🧠 Eudemons Online `cq_action` Table Guide
+# Eudemons Online `cq_action` Table Guide
 
 Welcome to the ultimate guide for understanding the `cq_action` table used in Eudemons Online private servers. This table plays a critical role in controlling game behavior — from NPC dialogs and item rewards to experience gains, system messages, and conditional logic.
 
@@ -9142,5 +9142,5 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Kill Position: %kil
 ---
 
 <footer style="text-align:center; padding: 20px; font-size: 14px; color: #777;">
-  🧠 Built with ❤️ by DuaSelipar • © 2025 • <a href="https://duaselipar.github.io/eudemons-cq_action-guide/" target="_blank">Back to Top</a>
+  🧠 Built with ❤️ by DuaSelipar • © 2025 • <a href="https://www.facebook.com/profile.php?id=61554036273018" target="_blank">facebook</a>
 </footer>
