@@ -8478,6 +8478,9 @@ This section will explain about the types of variables available in the server. 
 
 These variables can be displayed or checked using dialog windows (Type 101), message boxes (Type 126), and other script actions depending on how they are used in the event system.
 
+
+
+
 <details>
   <summary>🛠️ <strong>System Variables</strong></summary>
   <details style="margin-left: 20px;">
@@ -8548,6 +8551,41 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%maxeudemon_starlev
   </div>
 </details>
 
+  <details style="margin-left: 20px;">
+    <summary>📆 <strong>%date_ywday1 ~ %date_ywday7</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> These variables return the current <strong>week number</strong> based on a custom week start setting. Counting starts from <code>2018-01-01</code>.</li>
+      <li><strong>Usage:</strong> Useful for weekly events, reset timers, reward tiers, or weekly PVP rankings.</li>
+      <li><strong>Format:</strong> The value returned is a <strong>positive integer</strong> indicating how many full weeks have passed since your chosen day-of-week reference point.</li>
+    </ul>
+
+    <h4>📘 Variable Explanation:</h4>
+    <table cellspacing="0" cellpadding="6">
+      <thead>
+        <tr><th>Variable</th><th>Meaning</th><th>Week Start Day</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>%date_ywday1</code></td><td>Weekly index if your week starts on <strong>Monday</strong></td><td>Monday</td></tr>
+        <tr><td><code>%date_ywday2</code></td><td>Weekly index if your week starts on <strong>Tuesday</strong></td><td>Tuesday</td></tr>
+        <tr><td><code>%date_ywday3</code></td><td>Weekly index if your week starts on <strong>Wednesday</strong></td><td>Wednesday</td></tr>
+        <tr><td><code>%date_ywday4</code></td><td>Weekly index if your week starts on <strong>Thursday</strong></td><td>Thursday</td></tr>
+        <tr><td><code>%date_ywday5</code></td><td>Weekly index if your week starts on <strong>Friday</strong></td><td>Friday</td></tr>
+        <tr><td><code>%date_ywday6</code></td><td>Weekly index if your week starts on <strong>Saturday</strong></td><td>Saturday</td></tr>
+        <tr><td><code>%date_ywday7</code></td><td>Weekly index if your week starts on <strong>Sunday</strong></td><td>Sunday</td></tr>
+      </tbody>
+    </table>
+
+    <h4>💡 Example SQL – Weekly Reset Check (Week Starts on Tuesday):</h4>
+    <pre>
+-- This shows how many weeks have passed since 2018-01-01, treating Tuesday as start of the week
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Week Index (Tuesday Start): %date_ywday2');
+    </pre>
+
+    <div style="border-left: 4px solid #03A9F4; background: #e1f5fe; padding: 12px 16px; margin-top: 16px; border-radius: 6px;">
+      🧠 <strong>Tip:</strong> Use different <code>%date_ywdayX</code> depending on which day you want your server's week to begin (e.g., Monday for school ranking, Sunday for arena season).
+    </div>
+  </details>
 
 
 
@@ -8766,6 +8804,11 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%newdatastr1');
 
 </details>
 
+
+
+
+
+
 <details>
   <summary>🧑‍💼 <strong>User Variables</strong></summary>
 
@@ -8928,7 +8971,126 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, '%user_bp');
     </div>
   </details>
 
+ <details style="margin-left: 20px;">
+    <summary>🏆 <strong>%halloffamerank</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Celebrity Hall ranking. Returns <code>0</code> if not ranked.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Check HoF Rank</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Your Celebrity Hall Rank: %halloffamerank');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🔥 <strong>%godfirerank</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Rank among the 3 Divine Fire Statues.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Check God Fire Rank</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'God Fire Rank: %godfirerank');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🟡 <strong>%currentfirepoint</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Current score of the Divine Fire equipped on the player.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Show Current Divine Fire Score</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Current Fire Score: %currentfirepoint');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>💀 <strong>%killusertarget_name / %killusertarget_id</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong>Name and ID of the last player killed (or who killed you).</li>
+    </ul>
+
+    <h4>💡 Example SQL – Show Last PK Target Info</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'You last killed: %killusertarget_name (ID: %killusertarget_id)');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🔥 <strong>%firelev</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Divine Fire Realm Level.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Check Fire Level</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Your Divine Fire Realm Level: %firelev');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🔥 <strong>%firepoint</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Player's historical highest Fire Score.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Highest Fire Score</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Highest Fire Score: %firepoint');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>🎯 <strong>%bonuspoint</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Displays the character’s bonus point total.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Bonus Points</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Your Bonus Points: %bonuspoint');
+    </pre>
+  </details>
+
+  <details style="margin-left: 20px;">
+    <summary>👑 <strong>%allgoddesslevel</strong></summary>
+    <br>
+    <ul>
+      <li><strong>Description:</strong> Total goddess tier level sum. Returns 0 if no goddess is unlocked.</li>
+    </ul>
+
+    <h4>💡 Example SQL – Display Goddess Total Tier</h4>
+    <pre>
+REPLACE INTO cq_action VALUES (1000, 0000, 0000, 0126, 0, 'Total Goddess Tier: %allgoddesslevel');
+    </pre>
+  </details>
 </details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
