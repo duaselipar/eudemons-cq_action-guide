@@ -22,7 +22,7 @@
 {"@context":"https://schema.org","@type":"WebSite","description":"A complete guide to using cq_action in Eudemons Online private servers.","headline":"Eudemons Online cq_action Table Guide","name":"CQ_Action Guide","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=72789f682337b94c0887f38eb3a10c3d9523a8af">
+    <link rel="stylesheet" href="/assets/css/style.css?v=028f22920fbc02cd15f12bf4b010dcef11ceeeca">
     <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
 
 <!-- Setup Google Analytics -->
@@ -1388,10 +1388,10 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 0205, 0, '1002 888');
 </details>
 
 <details>
-  <summary>⚔️ <strong>Check Legion War Time (Type 226)</strong></summary>
+  <summary>⚔️ <strong>Check Legion War Time (Type 223 &amp; 226)</strong></summary>
   <br />
 
-  <p><strong>Type 226</strong> checks whether the current time is within the configured Legion War period. It's used to control war-based logic like teleportation, dialogue conditions, or reward distribution.</p>
+  <p><strong>Type 223 &amp; 226</strong> checks whether the current time is within the configured Legion War period. It's used to control war-based logic like teleportation, dialogue conditions, or reward distribution.</p>
 
   <h4>🧠 Behavior:</h4>
   <ul>
@@ -2020,6 +2020,45 @@ REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0323, 1, '1000 106 406 12 12 
       <li>Set <code>data=1</code> for alive-player-only events</li>
     </ol>
   </div>
+</details>
+
+<details>
+  <summary>🚶‍♂️ <strong>Move dynaNPC (Type 309)</strong></summary>
+  <br />
+
+  <p><strong>Type 309</strong> is used to move a <em>dynamic NPC</em> (dynaNPC) to a specified map and coordinates. You can also hide the NPC by moving it to coordinate <code>(0,0)</code>.</p>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+-- Move dynaNPC id=5001 to map 1000 (x=300, y=300)
+REPLACE INTO cq_action VALUES (910010, 910011, 910012, 309, 5001, '1000 300 300');
+
+-- Success message
+REPLACE INTO cq_action  VALUES (910011, 0, 0, 126, 0, 'dynaNPC #5001 moved to (300,300).');
+
+-- Fail message
+REPLACE INTO cq_action VALUES (910012, 0, 0, 126, 0, 'Failed to move dynaNPC #5001.');
+  </pre>
+
+  <h4>📦 Parameter Breakdown</h4>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead style="background:#f0f0f0;">
+      <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>data</code></td><td>dynaNPC ID</td><td>5001</td></tr>
+      <tr><td><code>param</code></td><td><code>mapId posX posY</code></td><td>1000 300 300</td></tr>
+    </tbody>
+  </table>
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use coordinate <code>0 0</code> to hide the dynaNPC without deleting it.</li>
+    <li><code>id_next</code> is executed on success, <code>id_next_fail</code> on failure.</li>
+    <li>Make sure the dynaNPC ID exists, otherwise the fail branch will trigger.</li>
+    <li>Useful for moving event NPCs, respawning them in another location, or making them temporarily vanish.</li>
+  </ul>
+
 </details>
 
 <details>

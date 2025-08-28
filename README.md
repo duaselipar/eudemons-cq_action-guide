@@ -1968,6 +1968,45 @@ REPLACE INTO `cq_action` VALUES (1000, 1001, 1002, 0323, 1, '1000 106 406 12 12 
   </div>
 </details>
 
+<details>
+  <summary>🚶‍♂️ <strong>Move dynaNPC (Type 309)</strong></summary>
+  <br>
+
+  <p><strong>Type 309</strong> is used to move a <em>dynamic NPC</em> (dynaNPC) to a specified map and coordinates. You can also hide the NPC by moving it to coordinate <code>(0,0)</code>.</p>
+
+  <h4>📜 Example SQL:</h4>
+  <pre>
+-- Move dynaNPC id=5001 to map 1000 (x=300, y=300)
+REPLACE INTO cq_action VALUES (910010, 910011, 910012, 309, 5001, '1000 300 300');
+
+-- Success message
+REPLACE INTO cq_action  VALUES (910011, 0, 0, 126, 0, 'dynaNPC #5001 moved to (300,300).');
+
+-- Fail message
+REPLACE INTO cq_action VALUES (910012, 0, 0, 126, 0, 'Failed to move dynaNPC #5001.');
+  </pre>
+
+  <h4>📦 Parameter Breakdown</h4>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead style="background:#f0f0f0;">
+      <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>data</code></td><td>dynaNPC ID</td><td>5001</td></tr>
+      <tr><td><code>param</code></td><td><code>mapId posX posY</code></td><td>1000 300 300</td></tr>
+    </tbody>
+  </table>
+
+  <h4>💡 Tips:</h4>
+  <ul>
+    <li>Use coordinate <code>0 0</code> to hide the dynaNPC without deleting it.</li>
+    <li><code>id_next</code> is executed on success, <code>id_next_fail</code> on failure.</li>
+    <li>Make sure the dynaNPC ID exists, otherwise the fail branch will trigger.</li>
+    <li>Useful for moving event NPCs, respawning them in another location, or making them temporarily vanish.</li>
+  </ul>
+
+</details>
+
 
 <details>
   <summary>✨ <strong>Map Effects (Type 312)</strong></summary>
