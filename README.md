@@ -1323,10 +1323,10 @@ INSERT INTO cq_action VALUES (1000, 0000, 0000, 0205, 0, '1002 888');
 
 
 <details>
-  <summary>⚔️ <strong>Check Legion War Time (Type 226)</strong></summary>
+  <summary>⚔️ <strong>Check Legion War Time (Type 223 & 226)</strong></summary>
   <br>
 
-  <p><strong>Type 226</strong> checks whether the current time is within the configured Legion War period. It's used to control war-based logic like teleportation, dialogue conditions, or reward distribution.</p>
+  <p><strong>Type 223 & 226</strong> checks whether the current time is within the configured Legion War period. It's used to control war-based logic like teleportation, dialogue conditions, or reward distribution.</p>
 
   <h4>🧠 Behavior:</h4>
   <ul>
