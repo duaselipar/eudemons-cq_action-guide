@@ -149,7 +149,8 @@
     html.dark .markdown-body hr { border-color: #21262d; }
     html.dark .markdown-body .highlight pre { background-color: #161b22; }
     html.dark .container-lg h1 a { color: #f0f6fc; }
-    html.dark footer { color: #8b949e !important; }
+    html.dark footer { color: #8b949e !important; border-top-color: #30363d !important; }
+    html.dark footer a { color: #8b949e !important; }
 
     html.dark #themeToggle .moon, html:not(.dark) #themeToggle .sun { display: none; }
   </style>
@@ -207,6 +208,13 @@
   {{ content }}
 </div>
 
+<!-- FOOTER -->
+<footer style="border-top:1px solid #d0d7de; padding:24px 0; text-align:center; font-size:14px; color:#656d76;">
+  © <span id="footerYear"></span> DuaSelipar Dev Hub ·
+  <a href="https://github.com/duaselipar/eudemons-cq_action-guide" target="_blank" style="color:#656d76;">GitHub</a> ·
+  <a href="https://www.facebook.com/profile.php?id=61554036273018" target="_blank" style="color:#656d76;">Facebook</a>
+</footer>
+
 <!-- Scripts -->
 <script>
   // Theme toggle
@@ -222,6 +230,9 @@
   mm.querySelectorAll('a').forEach(function(a){
     a.addEventListener('click', function(){ mm.classList.remove('open'); });
   });
+
+  // Footer year
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
 </script>
 
 </body>

@@ -9321,8 +9321,3 @@ REPLACE INTO `cq_action` VALUES (1000, 0000, 0000, 0126, 0, 'Kill Position: %kil
 </details>
 
 ---
-
-
-<footer style="text-align:center; padding: 20px; font-size: 14px; color: #777;">
-  🧠 Built with ❤️ by DuaSelipar • © 2025 • <a href="https://www.facebook.com/profile.php?id=61554036273018" target="_blank">facebook</a>
-</footer>
