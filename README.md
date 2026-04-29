@@ -1,3 +1,8 @@
+---
+title: Eudemons Online cq_action Table Guide
+description: A complete guide to using cq_action in Eudemons Online private servers.
+---
+
 # Eudemons Online `cq_action` Table Guide
 
 Welcome to the ultimate guide for understanding the `cq_action` table used in Eudemons Online private servers. This table plays a critical role in controlling game behavior — from NPC dialogs and item rewards to experience gains, system messages, and conditional logic.

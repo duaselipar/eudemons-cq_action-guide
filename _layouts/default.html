@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','ui-sans-serif','system-ui','Segoe UI','Roboto','Helvetica','Arial']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Prevent flash of wrong theme -->
+  <script>
+    (function(){
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.classList.add('dark');
+        else if (t === 'light') document.documentElement.classList.remove('dark');
+        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch(e){}
+    })();
+  </script>
+
+  <!-- Custom styles for content elements inside dark mode -->
+  <style>
+    /* Code blocks */
+    pre {
+      overflow-x: auto;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+    }
+    .dark pre {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    pre code {
+      background: none !important;
+      padding: 0 !important;
+    }
+
+    /* Inline code */
+    code {
+      background: #f1f5f9;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.875em;
+      border: 1px solid #e2e8f0;
+    }
+    .dark code {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+    table th, table td {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .dark table th, .dark table td {
+      border-color: #334155;
+    }
+    table th {
+      background: #f8fafc;
+      font-weight: 600;
+    }
+    .dark table th {
+      background: #0f172a;
+    }
+    table tr:hover {
+      background: #f8fafc;
+    }
+    .dark table tr:hover {
+      background: #0f172a;
+    }
+
+    /* Details / Summary */
+    details {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #ffffff;
+    }
+    .dark details {
+      background: #0f172a;
+      border-color: #334155;
+    }
+    details[open] {
+      padding-bottom: 1.25rem;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 0.25rem 0;
+      user-select: none;
+    }
+    summary:hover {
+      color: #0284c7;
+    }
+    .dark summary:hover {
+      color: #38bdf8;
+    }
+
+    /* Blockquotes */
+    blockquote {
+      border-left: 4px solid #e2e8f0;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      background: #f8fafc;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+    .dark blockquote {
+      border-color: #334155;
+      background: #0f172a;
+    }
+
+    /* Images */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Links */
+    a {
+      color: #0284c7;
+      text-decoration: underline;
+    }
+    .dark a {
+      color: #38bdf8;
+    }
+    a:hover {
+      color: #0369a1;
+    }
+    .dark a:hover {
+      color: #7dd3fc;
+    }
+
+    /* Headings */
+    h1 { font-size: 2rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.75rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+    h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    h5 { font-size: 1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; }
+    hr { border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0; }
+    .dark hr { border-color: #334155; }
+
+    /* Lists */
+    ul, ol { padding-left: 1.5rem; margin: 0.75rem 0; }
+    li { margin: 0.25rem 0; }
+
+    /* Paragraphs */
+    p { margin: 0.75rem 0; line-height: 1.7; }
+  </style>
+</head>
+<body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased text-[17px] md:text-[18px]">
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur border-b border-slate-200/70 dark:border-slate-800/70">
+  <div class="mx-auto max-w-[1080px] w-full px-4 md:px-6 lg:px-8">
+    <div class="h-14 flex items-center justify-between">
+      <!-- Brand -->
+      <a href="/" class="font-extrabold tracking-tight text-base md:text-lg">
+        {{ site.title | default: "CQ_Action Guide" }}
+      </a>
+
+      <!-- Right: nav + theme -->
+      <div class="flex items-center gap-2">
+        <nav class="hidden md:flex items-center gap-2">
+          <a href="/" class="px-3 py-2 text-sm font-semibold rounded-lg hover:bg-sky-500/10 hover:text-sky-700 dark:hover:bg-sky-400/10 dark:hover:text-sky-300">Home</a>
+          <a href="https://github.com/duaselipar/eudemons-cq_action-guide" target="_blank" class="px-3 py-2 text-sm font-semibold rounded-lg hover:bg-slate-950/5 dark:hover:bg-white/5">GitHub</a>
+        </nav>
+
+        <!-- Theme toggle -->
+        <button id="themeToggle" class="inline-flex items-center justify-center h-9 w-9 rounded-lg ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-slate-950/5 dark:hover:bg-white/5" title="Toggle theme">
+          <!-- sun (shows in dark) -->
+          <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m16.95 6.95-1.41-1.41M6.46 6.46 5.05 5.05m13.49 0-1.41 1.41M6.46 17.54l-1.41 1.41"/>
+          </svg>
+          <!-- moon (shows in light) -->
+          <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- Mobile menu btn -->
+        <button id="navToggle" class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg ring-1 ring-slate-200 dark:ring-slate-800 hover:bg-slate-950/5 dark:hover:bg-white/5" aria-label="Toggle navigation">
+          <svg id="bars" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <svg id="xmark" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M6 18L18 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobileNav" class="md:hidden hidden border-t border-slate-200/70 dark:border-slate-800/70 bg-white/95 dark:bg-slate-950/95 backdrop-blur">
+    <div class="mx-auto max-w-[1080px] w-full px-4 py-2">
+      <a href="/" class="block px-3 py-2 text-sm font-semibold rounded-lg hover:bg-sky-500/10 dark:hover:bg-sky-400/10">Home</a>
+      <a href="https://github.com/duaselipar/eudemons-cq_action-guide" target="_blank" class="block px-3 py-2 text-sm font-semibold rounded-lg hover:bg-slate-950/5 dark:hover:bg-white/5">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="relative">
+  <div class="mx-auto max-w-[1080px] w-full px-4 md:px-6 lg:px-8">
+    <div class="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-tr from-sky-500/10 to-transparent p-6 md:p-8">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">{{ page.title | default: site.title }}</h1>
+      {% if page.description or site.description %}
+      <p class="mt-2 text-slate-600 dark:text-slate-400">
+        {{ page.description | default: site.description }}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<main class="mx-auto max-w-[1080px] w-full px-4 md:px-6 lg:px-8 pb-16">
+  <div class="mt-8">
+    {{ content }}
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800">
+  <div class="mx-auto max-w-[1080px] w-full px-4 md:px-6 lg:px-8">
+    <div class="py-6 text-center text-sm text-slate-500">
+      © <span id="year"></span> {{ site.title | default: "CQ_Action Guide" }}. Powered by
+      <a href="https://github.com/duaselipar/eudemons-cq_action-guide" target="_blank" class="underline decoration-dotted hover:text-sky-600">GitHub Pages</a>.
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+  // Theme toggle
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    const r = document.documentElement;
+    const isDark = r.classList.toggle('dark');
+    try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e){}
+  });
+
+  // Mobile nav
+  const navBtn = document.getElementById('navToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const bars = document.getElementById('bars');
+  const xmark = document.getElementById('xmark');
+  navBtn?.addEventListener('click', () => {
+    const open = !mobileNav.classList.toggle('hidden');
+    bars?.classList.toggle('hidden', open);
+    xmark?.classList.toggle('hidden', !open);
+  });
+  mobileNav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobileNav.classList.add('hidden');
+    bars?.classList.remove('hidden');
+    xmark?.classList.add('hidden');
+  }));
+
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
