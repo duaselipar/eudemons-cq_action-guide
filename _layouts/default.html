@@ -152,6 +152,27 @@
     html.dark footer { color: #8b949e !important; border-top-color: #30363d !important; }
     html.dark footer a { color: #8b949e !important; }
 
+    /* Dark mode: colored info/warning boxes - fix readability */
+    html.dark .markdown-body div[style*="#f0fdf4"],
+    html.dark .markdown-body div[style*="#e8f5e9"],
+    html.dark .markdown-body div[style*="#e0f2f1"] { background-color: #0d2818 !important; }
+    html.dark .markdown-body div[style*="#e3f2fd"],
+    html.dark .markdown-body div[style*="#e1f5fe"] { background-color: #0d2137 !important; }
+    html.dark .markdown-body div[style*="#e8eaf6"] { background-color: #161b2d !important; }
+    html.dark .markdown-body div[style*="#fff8e1"] { background-color: #2d2610 !important; }
+    html.dark .markdown-body div[style*="#fff3e0"] { background-color: #2d2010 !important; }
+    html.dark .markdown-body div[style*="#ffebee"] { background-color: #3d161a !important; }
+    html.dark .markdown-body div[style*="#f3e5f5"] { background-color: #281a2d !important; }
+    html.dark .markdown-body div[style*="#ede7f6"] { background-color: #201a2d !important; }
+    html.dark .markdown-body div[style*="#eceff1"],
+    html.dark .markdown-body div[style*="#f0f0f0"],
+    html.dark .markdown-body div[style*="#f4f4f4"] { background-color: #1a1d20 !important; }
+
+    /* Ensure text inside these boxes is readable in dark mode */
+    html.dark .markdown-body div[style*="background"] { color: #c9d1d9 !important; }
+    html.dark .markdown-body div[style*="background"] a { color: #58a6ff !important; }
+    html.dark .markdown-body div[style*="background"] code { color: #f0f6fc !important; }
+
     html.dark #themeToggle .moon, html:not(.dark) #themeToggle .sun { display: none; }
   </style>
 
